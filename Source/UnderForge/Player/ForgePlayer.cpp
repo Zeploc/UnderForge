@@ -2,6 +2,8 @@
 
 #include "ForgePlayer.h"
 //#include "Components/InputComponent.h"
+#include "Engine/World.h"
+
 
 
 // Sets default values
@@ -56,15 +58,15 @@ void AForgePlayer::Interact()
 	FCollisionQueryParams Traceparams(TEXT("Interact Trace"), false, this);
 
 	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_GameTraceChannel1, Traceparams);
-	AInteractActor* InteractActor = Cast<AInteractActor>(hit.Actor);
-	if (InteractActor)
-	{
-		InteractActor->Interact();
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact with interact actor"));
-	}
-	else if (hit.bBlockingHit)
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact Hit object " + hit.Actor.Get()->GetFName().ToString()));
-	}
+	//AInteractActor* InteractActor = Cast<AInteractActor>(hit.Actor);
+	//if (InteractActor)
+	//{
+	//	InteractActor->Interact();
+	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact with interact actor"));
+	//}
+	//else if (hit.bBlockingHit)
+	//{
+	//	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact Hit object " + hit.Actor.Get()->GetFName().ToString()));
+	//}
 
 }
