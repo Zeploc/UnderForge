@@ -3,7 +3,7 @@
 #include "ForgePlayer.h"
 //#include "Components/InputComponent.h"
 #include "Engine/World.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -12,6 +12,8 @@ AForgePlayer::AForgePlayer()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 // Called when the game starts or when spawned
@@ -35,20 +37,20 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	// set up gameplay key bindings
 	PlayerInputComponent->BindAxis("MoveRight", this, &AForgePlayer::MoveRight);
-	PlayerInputComponent->BindAxis("MoveUp", this, &AForgePlayer::MoveUp);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AForgePlayer::MoveUp);
 	
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AForgePlayer::Interact);
 }
 void AForgePlayer::MoveRight(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
+	AddMovementInput(FVector(0.f, 1.f, 0.f), Value);
 }
 
 void AForgePlayer::MoveUp(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
+	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
 }
 
 void AForgePlayer::Interact()
