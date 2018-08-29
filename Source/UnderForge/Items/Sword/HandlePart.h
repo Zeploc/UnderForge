@@ -4,14 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Items/ForgePart.h"
+#include "Utlities.h"
 #include "HandlePart.generated.h"
 
-UENUM(BlueprintType)
-enum class EHandleType : uint8
-{
-	HT_STRAIGHT UMETA(DisplayName = "Straight"),
-	HT_CURVED UMETA(DisplayName = "Curved"),
-};
 /**
  * 
  */

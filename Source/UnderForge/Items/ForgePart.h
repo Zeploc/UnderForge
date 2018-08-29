@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utlities.h"
 #include "ForgePart.generated.h"
 
 UCLASS()
@@ -23,8 +24,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
+		void DropOnStation();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* PartMesh;
-	
-	
+
+	class AForgeStation* CurrentTouchingStation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		EPartType PartType;
 };

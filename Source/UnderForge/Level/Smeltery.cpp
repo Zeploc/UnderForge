@@ -26,7 +26,7 @@ void ASmeltery::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASmeltery::ProcessItem(AForgeMat* material)
+void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	switch (material->ResourceType)
 	{
@@ -62,6 +62,7 @@ void ASmeltery::ItemDectection(AActor* actor, bool entering)
 		}
 	}
 }
+
 
 AForgePart * ASmeltery::MakeResource(EResource type)
 {
