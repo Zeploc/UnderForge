@@ -34,7 +34,7 @@ public:
 
 
 	void Interact();
-
+	void SecondaryInteract();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractRange = 100.0f;
 	
