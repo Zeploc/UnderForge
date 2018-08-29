@@ -2,8 +2,7 @@
 
 #include "ForgeMat.h"
 #include "Level/ForgeStation.h"
-#include "Level/Smeltery.h"
-#include "Utlities.h"
+
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
@@ -30,7 +29,7 @@ void AForgeMat::DropOnStation()
 {
 	if (CurrentTouchingStation)
 	{
-		CurrentTouchingStation->ProcessItem(this);
+		CurrentTouchingStation->ProcessMatItem(this);
 	}
 }
 

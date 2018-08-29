@@ -5,7 +5,12 @@
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Items/ForgeMat.h"
+#include "Items/ForgePart.h"
+#include "Utlities.h"
+#include "Level/CarpentaryStation.h"
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -39,7 +44,7 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	// set up gameplay key bindings
 	PlayerInputComponent->BindAxis("MoveRight", this, &AForgePlayer::MoveRight);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AForgePlayer::MoveUp);
-	
+	PlayerInputComponent->BindAction("SecondaryInteract", IE_Pressed, this, &AForgePlayer::SecondaryInteract);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AForgePlayer::Interact);
 }
 void AForgePlayer::MoveRight(float Value)
@@ -72,4 +77,28 @@ void AForgePlayer::Interact()
 	//	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact Hit object " + hit.Actor.Get()->GetFName().ToString()));
 	//}
 
+}
+
+void AForgePlayer::SecondaryInteract()
+{
+	if (FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent())
+	{
+		if (Cast<UStaticMeshComponent>(FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent()))
+		{
+			if (AActor* item = Cast<UStaticMeshComponent>(FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent())->GetOwner())
+			{
+				if (AForgeMat* mat = Cast<AForgeMat>(item))
+				{
+					if (mat->CurrentTouchingStation && mat->ResourceType == EResource::R_WOOD)
+					{
+						if (ACarpentaryStation* station = Cast<ACarpentaryStation>(mat->CurrentTouchingStation))
+						{
+							station->MorphStates();
+						}
+
+					}
+				}
+			}
+		}
+	}
 }

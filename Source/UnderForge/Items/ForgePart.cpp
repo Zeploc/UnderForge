@@ -2,7 +2,7 @@
 
 #include "ForgePart.h"
 #include "Components/StaticMeshComponent.h"
-
+#include "Level/ForgeStation.h"
 
 // Sets default values
 AForgePart::AForgePart()
@@ -29,5 +29,13 @@ void AForgePart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AForgePart::DropOnStation()
+{
+	if (CurrentTouchingStation)
+	{
+		CurrentTouchingStation->ProcessPartItem(this);
+	}
 }
 
