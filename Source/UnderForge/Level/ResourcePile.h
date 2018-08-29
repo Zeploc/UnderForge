@@ -22,4 +22,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgeMat> ForgeMat;
+
+	UFUNCTION(BlueprintCallable)
+		class AForgeMat* GetResource();
 };
