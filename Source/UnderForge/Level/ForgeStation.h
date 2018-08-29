@@ -24,7 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	virtual void ProcessItem(AForgeMat* material);
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -32,5 +32,10 @@ void AForgeStation::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AForgeStation::ProcessItem(AForgeMat * material)
+{
+
+}
+
 
 

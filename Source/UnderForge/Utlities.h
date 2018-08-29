@@ -18,4 +18,3 @@ enum class EResource : uint8
 	R_STEEL UMETA(DisplayName = "Steel"),
 	R_REALBRONZE UMETA(DisplayName = "RealBronze"),
 };
-

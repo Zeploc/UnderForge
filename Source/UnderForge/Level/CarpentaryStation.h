@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Level/ForgeStation.h"
-#include "Smeltery.generated.h"
+#include "CarpentaryStation.generated.h"
 
 UCLASS()
-class UNDERFORGE_API ASmeltery : public AForgeStation
+class UNDERFORGE_API ACarpentaryStation : public AForgeStation
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	ASmeltery();
+	ACarpentaryStation();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,7 +23,7 @@ protected:
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -33,5 +33,5 @@ public:
 		TSubclassOf<class AForgeMat> ForgeMat;
 
 	UFUNCTION(BlueprintCallable)
-		class AForgeMat* MakeResource(EResource type);
+		class AForgeMat* MakeResource();
 };
