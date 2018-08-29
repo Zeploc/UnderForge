@@ -60,12 +60,15 @@ void AForgeStation::ProcessItem(AForgeMat* material)
 	switch (material->ResourceType)
 	{
 	case(EResource::R_WOOD):
+		Destroy(material);
 		break;
 
 	case(EResource::R_IRON):
+		Destroy(material);
 		break;
 
 	case(EResource::R_BRONZE):
+		Destroy(material);
 		break;
 	}
 }
