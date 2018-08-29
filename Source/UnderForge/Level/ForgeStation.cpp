@@ -3,6 +3,7 @@
 #include "ForgeStation.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Items/ForgeMat.h"
 
 // Sets default values
 AForgeStation::AForgeStation()
@@ -23,13 +24,13 @@ AForgeStation::AForgeStation()
 void AForgeStation::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AForgeStation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
+
+
 

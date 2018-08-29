@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ForgeMat.h"
-
-
+#include "Level/ForgeStation.h"
+#include "Level/Smeltery.h"
+#include "Utlities.h"
 // Sets default values
 AForgeMat::AForgeMat()
 {
@@ -16,6 +17,14 @@ void AForgeMat::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AForgeMat::DropOnStation()
+{
+	if (CurrentTouchingStation)
+	{
+		CurrentTouchingStation->ProcessItem(this);
+	}
 }
 
 // Called every frame

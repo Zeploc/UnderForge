@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ForgeStation.generated.h"
 
+class AForgeMat;
+
 UCLASS()
 class UNDERFORGE_API AForgeStation : public AActor
 {
@@ -18,7 +20,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

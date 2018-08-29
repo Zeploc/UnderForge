@@ -4,15 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utlities.h"
 #include "ForgeMat.generated.h"
 
-UENUM(BlueprintType)
-enum class EResource : uint8
-{
-	R_WOOD UMETA(DisplayName = "Wood"),
-	R_IRON UMETA(DisplayName = "Iron"),
-	R_BRONZE UMETA(DisplayName = "Bronze"),
-};
+
+class ASmeltery;
 
 UCLASS()
 class UNDERFORGE_API AForgeMat : public AActor
@@ -33,6 +29,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource ResourceType;
-	
+	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
+		void DropOnStation();
+	ASmeltery* CurrentTouchingStation;
 	
 };
