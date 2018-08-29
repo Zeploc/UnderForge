@@ -30,7 +30,7 @@ void ACarpentaryStation::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ACarpentaryStation::ProcessItem(AForgeMat* material)
+void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
 	switch (material->ResourceType)
 	{
