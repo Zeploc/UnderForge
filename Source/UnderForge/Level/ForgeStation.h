@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ForgeStation.generated.h"
 
+class AForgeMat;
+
 UCLASS()
 class UNDERFORGE_API AForgeStation : public AActor
 {
@@ -23,6 +25,7 @@ protected:
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -35,4 +38,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UBoxComponent* CollisionBox;
+
+
+	void ProcessItem(AForgeMat* material);
+
 };

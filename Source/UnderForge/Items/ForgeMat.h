@@ -35,8 +35,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource ResourceType;
-
-
+	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
+		void DropOnStation();
 	AForgeStation* CurrentTouchingStation;
 	
 };

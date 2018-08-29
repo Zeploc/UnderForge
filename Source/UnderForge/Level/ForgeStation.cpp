@@ -54,3 +54,18 @@ void AForgeStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, clas
 		mat->CurrentTouchingStation = nullptr;
 	}
 }
+
+void AForgeStation::ProcessItem(AForgeMat* material)
+{
+	switch (material->ResourceType)
+	{
+	case(EResource::R_WOOD):
+		break;
+
+	case(EResource::R_IRON):
+		break;
+
+	case(EResource::R_BRONZE):
+		break;
+	}
+}
