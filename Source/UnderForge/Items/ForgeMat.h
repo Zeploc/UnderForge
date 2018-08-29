@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ForgeMat.generated.h"
 
+class AForgeStation;
+
 UENUM(BlueprintType)
 enum class EResource : uint8
 {
@@ -33,6 +35,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource ResourceType;
-	
+
+
+	AForgeStation* CurrentTouchingStation;
 	
 };
