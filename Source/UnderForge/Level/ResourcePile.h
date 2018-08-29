@@ -4,15 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Level/ForgeStation.h"
+#include "Items/ForgeMat.h"
 #include "ResourcePile.generated.h"
 
-UENUM(BlueprintType)
-enum class EResource : uint8
-{
-	R_WOOD UMETA(DisplayName = "Wood"),
-	R_IRON UMETA(DisplayName = "Iron"),
-	R_BRONZE UMETA(DisplayName = "Bronze"),
-};
 /**
  * 
  */
@@ -25,5 +19,7 @@ class UNDERFORGE_API AResourcePile : public AForgeStation
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource Resource;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgeMat> ForgeMat;
 };
