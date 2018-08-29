@@ -4,18 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ForgeItem.generated.h"
+#include "ForgeMat.generated.h"
 
-
+UENUM(BlueprintType)
+enum class EResource : uint8
+{
+	R_WOOD UMETA(DisplayName = "Wood"),
+	R_IRON UMETA(DisplayName = "Iron"),
+	R_BRONZE UMETA(DisplayName = "Bronze"),
+};
 
 UCLASS()
-class UNDERFORGE_API AForgeItem : public AActor
+class UNDERFORGE_API AForgeMat : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AForgeItem();
+	AForgeMat();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,10 +31,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<class AForgePart*> ForceParts;
-
-	UFUNCTION(BlueprintCallable)
-		virtual void AddPart(class AForgePart* ForgePart);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		EResource ResourceType;
+	
 	
 };

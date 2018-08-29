@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ForgeItem.h"
+#include "ForgeMat.h"
 
 
 // Sets default values
-AForgeItem::AForgeItem()
+AForgeMat::AForgeMat()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,21 +12,16 @@ AForgeItem::AForgeItem()
 }
 
 // Called when the game starts or when spawned
-void AForgeItem::BeginPlay()
+void AForgeMat::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AForgeItem::Tick(float DeltaTime)
+void AForgeMat::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void AForgeItem::AddPart(AForgePart * ForgePart)
-{
-	ForceParts.Add(ForgePart);
 }
 

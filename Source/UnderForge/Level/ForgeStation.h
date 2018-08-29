@@ -4,18 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ForgeItem.generated.h"
-
-
+#include "ForgeStation.generated.h"
 
 UCLASS()
-class UNDERFORGE_API AForgeItem : public AActor
+class UNDERFORGE_API AForgeStation : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AForgeItem();
+	AForgeStation();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,10 +23,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<class AForgePart*> ForceParts;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* StationMesh;
 
-	UFUNCTION(BlueprintCallable)
-		virtual void AddPart(class AForgePart* ForgePart);
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USceneComponent* ObjectPosition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UBoxComponent* CollisionBox;
 };
