@@ -2,6 +2,7 @@
 
 #include "Smeltery.h"
 #include "Items/ForgeMat.h"
+#include "Items/ForgePart.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
@@ -69,8 +70,8 @@ void ASmeltery::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 	}
 }
 
-AForgeMat * ASmeltery::MakeResource(EResource type)
+AForgePart * ASmeltery::MakeResource(EResource type)
 {
-	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+	AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 	return ResourceRef;
 }
