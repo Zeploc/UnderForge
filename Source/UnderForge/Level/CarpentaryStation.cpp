@@ -32,6 +32,7 @@ void ACarpentaryStation::ProcessItem(AForgeMat* material)
 	{
 	case(EResource::R_WOOD):
 		material->Destroy();
+		MakeResource(EResource::R_PROCESSEDWOOD);
 		break;
 	}
 }
@@ -59,6 +60,7 @@ void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
 
 AForgePart * ACarpentaryStation::MakeResource(EResource type)
 {
-	return nullptr;
+	AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+	return ResourceRef;
 }
 

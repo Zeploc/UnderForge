@@ -29,7 +29,7 @@ public:
 	virtual void ItemDectection(class AActor* ,bool entering) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgeMat> ForgeMat;
+		TSubclassOf<class AForgePart> ForgePart;
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);
 
