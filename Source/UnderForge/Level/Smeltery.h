@@ -30,8 +30,8 @@ public:
 	virtual void ProcessItem(AForgeMat* material) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgeMat> ForgeMat;
+		TSubclassOf<class AForgePart> ForgedPart;
 
 	UFUNCTION(BlueprintCallable)
-		class AForgeMat* MakeResource(EResource type);
+		class AForgePart* MakeResource(EResource type);
 };
