@@ -11,6 +11,10 @@ ACarpentaryStation::ACarpentaryStation()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	StationMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
+	CurrentState = 1;
+	PotentiallyInteracting = false;
+
 
 }
 
@@ -32,7 +36,14 @@ void ACarpentaryStation::ProcessItem(AForgeMat* material)
 	{
 	case(EResource::R_WOOD):
 		material->Destroy();
-		MakeResource(EResource::R_PROCESSEDWOOD);
+		if (CurrentState == 1)
+		{
+			MakeResource(EResource::R_PROCESSEDWOOD);
+		}
+		else if (CurrentState == 2)
+		{
+			MakeResource(EResource::R_PROCESSEDWOOD2);
+		}
 		break;
 	}
 }
@@ -46,6 +57,7 @@ void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
 			if (mat->ResourceType == EResource::R_WOOD )
 			{
 				mat->CurrentTouchingStation = this;
+				PotentiallyInteracting = true;
 			}
 		}
 		else
@@ -53,6 +65,7 @@ void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
 			if (mat->ResourceType == EResource::R_WOOD)
 			{
 				mat->CurrentTouchingStation = nullptr;
+				PotentiallyInteracting = false;
 			}
 		}
 	}
@@ -60,7 +73,15 @@ void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
 
 AForgePart * ACarpentaryStation::MakeResource(EResource type)
 {
-	AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-	return ResourceRef;
+	if (type == EResource::R_PROCESSEDWOOD)
+	{
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		return ResourceRef;
+	}
+	else
+	{
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart2, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		return ResourceRef;
+	}
 }
 
