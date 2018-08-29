@@ -66,6 +66,19 @@ void ASmeltery::ItemDectection(AActor* actor, bool entering)
 
 AForgePart * ASmeltery::MakeResource(EResource type)
 {
-	AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-	return ResourceRef;
+	switch (type)
+	{
+		case(EResource::R_STEEL):
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			return ResourceRef;
+		}
+
+		case(EResource::R_REALBRONZE):
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(BronzeForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			return ResourceRef;
+		}
+	}
+	return nullptr;
 }

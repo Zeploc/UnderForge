@@ -34,6 +34,7 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material);
 	virtual void ProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);
+	void ThrowAway(AActor* Actor);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh;
