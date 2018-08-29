@@ -6,7 +6,6 @@
 
 AForgeMat * AResourcePile::GetResource()
 {
-	FActorSpawnParameters SpawnParams;
-	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat->GetClass(), ObjectPosition->GetComponentTransform(), SpawnParams);
+	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 	return ResourceRef;
 }
