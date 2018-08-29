@@ -4,7 +4,7 @@
 //#include "Components/InputComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 AForgePlayer::AForgePlayer()
@@ -20,7 +20,8 @@ AForgePlayer::AForgePlayer()
 void AForgePlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
 }
 
 // Called every frame
