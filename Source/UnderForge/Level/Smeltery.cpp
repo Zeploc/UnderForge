@@ -3,6 +3,9 @@
 #include "Smeltery.h"
 #include "Items/ForgeMat.h"
 #include "Components/BoxComponent.h"
+#include "Engine/World.h"
+#include "Utlities.h"
+
 // Sets default values
 ASmeltery::ASmeltery()
 {
@@ -31,14 +34,17 @@ void ASmeltery::ProcessItem(AForgeMat* material)
 	{
 	case(EResource::R_WOOD):
 		material->Destroy();
+		MakeResource(EResource::R_PROCESSEDWOOD);
 		break;
 
 	case(EResource::R_IRON):
 		material->Destroy();
+		MakeResource(EResource::R_STEEL);
 		break;
 
 	case(EResource::R_BRONZE):
 		material->Destroy();
+		MakeResource(EResource::R_REALBRONZE);
 		break;
 	}
 }
@@ -63,4 +69,10 @@ void ASmeltery::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 		UE_LOG(LogTemp, Warning, TEXT("End"));
 		mat->CurrentTouchingStation = nullptr;
 	}
+}
+
+AForgeMat * ASmeltery::MakeResource(EResource type)
+{
+	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+	return ResourceRef;
 }

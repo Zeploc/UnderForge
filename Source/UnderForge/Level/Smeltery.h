@@ -28,4 +28,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void ProcessItem(AForgeMat* material);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgeMat> ForgeMat;
+
+	UFUNCTION(BlueprintCallable)
+		class AForgeMat* MakeResource(EResource type);
 };
