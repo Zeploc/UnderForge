@@ -24,9 +24,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
+		void DropOnStation();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* PartMesh;
-	
+
+	class AForgeStation* CurrentTouchingStation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EPartType PartType;

@@ -26,7 +26,7 @@ void ASmeltery::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASmeltery::ProcessItem(AForgeMat* material)
+void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	switch (material->ResourceType)
 	{

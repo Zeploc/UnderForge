@@ -31,7 +31,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void ProcessItem(AForgeMat* material);
+	virtual void ProcessMatItem(AForgeMat* material);
+	virtual void ProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)

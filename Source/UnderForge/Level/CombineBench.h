@@ -18,9 +18,10 @@ public:
 
 	ACombineBench();
 
-	void VirtualOverrideFunc(AActor* OverlappActor);
+	void ItemDectection(class AActor* OverlappActor, bool entering);
 	void ChangeMesh();
 	void ThrowAway(AActor* Actor);
+	virtual void ProcessPartItem(AForgePart* Part) override;
 	
 	TArray<class AForgePart*> CurrentParts;
 

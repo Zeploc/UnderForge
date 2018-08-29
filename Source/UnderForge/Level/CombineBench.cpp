@@ -13,10 +13,16 @@ ACombineBench::ACombineBench()
 	ObjectPosition->SetupAttachment(CurrentWeaponMesh);
 }
 
-void ACombineBench::VirtualOverrideFunc(AActor* OverlappActor)
+void ACombineBench::ItemDectection(class AActor* OverlappActor, bool entering)
 {
 	if (AForgePart* Part = Cast<AForgePart>(OverlappActor))
 	{
+		if (!entering)
+		{
+			Part->CurrentTouchingStation = nullptr;
+			return;
+		}
+
 		for (int i = 0; i < CurrentParts.Num(); i++)
 		{
 			if (CurrentParts[i]->PartType == Part->PartType) // Check if it already has that part type
@@ -25,10 +31,7 @@ void ACombineBench::VirtualOverrideFunc(AActor* OverlappActor)
 				return; // Stop checking
 			}
 		}
-		CurrentParts.Add(Part);
-		Part->DisableComponentsSimulatePhysics();
-		Part->PartMesh->SetVisibility(false);
-		ChangeMesh();
+		Part->CurrentTouchingStation = this;
 	}
 	else
 	{
@@ -46,4 +49,13 @@ void ACombineBench::ChangeMesh()
 void ACombineBench::ThrowAway(AActor * Actor)
 {
 	// YEET THAT BOI
+}
+
+void ACombineBench::ProcessPartItem(AForgePart * Part)
+{
+	CurrentParts.Add(Part);
+	Part->DisableComponentsSimulatePhysics();
+	Part->PartMesh->SetVisibility(false);
+	Part->PartMesh->SetCollisionProfileName("OverlapAll");
+	ChangeMesh();
 }

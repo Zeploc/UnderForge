@@ -29,7 +29,7 @@ void AForgeMat::DropOnStation()
 {
 	if (CurrentTouchingStation)
 	{
-		CurrentTouchingStation->ProcessItem(this);
+		CurrentTouchingStation->ProcessMatItem(this);
 	}
 }
 
