@@ -33,13 +33,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
 		void DropOnStation();
 
-<<<<<<< .merge_file_a12168
 	AForgeStation* CurrentTouchingStation;
-=======
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* MatMesh;
-
-	ASmeltery* CurrentTouchingStation;
->>>>>>> .merge_file_a12156
-	
 };

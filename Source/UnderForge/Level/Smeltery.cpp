@@ -12,9 +12,6 @@ ASmeltery::ASmeltery()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	CollisionBox->bGenerateOverlapEvents = true;
-	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ASmeltery::OnOverlapBegin);
-	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &ASmeltery::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
@@ -45,28 +42,24 @@ void ASmeltery::ProcessItem(AForgeMat* material)
 	}
 }
 
-void ASmeltery::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ASmeltery::ItemDectection(AActor* actor, bool entering)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin"));
-	if (AForgeMat* mat = Cast<AForgeMat>(OtherActor))
+	if (AForgeMat* mat = Cast<AForgeMat>(actor))
 	{
-		if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+		if (entering)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Begin"));
-			mat->CurrentTouchingStation = this;
+			if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+			{
+				mat->CurrentTouchingStation = this;
+			}
 		}
-	}
-}
-
-
-void ASmeltery::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	UE_LOG(LogTemp, Warning, TEXT("End"));
-	if (AForgeMat* mat = Cast<AForgeMat>(OtherActor))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("End"));
-		mat->CurrentTouchingStation = nullptr;
+		else
+		{
+			if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+			{
+				mat->CurrentTouchingStation = nullptr;
+			}
+		}
 	}
 }
 

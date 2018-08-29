@@ -18,6 +18,10 @@ AForgeStation::AForgeStation()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	CollisionBox->SetupAttachment(StationMesh);
+
+	CollisionBox->bGenerateOverlapEvents = true;
+	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AForgeStation::OnOverlapBegin);
+	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AForgeStation::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
@@ -34,7 +38,22 @@ void AForgeStation::Tick(float DeltaTime)
 
 void AForgeStation::ProcessItem(AForgeMat * material)
 {
+}
 
+void AForgeStation::ItemDectection(AActor *, bool entering)
+{
+}
+
+void AForgeStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ItemDectection(OtherActor, true);
+}
+
+
+void AForgeStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	ItemDectection(OtherActor,false);
 }
 
 

@@ -2,6 +2,7 @@
 
 #include "CarpentaryStation.h"
 #include "Items/ForgeMat.h"
+#include "Items/ForgePart.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
@@ -10,9 +11,7 @@ ACarpentaryStation::ACarpentaryStation()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	CollisionBox->bGenerateOverlapEvents = true;
-	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ACarpentaryStation::OnOverlapBegin);
-	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &ACarpentaryStation::OnOverlapEnd);
+
 }
 
 // Called when the game starts or when spawned
@@ -33,38 +32,33 @@ void ACarpentaryStation::ProcessItem(AForgeMat* material)
 	{
 	case(EResource::R_WOOD):
 		material->Destroy();
-		MakeResource();
 		break;
 	}
 }
 
-void ACarpentaryStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin"));
-	if (AForgeMat* mat = Cast<AForgeMat>(OtherActor))
+	if (AForgeMat* mat = Cast<AForgeMat>(actor))
 	{
-		if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+		if (entering)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Begin"));
-			mat->CurrentTouchingStation = this;
+			if (mat->ResourceType == EResource::R_WOOD )
+			{
+				mat->CurrentTouchingStation = this;
+			}
+		}
+		else
+		{
+			if (mat->ResourceType == EResource::R_WOOD)
+			{
+				mat->CurrentTouchingStation = nullptr;
+			}
 		}
 	}
 }
 
-
-void ACarpentaryStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+AForgePart * ACarpentaryStation::MakeResource(EResource type)
 {
-	UE_LOG(LogTemp, Warning, TEXT("End"));
-	if (AForgeMat* mat = Cast<AForgeMat>(OtherActor))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("End"));
-		mat->CurrentTouchingStation = nullptr;
-	}
+	return nullptr;
 }
 
-AForgeMat * ACarpentaryStation::MakeResource()
-{
-	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-	return ResourceRef;
-}
