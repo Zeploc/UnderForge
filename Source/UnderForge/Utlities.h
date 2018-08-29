@@ -18,6 +18,9 @@ enum class EResource : uint8
 	R_PROCESSEDWOOD2 UMETA(DisplayName = "ProcessedWood2"),
 	R_STEEL UMETA(DisplayName = "Steel"),
 	R_REALBRONZE UMETA(DisplayName = "RealBronze"),
+
+
+	R_NONE UMETA(DisplayName = "Nothing"),
 };
 
 

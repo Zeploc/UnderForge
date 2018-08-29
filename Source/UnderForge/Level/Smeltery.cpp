@@ -12,18 +12,25 @@ ASmeltery::ASmeltery()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	SmeltingTimePassed = 0.0f;
+	bSmeltingMinigamePlaying = false;
+	SmeltingTimeKABOOM = 10.0f;
+	SmeltingTimeNeeded = 5.0f;
+	SmeltingTimeMax = 8.0f;
 }
 
 // Called when the game starts or when spawned
 void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 // Called every frame
 void ASmeltery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	SmeltingMinigame(DeltaTime);
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
@@ -31,13 +38,15 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 	switch (material->ResourceType)
 	{
 	case(EResource::R_IRON):
+		CurrentlyProcessing = material->ResourceType;
 		material->Destroy();
-		MakeResource(EResource::R_STEEL);
+		bSmeltingMinigamePlaying = true;
 		break;
 
 	case(EResource::R_BRONZE):
+		CurrentlyProcessing = material->ResourceType;
 		material->Destroy();
-		MakeResource(EResource::R_REALBRONZE);
+		bSmeltingMinigamePlaying = true;
 		break;
 	}
 }
@@ -68,4 +77,57 @@ AForgePart * ASmeltery::MakeResource(EResource type)
 {
 	AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 	return ResourceRef;
+}
+
+void ASmeltery::SmeltingMinigame(float DeltaTime)
+{
+	if (bSmeltingMinigamePlaying)
+	{
+		SmeltingTimePassed += DeltaTime;
+		if (SmeltingTimePassed > 10.0f)
+		{
+			bSmeltingMinigamePlaying = false;
+			CurrentlyProcessing = EResource::R_NONE;
+			//KABOOM
+		}
+	}
+}
+
+void ASmeltery::MiniGameComplete()
+{
+	bSmeltingMinigamePlaying = false;
+	if (SmeltingTimePassed < 5.0f)
+	{
+		bSmeltingMinigamePlaying = false;
+		switch (CurrentlyProcessing)
+		{
+		case(EResource::R_IRON):
+			MakeResource(EResource::R_IRON);
+			break;
+		case(EResource::R_BRONZE):
+			MakeResource(EResource::R_BRONZE);
+			break;
+		}
+		CurrentlyProcessing = EResource::R_NONE;
+	}
+	else if (SmeltingTimePassed < 8.0f)
+	{
+		bSmeltingMinigamePlaying = false;
+		switch (CurrentlyProcessing)
+		{
+		case(EResource::R_IRON):
+			MakeResource(EResource::R_STEEL);
+			break;
+		case(EResource::R_BRONZE):
+			MakeResource(EResource::R_REALBRONZE);
+			break;
+		}
+		CurrentlyProcessing = EResource::R_NONE;
+	}
+	else
+	{
+		bSmeltingMinigamePlaying = false;
+		CurrentlyProcessing = EResource::R_NONE;
+		//KABOOM
+	}
 }

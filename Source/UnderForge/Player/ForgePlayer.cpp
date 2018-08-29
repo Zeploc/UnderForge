@@ -11,6 +11,7 @@
 #include "Items/ForgePart.h"
 #include "Utlities.h"
 #include "Level/CarpentaryStation.h"
+#include "Level/Smeltery.h"
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -76,7 +77,16 @@ void AForgePlayer::Interact()
 	//{
 	//	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact Hit object " + hit.Actor.Get()->GetFName().ToString()));
 	//}
-
+	UE_LOG(LogTemp, Warning, TEXT("Interact"));
+	if (ASmeltery* smelty = Cast<ASmeltery>(hit.Actor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
+		if (smelty->bSmeltingMinigamePlaying)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
+			smelty->MiniGameComplete();
+		}
+	}
 }
 
 void AForgePlayer::SecondaryInteract()
@@ -95,7 +105,6 @@ void AForgePlayer::SecondaryInteract()
 						{
 							station->MorphStates();
 						}
-
 					}
 				}
 			}

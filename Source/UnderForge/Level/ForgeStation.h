@@ -35,6 +35,7 @@ public:
 	virtual void ProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);
 
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh;
 

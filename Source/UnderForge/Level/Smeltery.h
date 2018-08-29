@@ -19,6 +19,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+
+	float SmeltingTimePassed;
+	float SmeltingTimeMax;
+	float SmeltingTimeNeeded;
+	float SmeltingTimeKABOOM;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -26,9 +32,16 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 	virtual void ItemDectection(class AActor*, bool entering) override;
 
+	void SmeltingMinigame(float DeltaTime);
+	void MiniGameComplete();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> ForgedPart;
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);
+
+
+	bool bSmeltingMinigamePlaying;
+	EResource CurrentlyProcessing;
 };
