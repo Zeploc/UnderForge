@@ -32,11 +32,6 @@ void ASmeltery::ProcessItem(AForgeMat* material)
 {
 	switch (material->ResourceType)
 	{
-	case(EResource::R_WOOD):
-		material->Destroy();
-		MakeResource(EResource::R_PROCESSEDWOOD);
-		break;
-
 	case(EResource::R_IRON):
 		material->Destroy();
 		MakeResource(EResource::R_STEEL);
@@ -55,8 +50,11 @@ void ASmeltery::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 	UE_LOG(LogTemp, Warning, TEXT("Begin"));
 	if (AForgeMat* mat = Cast<AForgeMat>(OtherActor))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Begin"));
-		mat->CurrentTouchingStation = this;
+		if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Begin"));
+			mat->CurrentTouchingStation = this;
+		}
 	}
 }
 
