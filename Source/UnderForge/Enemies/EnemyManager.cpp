@@ -47,8 +47,6 @@ void AEnemyManager::SpawnEnemy()
 			int random = rand() % SpawnLocations.Num();
 			FRotator rotator;
 			FVector spawnLoc = SpawnLocations[random];
-			UE_LOG(LogTemp, Warning, TEXT("NUM: %d"), SpawnLocations.Num());
-			UE_LOG(LogTemp, Warning, TEXT("Location: %s"), *spawnLoc.ToString());
 			EnemyArray.Push(Cast<AEnemiesZombo>(world->SpawnActor<AEnemiesZombo>(EnemyZomboClass, spawnLoc, rotator, spawnParams)));
 		}
 	}

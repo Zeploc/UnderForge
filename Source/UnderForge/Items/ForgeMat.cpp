@@ -2,7 +2,7 @@
 
 #include "ForgeMat.h"
 #include "Level/ForgeStation.h"
-
+#include "Level/Smeltery.h"
 // Sets default values
 AForgeMat::AForgeMat()
 {

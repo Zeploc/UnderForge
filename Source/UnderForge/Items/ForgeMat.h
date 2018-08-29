@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ForgeMat.generated.h"
 
-class AForgeStation;
+class ASmeltery;
 
 UENUM(BlueprintType)
 enum class EResource : uint8
@@ -37,6 +37,6 @@ public:
 		EResource ResourceType;
 	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
 		void DropOnStation();
-	AForgeStation* CurrentTouchingStation;
+	ASmeltery* CurrentTouchingStation;
 	
 };
