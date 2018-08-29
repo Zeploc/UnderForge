@@ -8,7 +8,7 @@
 #include "ForgeMat.generated.h"
 
 
-class ASmeltery;
+class AForgeStation;
 
 UCLASS()
 class UNDERFORGE_API AForgeMat : public AActor
@@ -33,9 +33,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
 		void DropOnStation();
 
+	AForgeStation* CurrentTouchingStation;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* MatMesh;
-
-	ASmeltery* CurrentTouchingStation;
-	
 };

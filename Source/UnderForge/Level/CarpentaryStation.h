@@ -5,30 +5,32 @@
 #include "CoreMinimal.h"
 #include "Level/ForgeStation.h"
 #include "Utlities.h"
-#include "Smeltery.generated.h"
+#include "CarpentaryStation.generated.h"
+
 
 UCLASS()
-class UNDERFORGE_API ASmeltery : public AForgeStation
+class UNDERFORGE_API ACarpentaryStation : public AForgeStation
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	ASmeltery();
+	ACarpentaryStation();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-public:	
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void ProcessItem(AForgeMat* material) override;
-	virtual void ItemDectection(class AActor*, bool entering) override;
+	virtual void ItemDectection(class AActor* ,bool entering) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> ForgedPart;
-
+		TSubclassOf<class AForgeMat> ForgeMat;
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);
+
 };
