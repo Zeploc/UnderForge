@@ -59,7 +59,6 @@ void ASmeltery::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 	}
 }
 
-
 void ASmeltery::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	UE_LOG(LogTemp, Warning, TEXT("End"));

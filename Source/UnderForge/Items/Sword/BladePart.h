@@ -4,21 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Items/ForgePart.h"
+#include "Utlities.h"
 #include "BladePart.generated.h"
 
-UENUM(BlueprintType)
-enum class EBladeMat : uint8
-{
-	BM_BRONZE UMETA(DisplayName = "Bronze"),
-	BM_IRON UMETA(DisplayName = "Iron"),
-};
-
-UENUM(BlueprintType)
-enum class EBladeType : uint8
-{
-	BT_BROADSWORD UMETA(DisplayName = "Broadsword"),
-	BT_KRIS UMETA(DisplayName = "Kris"),
-};
 
 /**
  * 

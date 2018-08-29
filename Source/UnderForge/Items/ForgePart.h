@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utlities.h"
 #include "ForgePart.generated.h"
 
 UCLASS()
@@ -26,5 +27,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* PartMesh;
 	
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		EPartType PartType;
 };
