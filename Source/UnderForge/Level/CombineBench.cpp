@@ -22,7 +22,11 @@ void ACombineBench::ItemDectection(class AActor* OverlappActor, bool entering)
 			Part->CurrentTouchingStation = nullptr;
 			return;
 		}
-
+		if (Part->PartType != EPartType::PT_BLADE && Part->PartType != EPartType::PT_HANDLE)
+		{
+			ThrowAway(OverlappActor); // if it does throw it away
+			return; // Stop checking
+		}
 		for (int i = 0; i < CurrentParts.Num(); i++)
 		{
 			if (CurrentParts[i]->PartType == Part->PartType) // Check if it already has that part type
@@ -44,11 +48,6 @@ void ACombineBench::ItemDectection(class AActor* OverlappActor, bool entering)
 void ACombineBench::ChangeMesh()
 {
 
-}
-
-void ACombineBench::ThrowAway(AActor * Actor)
-{
-	// YEET THAT BOI
 }
 
 void ACombineBench::ProcessPartItem(AForgePart * Part)

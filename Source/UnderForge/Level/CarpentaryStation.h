@@ -28,7 +28,8 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 	virtual void ItemDectection(class AActor* ,bool entering) override;
 
-	void MorphStates();
+	UFUNCTION(BlueprintCallable)
+		void MorphStates();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> ForgePart;

@@ -49,5 +49,6 @@ UENUM(BlueprintType)
 enum class EPartType : uint8
 {
 	PT_BLADE UMETA(DisplayName = "Blade"),
+	PT_UNFORMEDBLADE UMETA(DisplayName = "Unformed Blade"),
 	PT_HANDLE UMETA(DisplayName = "Handle"),
 };

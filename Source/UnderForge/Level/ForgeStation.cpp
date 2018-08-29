@@ -49,6 +49,11 @@ void AForgeStation::ItemDectection(AActor *, bool entering)
 {
 }
 
+void AForgeStation::ThrowAway(AActor * Actor)
+{
+	// YEET THAT BOI
+}
+
 void AForgeStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
