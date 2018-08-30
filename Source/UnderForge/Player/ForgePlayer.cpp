@@ -11,6 +11,8 @@
 #include "Items/ForgePart.h"
 #include "Utlities.h"
 #include "Level/CarpentaryStation.h"
+#include "Level/Smeltery.h"
+#include "Level/ForgeAnvil.h"
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -65,7 +67,7 @@ void AForgePlayer::Interact()
 	FVector EndLocation = GetActorLocation() + GetActorRotation().Vector() * InteractRange;
 	FCollisionQueryParams Traceparams(TEXT("Interact Trace"), false, this);
 
-	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_GameTraceChannel1, Traceparams);
+	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_EngineTraceChannel3, Traceparams);
 	//AInteractActor* InteractActor = Cast<AInteractActor>(hit.Actor);
 	//if (InteractActor)
 	//{
@@ -76,7 +78,25 @@ void AForgePlayer::Interact()
 	//{
 	//	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact Hit object " + hit.Actor.Get()->GetFName().ToString()));
 	//}
-
+	UE_LOG(LogTemp, Warning, TEXT("Interact"));
+	if (ASmeltery* smelty = Cast<ASmeltery>(hit.Actor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
+		if (smelty->bSmeltingMinigamePlaying)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
+			smelty->MiniGameComplete();
+		}
+	}
+	else if (AForgeAnvil* anvil = Cast<AForgeAnvil>(hit.Actor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
+		if (anvil->bHammerMinigamePlaying)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
+			anvil->HammeringCycle();
+		}
+	}
 }
 
 void AForgePlayer::SecondaryInteract()
@@ -95,7 +115,6 @@ void AForgePlayer::SecondaryInteract()
 						{
 							station->MorphStates();
 						}
-
 					}
 				}
 			}

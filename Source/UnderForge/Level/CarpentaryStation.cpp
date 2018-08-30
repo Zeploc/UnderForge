@@ -3,6 +3,7 @@
 #include "CarpentaryStation.h"
 #include "Items/ForgeMat.h"
 #include "Items/ForgePart.h"
+#include "Items/Sword/HandlePart.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
@@ -15,9 +16,15 @@ ACarpentaryStation::ACarpentaryStation()
 	StationMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
 	StationMesh2->SetupAttachment(StationMesh);
 	StationMesh2->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
+	StationMesh2->SetVisibility(true, false);
+
+	StationMesh3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh3"));
+	StationMesh3->SetupAttachment(StationMesh);
+	StationMesh3->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	StationMesh3->SetVisibility(false, false);
+
 	CurrentState = 1;
 	PotentiallyInteracting = false;
-	StationMesh2->SetVisibility(false, false);
 }
 
 // Called when the game starts or when spawned
@@ -30,23 +37,21 @@ void ACarpentaryStation::BeginPlay()
 void ACarpentaryStation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FRotator rotate(0,0,1);
+	StationMesh3->AddLocalRotation(rotate);
+	StationMesh2->AddLocalRotation(rotate);
 }
 
 void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
-	switch (material->ResourceType)
+	material->Destroy();
+	if (CurrentState == 1)
 	{
-	case(EResource::R_WOOD):
-		material->Destroy();
-		if (CurrentState == 1)
-		{
-			MakeResource(EResource::R_PROCESSEDWOOD);
-		}
-		else if (CurrentState == 2)
-		{
-			MakeResource(EResource::R_PROCESSEDWOOD2);
-		}
-		break;
+		MakeResource(EHandleType::HT_CURVED);
+	}
+	else if (CurrentState == 2)
+	{
+		MakeResource(EHandleType::HT_STRAIGHT);
 	}
 }
 
@@ -79,27 +84,31 @@ void ACarpentaryStation::MorphStates()
 	{
 		CurrentState = 2;
 		StationMesh2->SetVisibility(true, false);
-		StationMesh->SetVisibility(false, false);
+		StationMesh3->SetVisibility(false, false);
 	}
 	else if(CurrentState == 2)
 	{
 		CurrentState = 1;
 		StationMesh2->SetVisibility(false, false);
-		StationMesh->SetVisibility(true, false);
+		StationMesh3->SetVisibility(true, false);
 	}
 }
 
-AForgePart * ACarpentaryStation::MakeResource(EResource type)
+AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 {
-	if (type == EResource::R_PROCESSEDWOOD)
+	switch (type)
 	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+	case EHandleType::HT_STRAIGHT:
+	{
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(StraightHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
-	else
+	case EHandleType::HT_CURVED:
 	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart2, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(CurvedHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
+	}
+	return nullptr;
 }
 

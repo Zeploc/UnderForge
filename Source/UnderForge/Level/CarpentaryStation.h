@@ -28,19 +28,23 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 	virtual void ItemDectection(class AActor* ,bool entering) override;
 
-	void MorphStates();
+	UFUNCTION(BlueprintCallable)
+		void MorphStates();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> ForgePart;
+		TSubclassOf<class AHandlePart> StraightHandlePart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> ForgePart2;
+		TSubclassOf<class AHandlePart> CurvedHandlePart;
 
 	UFUNCTION(BlueprintCallable)
-		class AForgePart* MakeResource(EResource type);
+		class AForgePart* MakeResource(EHandleType type);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh2;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* StationMesh3;
+
 	int CurrentState;
 	bool PotentiallyInteracting;
 };

@@ -32,9 +32,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
-	void Interact();
-	void SecondaryInteract();
+	UFUNCTION(BlueprintCallable)
+		void Interact();
+	UFUNCTION(BlueprintCallable)
+		void SecondaryInteract();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractRange = 100.0f;
 	

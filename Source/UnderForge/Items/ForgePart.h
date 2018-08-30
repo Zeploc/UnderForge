@@ -34,4 +34,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EPartType PartType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		EResource ResourceType;
 };

@@ -7,6 +7,7 @@
 #include "Utlities.h"
 #include "Smeltery.generated.h"
 
+
 UCLASS()
 class UNDERFORGE_API ASmeltery : public AForgeStation
 {
@@ -19,6 +20,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+
+	float SmeltingTimeMax;
+	float SmeltingTimeNeeded;
+	float SmeltingTimeKABOOM;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -26,9 +32,29 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 	virtual void ItemDectection(class AActor*, bool entering) override;
 
+	void SmeltingMinigame(float DeltaTime);
+	void MiniGameComplete();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> ForgedPart;
+		TSubclassOf<class AForgePart> IronForgedPart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> BronzeForgedPart;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgeMat> IronMat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgeMat> BronzeMat;
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);
+	UFUNCTION(BlueprintCallable)
+		class AForgeMat* MakeMat(EResource type);
+
+	bool bSmeltingMinigamePlaying;
+	UPROPERTY(BlueprintReadWrite)
+		float SmeltingTimePassed;
+	EResource CurrentlyProcessing;
+	FTimerHandle timer;
 };

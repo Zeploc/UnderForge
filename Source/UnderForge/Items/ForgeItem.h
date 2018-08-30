@@ -25,10 +25,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<class AForgePart*> ForceParts;
-
-	UFUNCTION(BlueprintCallable)
-		virtual void AddPart(class AForgePart* ForgePart);
 	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* ItemMesh;
 };
