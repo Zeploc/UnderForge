@@ -52,6 +52,7 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 			ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			NewSwordItem->ForgeParts.Add(SwordPart);
 			CurrentItem = NewSwordItem;
+			Part->Destroy();
 		}
 		else // Is not valid part
 		{

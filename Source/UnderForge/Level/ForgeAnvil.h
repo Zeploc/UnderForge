@@ -40,6 +40,17 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh2;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* StationMesh3;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* StationMesh4;
+
+
+
+	int CurrentState;
+	bool PotentiallyInteracting;
+
 	float HammerTimeMax;
 	float HammerTimeNeeded;
 	float HammerTimeKABOOM;

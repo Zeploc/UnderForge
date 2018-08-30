@@ -22,7 +22,6 @@ enum class EResource : uint8
 	R_NONE UMETA(DisplayName = "Nothing"),
 };
 
-
 UENUM(BlueprintType)
 enum class EBladeMat : uint8
 {

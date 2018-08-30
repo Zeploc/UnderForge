@@ -95,6 +95,7 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 		{
 			bHammerMinigamePlaying = false;
 			HammerTimePassed = 0.0f;
+			CurrentResource = EBladeMat::BM_NONE;
 			CurrentlyProcessing = EResource::R_NONE;
 			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 			//KABOOM
@@ -118,15 +119,33 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 
 void AForgeAnvil::HammeringCycle()
 {
-	HammerTimePassed = 0.0f;
-	HammingCycles++;
+	if (HammerTimePassed > HammerTimeNeeded && HammerTimePassed < HammerTimeMax)
+	{
+		HammingCycles++;
+		HammerTimePassed = 0.0f;
+	}
+	else
+	{
+		bHammerMinigamePlaying = false;
+		CurrentResource = EBladeMat::BM_NONE;
+		CurrentlyProcessing = EResource::R_NONE;
+		HammerTimePassed = 0.0f;
+		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
+
+
+		HammingCycles = 0;
+		//KABOOM
+	}
 	if (HammingCycles >= MaxCycles)
 	{
 		MakeResource(CurrentResource);
-		CurrentResource = EBladeMat::BM_NONE;
 		bHammerMinigamePlaying = false;
+		CurrentResource = EBladeMat::BM_NONE;
+		CurrentlyProcessing = EResource::R_NONE;
 		HammerTimePassed = 0.0f;
+
 		StationMesh2->SetVisibility(false, false);
+		HammingCycles = 0;
 	}
 }
 

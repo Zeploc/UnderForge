@@ -4,8 +4,6 @@
 
 bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
 {
-	bool HasBlade = false;
-	bool Hashandle = false;
 	for (int i = 0; i < ForgeParts.Num(); i++)
 	{
 		if (IsHandle(ForgeParts[i]) && IsHandle(PartToCheck))
@@ -17,6 +15,7 @@ bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
 			return false;
 		}
 	}
+	return true;
 }
 
 bool ASwordItem::IsHandle(ESwordPart SwordPart)

@@ -42,6 +42,9 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh2;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* StationMesh3;
+
 	int CurrentState;
 	bool PotentiallyInteracting;
 };
