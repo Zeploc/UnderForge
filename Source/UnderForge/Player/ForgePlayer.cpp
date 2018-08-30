@@ -12,6 +12,7 @@
 #include "Utlities.h"
 #include "Level/CarpentaryStation.h"
 #include "Level/Smeltery.h"
+#include "Level/ForgeAnvil.h"
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -85,6 +86,15 @@ void AForgePlayer::Interact()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
 			smelty->MiniGameComplete();
+		}
+	}
+	else if (AForgeAnvil* anvil = Cast<AForgeAnvil>(hit.Actor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
+		if (anvil->bHammerMinigamePlaying)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
+			anvil->HammeringCycle();
 		}
 	}
 }

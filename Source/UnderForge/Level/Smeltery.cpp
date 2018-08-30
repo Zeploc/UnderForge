@@ -35,19 +35,22 @@ void ASmeltery::Tick(float DeltaTime)
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
-	switch (material->ResourceType)
+	if (!bSmeltingMinigamePlaying)
 	{
-	case(EResource::R_IRON):
-		CurrentlyProcessing = material->ResourceType;
-		material->Destroy();
-		bSmeltingMinigamePlaying = true;
-		break;
+		switch (material->ResourceType)
+		{
+		case(EResource::R_IRON):
+			CurrentlyProcessing = material->ResourceType;
+			material->Destroy();
+			bSmeltingMinigamePlaying = true;
+			break;
 
-	case(EResource::R_BRONZE):
-		CurrentlyProcessing = material->ResourceType;
-		material->Destroy();
-		bSmeltingMinigamePlaying = true;
-		break;
+		case(EResource::R_BRONZE):
+			CurrentlyProcessing = material->ResourceType;
+			material->Destroy();
+			bSmeltingMinigamePlaying = true;
+			break;
+		}
 	}
 }
 
@@ -82,6 +85,7 @@ void ASmeltery::SmeltingMinigame(float DeltaTime)
 		if (SmeltingTimePassed > 10.0f)
 		{
 			bSmeltingMinigamePlaying = false;
+			SmeltingTimePassed = 0.0f;
 			CurrentlyProcessing = EResource::R_NONE;
 			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 			//KABOOM

@@ -29,6 +29,8 @@ enum class EBladeMat : uint8
 {
 	BM_BRONZE UMETA(DisplayName = "Bronze"),
 	BM_IRON UMETA(DisplayName = "Iron"),
+
+	BM_NONE UMETA(DisplayName = "None"),
 };
 
 UENUM(BlueprintType)

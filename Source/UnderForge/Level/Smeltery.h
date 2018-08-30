@@ -22,7 +22,6 @@ protected:
 	virtual void BeginPlay() override;
 
 
-	float SmeltingTimePassed;
 	float SmeltingTimeMax;
 	float SmeltingTimeNeeded;
 	float SmeltingTimeKABOOM;
@@ -52,7 +51,10 @@ public:
 		class AForgePart* MakeResource(EResource type);
 	UFUNCTION(BlueprintCallable)
 		class AForgeMat* MakeMat(EResource type);
+
 	bool bSmeltingMinigamePlaying;
+	UPROPERTY(BlueprintReadWrite)
+		float SmeltingTimePassed;
 	EResource CurrentlyProcessing;
 	FTimerHandle timer;
 };

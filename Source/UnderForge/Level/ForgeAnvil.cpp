@@ -3,6 +3,37 @@
 #include "ForgeAnvil.h"
 #include "Items/Sword/BladePart.h"
 #include "Engine/World.h"
+#include "Engine.h"
+
+
+AForgeAnvil::AForgeAnvil()
+{
+	HammerTimeMax = 2.0f;
+	HammerTimeNeeded = 1.0f;
+	HammerTimeKABOOM = 3.0f;
+	HammingCycles = 0;
+	MaxCycles = 5;
+
+	bHammerMinigamePlaying = false;
+	HammerTimePassed = 0.0f;
+
+	StationMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
+	StationMesh2->SetupAttachment(StationMesh);
+	StationMesh2->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	StationMesh2->SetVisibility(false, false);
+
+	CurrentResource = EBladeMat::BM_NONE;
+}
+void AForgeAnvil::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void AForgeAnvil::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	HammeringMinigame(DeltaTime);
+}
 
 void AForgeAnvil::ItemDectection(AActor * OverlappActor, bool entering)
 {
@@ -30,16 +61,63 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	{
 		case(EResource::R_REALBRONZE):
 		{
-			MakeResource(EBladeMat::BM_BRONZE);
+			CurrentResource = EBladeMat::BM_BRONZE;
+			bHammerMinigamePlaying = true;
 			break;
 		}
 		case(EResource::R_STEEL):
 		{
-			MakeResource(EBladeMat::BM_IRON);
+			CurrentResource = EBladeMat::BM_IRON;
+			bHammerMinigamePlaying = true;
 			break;
 		}
 	}
 	Part->Destroy();
+}
+
+void AForgeAnvil::HammeringMinigame(float Deltatime)
+{
+	if (bHammerMinigamePlaying)
+	{
+		HammerTimePassed += Deltatime;
+		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "TimePassed: " + FString::SanitizeFloat(HammerTimePassed));
+		if (HammerTimePassed > HammerTimeKABOOM)
+		{
+			bHammerMinigamePlaying = false;
+			HammerTimePassed = 0.0f;
+			CurrentlyProcessing = EResource::R_NONE;
+			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
+			//KABOOM
+		}
+		else if (HammerTimePassed > HammerTimeNeeded && HammerTimePassed < HammerTimeMax)
+		{
+			if (!StationMesh2->IsVisible())
+			{
+				StationMesh2->SetVisibility(true, false);
+			}
+		}
+		else if (HammerTimePassed < HammerTimeNeeded || HammerTimePassed > HammerTimeMax)
+		{
+			if (StationMesh2->IsVisible())
+			{
+				StationMesh2->SetVisibility(false, false);
+			}
+		}
+	}
+}
+
+void AForgeAnvil::HammeringCycle()
+{
+	HammerTimePassed = 0.0f;
+	HammingCycles++;
+	if (HammingCycles >= MaxCycles)
+	{
+		MakeResource(CurrentResource);
+		CurrentResource = EBladeMat::BM_NONE;
+		bHammerMinigamePlaying = false;
+		HammerTimePassed = 0.0f;
+		StationMesh2->SetVisibility(false, false);
+	}
 }
 
 AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
