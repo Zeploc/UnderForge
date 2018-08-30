@@ -24,14 +24,13 @@ ASmeltery::ASmeltery()
 void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetTimerManager().SetTimer(timer, this, &ASmeltery::SmeltingMinigame, 0.5f, true);
 }
 
 // Called every frame
 void ASmeltery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SmeltingMinigame();
+	SmeltingMinigame(DeltaTime);
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
@@ -74,12 +73,12 @@ void ASmeltery::ItemDectection(AActor* actor, bool entering)
 }
 
 
-void ASmeltery::SmeltingMinigame()
+void ASmeltery::SmeltingMinigame(float DeltaTime)
 {
 	if (bSmeltingMinigamePlaying)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Time %f"), &SmeltingTimePassed);
-		SmeltingTimePassed += 0.5f;
+		SmeltingTimePassed += DeltaTime;
+		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
 		if (SmeltingTimePassed > 10.0f)
 		{
 			bSmeltingMinigamePlaying = false;

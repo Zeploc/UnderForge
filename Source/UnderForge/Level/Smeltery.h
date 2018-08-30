@@ -33,7 +33,7 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 	virtual void ItemDectection(class AActor*, bool entering) override;
 
-	void SmeltingMinigame();
+	void SmeltingMinigame(float DeltaTime);
 	void MiniGameComplete();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
