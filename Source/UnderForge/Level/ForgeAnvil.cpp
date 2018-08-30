@@ -4,10 +4,12 @@
 #include "Items/Sword/BladePart.h"
 #include "Engine/World.h"
 #include "Engine.h"
-
+#include <ctime>
 
 AForgeAnvil::AForgeAnvil()
 {
+	srand(static_cast <unsigned> (time(0)));
+
 	HammerTimeMax = 2.0f;
 	HammerTimeNeeded = 1.0f;
 	HammerTimeKABOOM = 3.0f;
@@ -95,6 +97,8 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 		{
 			bHammerMinigamePlaying = false;
 			HammerTimePassed = 0.0f;
+			HammerTimeMax = 2.0f;
+			HammerTimeNeeded = 1.0f;
 			CurrentResource = EBladeMat::BM_NONE;
 			CurrentlyProcessing = EResource::R_NONE;
 			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
@@ -143,10 +147,19 @@ void AForgeAnvil::HammeringCycle()
 		CurrentResource = EBladeMat::BM_NONE;
 		CurrentlyProcessing = EResource::R_NONE;
 		HammerTimePassed = 0.0f;
-
+		HammerTimeMax = 2.0f;
+		HammerTimeNeeded = 1.0f;
 		StationMesh2->SetVisibility(false, false);
 		HammingCycles = 0;
 	}
+	RandomizeHammeringWindow();
+}
+
+void AForgeAnvil::RandomizeHammeringWindow()
+{
+	float r = 0.5f + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/ (2.6f - 0.5f));
+	HammerTimeMax = r + 0.3f;
+	HammerTimeNeeded = r - 0.3f;
 }
 
 AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
