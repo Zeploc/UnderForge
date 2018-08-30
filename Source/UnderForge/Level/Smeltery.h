@@ -24,6 +24,7 @@ protected:
 
 	float SmeltingTimeMax;
 	float SmeltingTimeNeeded;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float SmeltingTimeKABOOM;
 public:	
 	// Called every frame
@@ -57,4 +58,7 @@ public:
 		float SmeltingTimePassed;
 	EResource CurrentlyProcessing;
 	FTimerHandle timer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float CurrentRemainingTime = 0.0f;
 };

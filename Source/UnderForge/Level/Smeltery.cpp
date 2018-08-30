@@ -81,11 +81,13 @@ void ASmeltery::SmeltingMinigame(float DeltaTime)
 	if (bSmeltingMinigamePlaying)
 	{
 		SmeltingTimePassed += DeltaTime;
+		CurrentRemainingTime = SmeltingTimeNeeded - SmeltingTimePassed;
 		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
-		if (SmeltingTimePassed > 10.0f)
+		if (SmeltingTimePassed > SmeltingTimeKABOOM)
 		{
 			bSmeltingMinigamePlaying = false;
 			SmeltingTimePassed = 0.0f;
+			CurrentRemainingTime = 0.0f;
 			CurrentlyProcessing = EResource::R_NONE;
 			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 			//KABOOM
@@ -96,7 +98,7 @@ void ASmeltery::SmeltingMinigame(float DeltaTime)
 void ASmeltery::MiniGameComplete()
 {
 	bSmeltingMinigamePlaying = false;
-	if (SmeltingTimePassed < 5.0f)
+	if (SmeltingTimePassed < SmeltingTimeNeeded)
 	{
 		bSmeltingMinigamePlaying = false;
 		switch (CurrentlyProcessing)
@@ -110,7 +112,7 @@ void ASmeltery::MiniGameComplete()
 		}
 		CurrentlyProcessing = EResource::R_NONE;
 	}
-	else if (SmeltingTimePassed < 8.0f)
+	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
 	{
 		bSmeltingMinigamePlaying = false;
 		switch (CurrentlyProcessing)
