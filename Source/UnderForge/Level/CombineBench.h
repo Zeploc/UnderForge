@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Level/ForgeStation.h"
+#include "Utlities.h"
 #include "CombineBench.generated.h"
 
 /**
@@ -22,8 +23,9 @@ public:
 	void ChangeMesh();
 	virtual void ProcessPartItem(AForgePart* Part) override;
 	
-	TArray<class AForgePart*> CurrentParts;
+	TArray<ESwordPart> CurrentParts;
 
+	class AForgeItem* CurrentItem;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentWeaponMesh;

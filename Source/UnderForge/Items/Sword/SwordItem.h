@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Items/ForgeItem.h"
+#include "Utlities.h"
 #include "SwordItem.generated.h"
 
 
@@ -16,7 +17,12 @@ class UNDERFORGE_API ASwordItem : public AForgeItem
 	GENERATED_BODY()
 	
 
-	UFUNCTION(BlueprintCallable)
-		virtual void AddPart(class AForgePart* ForgePart) override;	
+public:
+	bool CanHavePart(ESwordPart PartToCheck);
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<ESwordPart> ForgeParts;
+
+	bool IsHandle(ESwordPart SwordPart);
+	bool IsBlade(ESwordPart SwordPart);
 };

@@ -32,13 +32,13 @@ public:
 		void MorphStates();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> ForgePart;
+		TSubclassOf<class AHandlePart> StraightHandlePart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> ForgePart2;
+		TSubclassOf<class AHandlePart> CurvedHandlePart;
 
 	UFUNCTION(BlueprintCallable)
-		class AForgePart* MakeResource(EResource type);
+		class AForgePart* MakeResource(EHandleType type);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh2;
