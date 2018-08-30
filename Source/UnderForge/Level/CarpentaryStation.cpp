@@ -3,6 +3,7 @@
 #include "CarpentaryStation.h"
 #include "Items/ForgeMat.h"
 #include "Items/ForgePart.h"
+#include "Items/Sword/HandlePart.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
@@ -34,19 +35,14 @@ void ACarpentaryStation::Tick(float DeltaTime)
 
 void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
-	switch (material->ResourceType)
+	material->Destroy();
+	if (CurrentState == 1)
 	{
-	case(EResource::R_WOOD):
-		material->Destroy();
-		if (CurrentState == 1)
-		{
-			MakeResource(EResource::R_PROCESSEDWOOD);
-		}
-		else if (CurrentState == 2)
-		{
-			MakeResource(EResource::R_PROCESSEDWOOD2);
-		}
-		break;
+		MakeResource(EHandleType::HT_CURVED);
+	}
+	else if (CurrentState == 2)
+	{
+		MakeResource(EHandleType::HT_STRAIGHT);
 	}
 }
 
@@ -89,17 +85,21 @@ void ACarpentaryStation::MorphStates()
 	}
 }
 
-AForgePart * ACarpentaryStation::MakeResource(EResource type)
+AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 {
-	if (type == EResource::R_PROCESSEDWOOD)
+	switch (type)
 	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+	case EHandleType::HT_STRAIGHT:
+	{
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(StraightHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
-	else
+	case EHandleType::HT_CURVED:
 	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(ForgePart2, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(CurvedHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
+	}
+	return nullptr;
 }
 

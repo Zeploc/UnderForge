@@ -4,6 +4,9 @@
 #include "Items/Sword/BladePart.h"
 #include "Engine/World.h"
 
+// TEMP
+#include "Engine.h"
+
 void AForgeAnvil::ItemDectection(AActor * OverlappActor, bool entering)
 {
 	if (AForgePart* Part = Cast<AForgePart>(OverlappActor))
@@ -26,6 +29,7 @@ void AForgeAnvil::ItemDectection(AActor * OverlappActor, bool entering)
 
 void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Part: " + Part->GetName()));
 	switch (Part->ResourceType)
 	{
 		case(EResource::R_REALBRONZE):
@@ -36,6 +40,12 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 		case(EResource::R_STEEL):
 		{
 			MakeResource(EBladeMat::BM_IRON);
+			break;
+		}
+		default:
+		{
+			const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EResource"), true);
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("No valid Resource type, instead is " + EnumPtr->GetNameByValue((int64)Part->ResourceType).ToString()));
 			break;
 		}
 	}
