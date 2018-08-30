@@ -34,6 +34,7 @@ public:
 		void DropOnStation();
 
 	AForgeStation* CurrentTouchingStation;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* MatMesh;
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utlities.generated.h"
 /**
  * 
  */
@@ -46,4 +47,24 @@ enum class EPartType : uint8
 	PT_BLADE UMETA(DisplayName = "Blade"),
 	PT_UNFORMEDBLADE UMETA(DisplayName = "Unformed Blade"),
 	PT_HANDLE UMETA(DisplayName = "Handle"),
+};
+
+UENUM(BlueprintType)
+enum class ESwordPart : uint8
+{
+	PT_BRONZEKRISBLADE UMETA(DisplayName = "Bronze Kris Blade"),
+	PT_BRONZEBROADSWORDBLADE UMETA(DisplayName = "Bronze BroadSword Blade"),
+	PT_STEELKRISBLADE UMETA(DisplayName = "Steel Kris Blade"),
+	PT_STEELBROADSWORDBLADE UMETA(DisplayName = "Steel BroadSword Blade"),
+	PT_CURVEDHANDLE UMETA(DisplayName = "Curved Handle"),
+	PT_STRAIGHTHANDLE UMETA(DisplayName = "Straight Handle"),
+};
+
+UCLASS()
+class UNDERFORGE_API UUtilities : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	static ESwordPart GetSwordPartEnum(class AForgePart* Part);
 };
