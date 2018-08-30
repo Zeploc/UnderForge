@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
+#include "Engine.h"
 
 // Sets default values
 ASmeltery::ASmeltery()
@@ -23,14 +24,14 @@ ASmeltery::ASmeltery()
 void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
-
+	GetWorld()->GetTimerManager().SetTimer(timer, this, &ASmeltery::SmeltingMinigame, 0.5f, true);
 }
 
 // Called every frame
 void ASmeltery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SmeltingMinigame(DeltaTime);
+	SmeltingMinigame();
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
@@ -73,15 +74,17 @@ void ASmeltery::ItemDectection(AActor* actor, bool entering)
 }
 
 
-void ASmeltery::SmeltingMinigame(float DeltaTime)
+void ASmeltery::SmeltingMinigame()
 {
 	if (bSmeltingMinigamePlaying)
 	{
-		SmeltingTimePassed += DeltaTime;
+		UE_LOG(LogTemp, Warning, TEXT("Time %f"), &SmeltingTimePassed);
+		SmeltingTimePassed += 0.5f;
 		if (SmeltingTimePassed > 10.0f)
 		{
 			bSmeltingMinigamePlaying = false;
 			CurrentlyProcessing = EResource::R_NONE;
+			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 			//KABOOM
 		}
 	}
@@ -96,10 +99,10 @@ void ASmeltery::MiniGameComplete()
 		switch (CurrentlyProcessing)
 		{
 		case(EResource::R_IRON):
-			MakeResource(EResource::R_IRON);
+			MakeMat(EResource::R_IRON);
 			break;
 		case(EResource::R_BRONZE):
-			MakeResource(EResource::R_BRONZE);
+			MakeMat(EResource::R_BRONZE);
 			break;
 		}
 		CurrentlyProcessing = EResource::R_NONE;
@@ -122,8 +125,10 @@ void ASmeltery::MiniGameComplete()
 	{
 		bSmeltingMinigamePlaying = false;
 		CurrentlyProcessing = EResource::R_NONE;
+		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
 	}
+	SmeltingTimePassed = 0.0f;
 }
 
 AForgePart * ASmeltery::MakeResource(EResource type)
@@ -142,6 +147,26 @@ AForgePart * ASmeltery::MakeResource(EResource type)
 			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(BronzeForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
+	}
+	return nullptr;
+}
+
+AForgeMat * ASmeltery::MakeMat(EResource type)
+{
+
+	switch (type)
+	{
+	case(EResource::R_IRON):
+	{
+		AForgeMat * ResourceRef = GetWorld()->SpawnActor<AForgeMat>(IronMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		return ResourceRef;
+	}
+
+	case(EResource::R_BRONZE):
+	{
+		AForgeMat * ResourceRef = GetWorld()->SpawnActor<AForgeMat>(BronzeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		return ResourceRef;
+	}
 	}
 	return nullptr;
 }

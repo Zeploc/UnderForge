@@ -66,7 +66,7 @@ void AForgePlayer::Interact()
 	FVector EndLocation = GetActorLocation() + GetActorRotation().Vector() * InteractRange;
 	FCollisionQueryParams Traceparams(TEXT("Interact Trace"), false, this);
 
-	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_GameTraceChannel1, Traceparams);
+	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_EngineTraceChannel3, Traceparams);
 	//AInteractActor* InteractActor = Cast<AInteractActor>(hit.Actor);
 	//if (InteractActor)
 	//{
