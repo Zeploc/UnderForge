@@ -27,6 +27,7 @@ public:
 
 	void HammeringMinigame(float Deltatime);
 	void HammeringCycle();
+	void RandomizeHammeringWindow();
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EBladeMat type);
