@@ -64,6 +64,12 @@ enum class ESwordPart : uint8
 	PT_STRAIGHTHANDLE UMETA(DisplayName = "Straight Handle"),
 };
 
+UENUM(BlueprintType)
+enum class EEquipable : uint8
+{
+	
+};
+
 UCLASS()
 class UNDERFORGE_API UUtilities : public UObject
 {
