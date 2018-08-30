@@ -47,11 +47,11 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 	material->Destroy();
 	if (CurrentState == 1)
 	{
-		MakeResource(EHandleType::HT_CURVED);
+		MakeResource(EHandleType::HT_BROADSWORD);
 	}
 	else if (CurrentState == 2)
 	{
-		MakeResource(EHandleType::HT_STRAIGHT);
+		MakeResource(EHandleType::HT_KRIS);
 	}
 }
 
@@ -98,12 +98,12 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 {
 	switch (type)
 	{
-	case EHandleType::HT_STRAIGHT:
+	case EHandleType::HT_BROADSWORD:
 	{
 		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(StraightHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
-	case EHandleType::HT_CURVED:
+	case EHandleType::HT_KRIS:
 	{
 		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(CurvedHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;

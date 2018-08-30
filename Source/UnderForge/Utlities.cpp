@@ -8,18 +8,18 @@ ESwordPart UUtilities::GetSwordPartEnum(AForgePart * Part)
 {
 	if (ABladePart* Blade = Cast<ABladePart>(Part))
 	{
-		if (Blade->BladeMat == EBladeMat::BM_BRONZE)
+		if (Blade->BladeMat == EBladeMat::BM_IRON)
 		{
 			if (Blade->BladeType == EBladeType::BT_BROADSWORD)
 			{
-				return ESwordPart::PT_BRONZEBROADSWORDBLADE;
+				return ESwordPart::PT_IRONBROADSWORDBLADE;
 			}
 			else
 			{
-				return ESwordPart::PT_BRONZEKRISBLADE;
+				return ESwordPart::PT_IRONKRISBLADE;
 			}
 		}
-		else if (Blade->BladeMat == EBladeMat::BM_IRON)
+		else if (Blade->BladeMat == EBladeMat::BM_STEEL)
 		{
 			if (Blade->BladeType == EBladeType::BT_BROADSWORD)
 			{
@@ -33,13 +33,13 @@ ESwordPart UUtilities::GetSwordPartEnum(AForgePart * Part)
 	}
 	else if (AHandlePart* Blade = Cast<AHandlePart>(Part))
 	{
-		if (Blade->HandleType == EHandleType::HT_CURVED)
+		if (Blade->HandleType == EHandleType::HT_BROADSWORD)
 		{
-			return ESwordPart::PT_CURVEDHANDLE;
+			return ESwordPart::PT_BROADSWORDHANDLE;
 		}
 		else
 		{
-			return ESwordPart::PT_STRAIGHTHANDLE;
+			return ESwordPart::PT_KRISHANDLE;
 		}
 	}
 	return ESwordPart();

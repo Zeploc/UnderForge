@@ -20,8 +20,8 @@ bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
 
 bool ASwordItem::IsHandle(ESwordPart SwordPart)
 {
-	if (SwordPart == ESwordPart::PT_CURVEDHANDLE ||
-		SwordPart == ESwordPart::PT_STRAIGHTHANDLE)
+	if (SwordPart == ESwordPart::PT_BROADSWORDHANDLE ||
+		SwordPart == ESwordPart::PT_KRISHANDLE)
 	{
 		return true;
 	}
@@ -31,8 +31,8 @@ bool ASwordItem::IsHandle(ESwordPart SwordPart)
 
 bool ASwordItem::IsBlade(ESwordPart SwordPart)
 {
-	if (SwordPart == ESwordPart::PT_BRONZEBROADSWORDBLADE ||
-		SwordPart == ESwordPart::PT_BRONZEKRISBLADE ||
+	if (SwordPart == ESwordPart::PT_IRONBROADSWORDBLADE ||
+		SwordPart == ESwordPart::PT_IRONKRISBLADE ||
 		SwordPart == ESwordPart::PT_STEELBROADSWORDBLADE ||
 		SwordPart == ESwordPart::PT_STEELKRISBLADE)
 	{

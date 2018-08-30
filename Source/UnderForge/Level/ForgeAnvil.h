@@ -36,7 +36,7 @@ public:
 		TSubclassOf<class AForgePart> IronBladePart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> BronzeBladePart;
+		TSubclassOf<class AForgePart> SteelBladePart;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh2;

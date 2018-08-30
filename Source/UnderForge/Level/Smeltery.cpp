@@ -37,20 +37,8 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	if (!bSmeltingMinigamePlaying)
 	{
-		switch (material->ResourceType)
-		{
-		case(EResource::R_IRON):
-			CurrentlyProcessing = material->ResourceType;
-			material->Destroy();
-			bSmeltingMinigamePlaying = true;
-			break;
-
-		case(EResource::R_BRONZE):
-			CurrentlyProcessing = material->ResourceType;
-			material->Destroy();
-			bSmeltingMinigamePlaying = true;
-			break;
-		}
+		CurrentlyProcessing = material->ResourceType;
+		material->Destroy();
 	}
 }
 
@@ -60,14 +48,14 @@ void ASmeltery::ItemDectection(AActor* actor, bool entering)
 	{
 		if (entering)
 		{
-			if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+			if (mat->ResourceType == EResource::R_IRONORE)
 			{
 				mat->CurrentTouchingStation = this;
 			}
 		}
 		else
 		{
-			if (mat->ResourceType == EResource::R_IRON || mat->ResourceType == EResource::R_BRONZE)
+			if (mat->ResourceType == EResource::R_IRONORE)
 			{
 				mat->CurrentTouchingStation = nullptr;
 			}
@@ -101,15 +89,7 @@ void ASmeltery::MiniGameComplete()
 	if (SmeltingTimePassed < SmeltingTimeNeeded)
 	{
 		bSmeltingMinigamePlaying = false;
-		switch (CurrentlyProcessing)
-		{
-		case(EResource::R_IRON):
-			MakeMat(EResource::R_IRON);
-			break;
-		case(EResource::R_BRONZE):
-			MakeMat(EResource::R_BRONZE);
-			break;
-		}
+		MakeMat(CurrentlyProcessing);
 		CurrentlyProcessing = EResource::R_NONE;
 	}
 	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
@@ -117,11 +97,8 @@ void ASmeltery::MiniGameComplete()
 		bSmeltingMinigamePlaying = false;
 		switch (CurrentlyProcessing)
 		{
-		case(EResource::R_IRON):
-			MakeResource(EResource::R_STEEL);
-			break;
-		case(EResource::R_BRONZE):
-			MakeResource(EResource::R_REALBRONZE);
+		case(EResource::R_IRONORE):
+			MakeResource(EResource::R_IRONINGOT);
 			break;
 		}
 		CurrentlyProcessing = EResource::R_NONE;
@@ -141,15 +118,15 @@ AForgePart * ASmeltery::MakeResource(EResource type)
 
 	switch (type)
 	{
-		case(EResource::R_STEEL):
+	case(EResource::R_IRONINGOT):
 		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronIngotPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
 
-		case(EResource::R_REALBRONZE):
+	case(EResource::R_STEELINGOT):
 		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(BronzeForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
 	}
@@ -161,17 +138,11 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 
 	switch (type)
 	{
-	case(EResource::R_IRON):
-	{
-		AForgeMat * ResourceRef = GetWorld()->SpawnActor<AForgeMat>(IronMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-		return ResourceRef;
-	}
-
-	case(EResource::R_BRONZE):
-	{
-		AForgeMat * ResourceRef = GetWorld()->SpawnActor<AForgeMat>(BronzeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-		return ResourceRef;
-	}
+		case(EResource::R_IRONORE):
+		{
+			AForgeMat * ResourceRef = GetWorld()->SpawnActor<AForgeMat>(IronMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			return ResourceRef;
+		}
 	}
 	return nullptr;
 }

@@ -12,11 +12,10 @@ UENUM(BlueprintType)
 enum class EResource : uint8
 {
 	R_WOOD UMETA(DisplayName = "Wood"),
-	R_IRON UMETA(DisplayName = "Iron"),
-	R_BRONZE UMETA(DisplayName = "Bronze"),
+	R_IRONORE UMETA(DisplayName = "Iron Ore"),
 
-	R_STEEL UMETA(DisplayName = "Steel"),
-	R_REALBRONZE UMETA(DisplayName = "RealBronze"),
+	R_STEELINGOT UMETA(DisplayName = "Steel Ingot"),
+	R_IRONINGOT UMETA(DisplayName = "Iron Ingot"),
 
 
 	R_NONE UMETA(DisplayName = "Nothing"),
@@ -25,7 +24,7 @@ enum class EResource : uint8
 UENUM(BlueprintType)
 enum class EBladeMat : uint8
 {
-	BM_BRONZE UMETA(DisplayName = "Bronze"),
+	BM_STEEL UMETA(DisplayName = "Steel"),
 	BM_IRON UMETA(DisplayName = "Iron"),
 
 	BM_NONE UMETA(DisplayName = "None"),
@@ -34,34 +33,34 @@ enum class EBladeMat : uint8
 UENUM(BlueprintType)
 enum class EBladeType : uint8
 {
-	BT_BROADSWORD UMETA(DisplayName = "Broadsword"),
-	BT_KRIS UMETA(DisplayName = "Kris"),
+	BT_BROADSWORD UMETA(DisplayName = "Broadsword Blade"),
+	BT_KRIS UMETA(DisplayName = "Kris Handle"),
 };
 
 UENUM(BlueprintType)
 enum class EHandleType : uint8
 {
-	HT_STRAIGHT UMETA(DisplayName = "Straight"),
-	HT_CURVED UMETA(DisplayName = "Curved"),
+	HT_KRIS UMETA(DisplayName = "Kris Handle"),
+	HT_BROADSWORD UMETA(DisplayName = "Broadsword Handle"),
 };
 
 UENUM(BlueprintType)
 enum class EPartType : uint8
 {
+	PT_INGOT UMETA(DisplayName = "Ingot"),
 	PT_BLADE UMETA(DisplayName = "Blade"),
-	PT_UNFORMEDBLADE UMETA(DisplayName = "Unformed Blade"),
 	PT_HANDLE UMETA(DisplayName = "Handle"),
 };
 
 UENUM(BlueprintType)
 enum class ESwordPart : uint8
 {
-	PT_BRONZEKRISBLADE UMETA(DisplayName = "Bronze Kris Blade"),
-	PT_BRONZEBROADSWORDBLADE UMETA(DisplayName = "Bronze BroadSword Blade"),
+	PT_IRONKRISBLADE UMETA(DisplayName = "Iron Kris Blade"),
+	PT_IRONBROADSWORDBLADE UMETA(DisplayName = "Iron BroadSword Blade"),
 	PT_STEELKRISBLADE UMETA(DisplayName = "Steel Kris Blade"),
 	PT_STEELBROADSWORDBLADE UMETA(DisplayName = "Steel BroadSword Blade"),
-	PT_CURVEDHANDLE UMETA(DisplayName = "Curved Handle"),
-	PT_STRAIGHTHANDLE UMETA(DisplayName = "Straight Handle"),
+	PT_KRISHANDLE UMETA(DisplayName = "Kris Handle"),
+	PT_BROADSWORDHANDLE UMETA(DisplayName = "Broadsword Handle"),
 };
 
 UCLASS()
