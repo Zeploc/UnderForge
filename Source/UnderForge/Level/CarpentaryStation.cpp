@@ -100,12 +100,12 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	{
 	case EHandleType::HT_BROADSWORD:
 	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(StraightHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
 	case EHandleType::HT_KRIS:
 	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(CurvedHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		return ResourceRef;
 	}
 	}

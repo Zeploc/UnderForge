@@ -32,10 +32,10 @@ public:
 		void MorphStates();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AHandlePart> StraightHandlePart;
+		TSubclassOf<class AHandlePart> BroadswordHandlePart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AHandlePart> CurvedHandlePart;
+		TSubclassOf<class AHandlePart> KrisHandlePart;
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EHandleType type);
