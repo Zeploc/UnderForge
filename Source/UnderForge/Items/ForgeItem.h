@@ -28,4 +28,8 @@ public:
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UBoxComponent* InteractBox;
+	
 };

@@ -25,8 +25,11 @@ public:
 	
 	TArray<ESwordPart> CurrentParts;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class ASwordItem> SwordItem;
+
 	class AForgeItem* CurrentItem;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentWeaponMesh;
 };

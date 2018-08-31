@@ -15,14 +15,27 @@ UCLASS()
 class UNDERFORGE_API ASwordItem : public AForgeItem
 {
 	GENERATED_BODY()
-	
+
+	ASwordItem();
 
 public:
 	bool CanHavePart(ESwordPart PartToCheck);
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<ESwordPart> ForgeParts;
+	bool AddPart(ESwordPart PartToAdd);
 
 	bool IsHandle(ESwordPart SwordPart);
 	bool IsBlade(ESwordPart SwordPart);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<ESwordPart, UStaticMesh*> PartMeshes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* HandleMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* BladeMesh;
+
+private:
+	UPROPERTY(EditAnywhere)
+		TArray<ESwordPart> ForgeParts;
+
 };

@@ -15,6 +15,7 @@ ACombineBench::ACombineBench()
 {
 	CurrentWeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
 	ObjectPosition->SetupAttachment(CurrentWeaponMesh);
+	ObjectPosition->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
 void ACombineBench::ItemDectection(class AActor* OverlappActor, bool entering)
@@ -49,8 +50,9 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 		if (Part->PartType == EPartType::PT_BLADE || Part->PartType == EPartType::PT_HANDLE) // is sword part
 		{
 			ESwordPart SwordPart = UUtilities::GetSwordPartEnum(Part);
-			ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			NewSwordItem->ForgeParts.Add(SwordPart);
+			ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			NewSwordItem->ItemMesh->SetSimulatePhysics(false);
+			NewSwordItem->AddPart(SwordPart);
 			CurrentItem = NewSwordItem;
 			Part->Destroy();
 		}
@@ -66,9 +68,12 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 			ESwordPart SwordPart = UUtilities::GetSwordPartEnum(Part);
 			if (CurrentSwordItem->CanHavePart(SwordPart)) // If the sword needs that type of part
 			{
-				CurrentSwordItem->ForgeParts.Add(SwordPart); // Add the part
 				Part->Destroy(); // Destroy part actor
-				ChangeMesh(); // Update mesh
+				if (CurrentSwordItem->AddPart(SwordPart)) // Add the part
+				{
+					// Is complete
+					CurrentSwordItem = nullptr;
+				}
 			}
 			else
 			{

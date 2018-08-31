@@ -3,6 +3,7 @@
 #include "ForgeItem.h"
 
 #include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AForgeItem::AForgeItem()
@@ -10,11 +11,15 @@ AForgeItem::AForgeItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
-	RootComponent = ItemMesh;
+	SetRootComponent(ItemMesh);
 	ItemMesh->SetSimulatePhysics(true);
 	ItemMesh->SetCollisionProfileName("PhysicsActor");
 	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel1, ECollisionResponse::ECR_Block);
+
+	InteractBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Interact Box"));
+	InteractBox->SetupAttachment(ItemMesh);
 }
 
 // Called when the game starts or when spawned
