@@ -183,6 +183,10 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 	{
 		case(EBladeMat::BM_IRON):
 		{
+			if (CurrentState == 1)
+			{
+
+			}
 			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
