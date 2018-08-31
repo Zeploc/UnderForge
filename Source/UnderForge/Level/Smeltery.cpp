@@ -18,12 +18,25 @@ ASmeltery::ASmeltery()
 	SmeltingTimeKABOOM = 10.0f;
 	SmeltingTimeNeeded = 5.0f;
 	SmeltingTimeMax = 8.0f;
+
+	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
+	Rotator->SetupAttachment(StationMesh);
+	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
+
+	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
+	CurrentProducingItem->SetupAttachment(Rotator);
+	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	CurrentProducingItem->SetVisibility(true, false);
+	CurrentState = 1;
+
 }
 
 // Called when the game starts or when spawned
 void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentProducingItem->SetStaticMesh(IronIngot);
+	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
 // Called every frame
@@ -31,6 +44,8 @@ void ASmeltery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	SmeltingMinigame(DeltaTime);
+	FRotator rotate(0, 1, 0);
+	Rotator->AddWorldRotation(rotate);
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
@@ -99,7 +114,14 @@ void ASmeltery::MiniGameComplete()
 		switch (CurrentlyProcessing)
 		{
 		case(EResource::R_IRONORE):
-			MakeResource(EResource::R_IRONINGOT);
+			if (CurrentState == 1)
+			{
+				MakeResource(EResource::R_IRONINGOT);
+			}
+			else if(CurrentState == 2)
+			{
+				MakeResource(EResource::R_STEELINGOT);
+			}
 			break;
 		}
 		CurrentlyProcessing = EResource::R_NONE;
@@ -146,4 +168,18 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 		}
 	}
 	return nullptr;
+}
+
+void ASmeltery::MorphStates()
+{
+	if (CurrentState == 1)
+	{
+		CurrentState = 2;
+		CurrentProducingItem->SetStaticMesh(SteelIngot);
+	}
+	else if (CurrentState == 2)
+	{
+		CurrentState = 1;
+		CurrentProducingItem->SetStaticMesh(IronIngot);
+	}
 }

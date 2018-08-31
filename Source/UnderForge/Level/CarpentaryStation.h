@@ -45,10 +45,8 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class USceneComponent* Rotator;
 
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* StraightSwordHandle;
+		class UStaticMesh* BroadSwordHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* KrisSwordHandle;
 

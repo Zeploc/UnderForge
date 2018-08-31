@@ -35,6 +35,8 @@ public:
 
 	void SmeltingMinigame(float DeltaTime);
 	void MiniGameComplete();
+	UFUNCTION(BlueprintCallable)
+		void MorphStates();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> IronIngotPart;
@@ -59,4 +61,16 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float CurrentRemainingTime = 0.0f;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* CurrentProducingItem;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class USceneComponent* Rotator;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMesh* IronIngot;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMesh* SteelIngot;
+	int CurrentState;
+
 };

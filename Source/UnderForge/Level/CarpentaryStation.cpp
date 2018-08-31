@@ -32,7 +32,7 @@ ACarpentaryStation::ACarpentaryStation()
 void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentProducingItem->SetStaticMesh(StraightSwordHandle);
+	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
@@ -61,18 +61,17 @@ void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
 {
 	if (AForgeMat* mat = Cast<AForgeMat>(actor))
 	{
-		if (entering)
+
+		if (mat->ResourceType == EResource::R_WOOD)
 		{
-			if (mat->ResourceType == EResource::R_WOOD )
+			if (entering)
 			{
 				mat->CurrentTouchingStation = this;
 				PotentiallyInteracting = true;
 			}
-		}
-		else
-		{
-			if (mat->ResourceType == EResource::R_WOOD)
+			else
 			{
+
 				mat->CurrentTouchingStation = nullptr;
 				PotentiallyInteracting = false;
 			}
@@ -85,12 +84,12 @@ void ACarpentaryStation::MorphStates()
 	if (CurrentState == 1)
 	{
 		CurrentState = 2;
-		CurrentProducingItem->SetStaticMesh(StraightSwordHandle);
+		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
 	}
 	else if(CurrentState == 2)
 	{
 		CurrentState = 1;
-		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
+		CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 	}
 }
 

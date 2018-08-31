@@ -41,7 +41,7 @@ void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
-	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 200.0f));
+	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
 void AForgeAnvil::Tick(float DeltaTime)
@@ -183,6 +183,10 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 	{
 		case(EBladeMat::BM_IRON):
 		{
+			if (CurrentState == 1)
+			{
+
+			}
 			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
@@ -202,11 +206,11 @@ void AForgeAnvil::MorphStates()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("hi"));
 		CurrentState = 2;
-		CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
+		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
 	}
 	else if (CurrentState == 2)
 	{
 		CurrentState = 1;
-		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+		CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
 	}
 }
