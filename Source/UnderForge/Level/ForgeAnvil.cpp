@@ -59,7 +59,7 @@ void AForgeAnvil::ItemDectection(AActor * OverlappActor, bool entering)
 {
 	if (AForgePart* Part = Cast<AForgePart>(OverlappActor))
 	{
-		if (Part->PartType == EPartType::PT_UNFORMEDBLADE)
+		if (Part->PartType == EPartType::PT_INGOT)
 		{
 			if (!entering)
 			{
@@ -80,13 +80,13 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Part: " + Part->GetName()));
 	switch (Part->ResourceType)
 	{
-		case(EResource::R_REALBRONZE):
+	case(EResource::R_STEELINGOT):
 		{
-			CurrentResource = EBladeMat::BM_BRONZE;
+			CurrentResource = EBladeMat::BM_STEEL;
 			bHammerMinigamePlaying = true;
 			break;
 		}
-		case(EResource::R_STEEL):
+	case(EResource::R_IRONINGOT):
 		{
 			CurrentResource = EBladeMat::BM_IRON;
 			bHammerMinigamePlaying = true;
@@ -186,7 +186,7 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
-		case(EBladeMat::BM_BRONZE):
+		case(EBladeMat::BM_STEEL):
 		{
 			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;

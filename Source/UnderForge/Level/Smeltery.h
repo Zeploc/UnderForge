@@ -37,16 +37,14 @@ public:
 	void MiniGameComplete();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronForgedPart;
+		TSubclassOf<class AForgePart> IronIngotPart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> BronzeForgedPart;
+		TSubclassOf<class AForgePart> SteelForgedPart;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgeMat> IronMat;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgeMat> BronzeMat;
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);
