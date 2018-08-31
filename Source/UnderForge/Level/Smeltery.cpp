@@ -39,6 +39,7 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 	{
 		CurrentlyProcessing = material->ResourceType;
 		material->Destroy();
+		bSmeltingMinigamePlaying = true;
 	}
 }
 
