@@ -33,6 +33,7 @@ AForgeAnvil::AForgeAnvil()
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
 
+	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 	CurrentState = 1;
 
 	CurrentResource = EBladeMat::BM_NONE;
@@ -41,7 +42,6 @@ void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
-	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
 void AForgeAnvil::Tick(float DeltaTime)

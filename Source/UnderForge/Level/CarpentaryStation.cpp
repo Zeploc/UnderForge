@@ -18,6 +18,7 @@ ACarpentaryStation::ACarpentaryStation()
 	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
 	Rotator->SetupAttachment(StationMesh);
 	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
+	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 
 	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
 	CurrentProducingItem->SetupAttachment(Rotator);
@@ -33,7 +34,6 @@ void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
-	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
 // Called every frame
