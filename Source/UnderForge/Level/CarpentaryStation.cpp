@@ -6,6 +6,7 @@
 #include "Items/Sword/HandlePart.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
 
@@ -13,17 +14,17 @@ ACarpentaryStation::ACarpentaryStation()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	StationMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
-	StationMesh2->SetupAttachment(StationMesh);
-	StationMesh2->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
-	StationMesh2->SetVisibility(true, false);
 
-	StationMesh3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh3"));
-	StationMesh3->SetupAttachment(StationMesh);
-	StationMesh3->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	StationMesh3->SetVisibility(false, false);
+	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
+	Rotator->SetupAttachment(StationMesh);
+	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
 
+	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
+	CurrentProducingItem->SetupAttachment(Rotator);
+	CurrentProducingItem->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
+	CurrentProducingItem->SetVisibility(true, false);
 	CurrentState = 1;
+
 	PotentiallyInteracting = false;
 }
 
@@ -31,15 +32,16 @@ ACarpentaryStation::ACarpentaryStation()
 void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentProducingItem->SetStaticMesh(StraightSwordHandle);
+	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
 // Called every frame
 void ACarpentaryStation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FRotator rotate(0,0,1);
-	StationMesh3->AddLocalRotation(rotate);
-	StationMesh2->AddLocalRotation(rotate);
+	FRotator rotate(0,1,0);
+	Rotator->AddWorldRotation(rotate);
 }
 
 void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
@@ -83,14 +85,12 @@ void ACarpentaryStation::MorphStates()
 	if (CurrentState == 1)
 	{
 		CurrentState = 2;
-		StationMesh2->SetVisibility(true, false);
-		StationMesh3->SetVisibility(false, false);
+		CurrentProducingItem->SetStaticMesh(StraightSwordHandle);
 	}
 	else if(CurrentState == 2)
 	{
 		CurrentState = 1;
-		StationMesh2->SetVisibility(false, false);
-		StationMesh3->SetVisibility(true, false);
+		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
 	}
 }
 

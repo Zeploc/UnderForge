@@ -67,7 +67,7 @@ enum class ESwordPart : uint8
 UENUM(BlueprintType)
 enum class EEquipable : uint8
 {
-	
+	PT_BRONZEKRISBLADE UMETA(DisplayName = "Bronze Kris Blade"),
 };
 
 UCLASS()

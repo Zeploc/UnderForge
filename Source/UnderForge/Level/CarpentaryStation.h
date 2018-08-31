@@ -41,9 +41,16 @@ public:
 		class AForgePart* MakeResource(EHandleType type);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* StationMesh2;
+		class UStaticMeshComponent* CurrentProducingItem;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* StationMesh3;
+		class USceneComponent* Rotator;
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMesh* StraightSwordHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMesh* KrisSwordHandle;
 
 	int CurrentState;
 	bool PotentiallyInteracting;

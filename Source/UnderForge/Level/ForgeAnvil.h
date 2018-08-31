@@ -24,6 +24,7 @@ protected:
 public:
 	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
 	virtual void ProcessPartItem(AForgePart* Part) override;
+	void MorphStates();
 
 	void HammeringMinigame(float Deltatime);
 	void HammeringCycle();
@@ -33,19 +34,32 @@ public:
 		class AForgePart* MakeResource(EBladeMat type);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronBladePart;
+		TSubclassOf<class AForgePart> SteelKrisBladePart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> BronzeBladePart;
+		TSubclassOf<class AForgePart> SteelBroadBladePart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> IronKrisBladePart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> IronBroadBladePart;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh2;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* StationMesh3;
+
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* StationMesh4;
+		class UStaticMeshComponent* CurrentProducingItem;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class USceneComponent* Rotator;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMesh* StraightSwordBlade;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMesh* KrisSwordBlade;
 
 
 

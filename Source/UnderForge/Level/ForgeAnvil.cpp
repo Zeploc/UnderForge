@@ -4,6 +4,7 @@
 #include "Items/Sword/BladePart.h"
 #include "Engine/World.h"
 #include "Engine.h"
+#include "Components/SceneComponent.h"
 #include <ctime>
 
 AForgeAnvil::AForgeAnvil()
@@ -18,23 +19,37 @@ AForgeAnvil::AForgeAnvil()
 
 	bHammerMinigamePlaying = false;
 	HammerTimePassed = 0.0f;
+	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
+	Rotator->SetupAttachment(StationMesh);
+	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
 
 	StationMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
 	StationMesh2->SetupAttachment(StationMesh);
 	StationMesh2->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	StationMesh2->SetVisibility(false, false);
 
+	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh3"));
+	CurrentProducingItem->SetupAttachment(Rotator);
+	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	CurrentProducingItem->SetVisibility(true, false);
+
+	CurrentState = 1;
+
 	CurrentResource = EBladeMat::BM_NONE;
 }
 void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
+	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 200.0f));
 }
 
 void AForgeAnvil::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	HammeringMinigame(DeltaTime);
+	FRotator rotate(0, 1,0);
+	Rotator->AddWorldRotation(rotate);
 }
 
 // TEMP
@@ -168,14 +183,29 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 	{
 		case(EBladeMat::BM_IRON):
 		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
 		case(EBladeMat::BM_BRONZE):
 		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(BronzeBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
 	}
 	return nullptr;
+}
+
+
+void AForgeAnvil::MorphStates()
+{
+	if (CurrentState == 1)
+	{
+		CurrentState = 2;
+		CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
+	}
+	else if (CurrentState == 2)
+	{
+		CurrentState = 1;
+		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+	}
 }
