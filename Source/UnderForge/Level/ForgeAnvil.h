@@ -24,7 +24,9 @@ protected:
 public:
 	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
 	virtual void ProcessPartItem(AForgePart* Part) override;
-	void MorphStates();
+
+	UFUNCTION(BlueprintCallable)
+		void MorphStates();
 
 	void HammeringMinigame(float Deltatime);
 	void HammeringCycle();

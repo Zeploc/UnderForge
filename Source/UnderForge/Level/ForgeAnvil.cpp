@@ -200,6 +200,7 @@ void AForgeAnvil::MorphStates()
 {
 	if (CurrentState == 1)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("hi"));
 		CurrentState = 2;
 		CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
 	}
