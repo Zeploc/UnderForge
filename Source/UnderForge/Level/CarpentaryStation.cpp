@@ -85,12 +85,12 @@ void ACarpentaryStation::MorphStates()
 	if (CurrentState == 1)
 	{
 		CurrentState = 2;
-		CurrentProducingItem->SetStaticMesh(StraightSwordHandle);
+		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
 	}
 	else if(CurrentState == 2)
 	{
 		CurrentState = 1;
-		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
+		CurrentProducingItem->SetStaticMesh(StraightSwordHandle);
 	}
 }
 
