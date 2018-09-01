@@ -57,13 +57,13 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AForgePlayer::MoveRight(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(0.f, 1.f, 0.f), Value);
+	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
 }
 
 void AForgePlayer::MoveUp(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
+	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
 
 void AForgePlayer::Interact()

@@ -16,8 +16,6 @@
 // Sets default values
 ACombineBench::ACombineBench()
 {
-	CurrentWeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
-	ObjectPosition->SetupAttachment(CurrentWeaponMesh);
 	ObjectPosition->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
