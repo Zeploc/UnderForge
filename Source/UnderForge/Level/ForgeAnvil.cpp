@@ -34,14 +34,14 @@ AForgeAnvil::AForgeAnvil()
 	CurrentProducingItem->SetVisibility(true, false);
 
 	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
-	CurrentState = 1;
+	CurrentState = EBladeType::BT_BROADSWORD;
 
 	CurrentResource = EBladeMat::BM_NONE;
 }
 void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
+	CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 }
 
 void AForgeAnvil::Tick(float DeltaTime)
@@ -55,28 +55,13 @@ void AForgeAnvil::Tick(float DeltaTime)
 // TEMP
 #include "Engine.h"
 
-void AForgeAnvil::ItemDectection(AActor * OverlappActor, bool entering)
-{
-	if (AForgePart* Part = Cast<AForgePart>(OverlappActor))
-	{
-		if (Part->PartType == EPartType::PT_INGOT)
-		{
-			if (!entering)
-			{
-				Part->CurrentTouchingStation = nullptr;
-				return;
-			}
-			Part->CurrentTouchingStation = this;
-		}
-		else
-			ThrowAway(OverlappActor);
-	}
-	else
-		ThrowAway(OverlappActor);
-}
-
 void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 {
+	if (Part->PartType != EPartType::PT_INGOT || bHammerMinigamePlaying)
+	{
+		ThrowAway(Part);
+		return;
+	}
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Part: " + Part->GetName()));
 	switch (Part->ResourceType)
 	{
@@ -183,17 +168,29 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 	{
 		case(EBladeMat::BM_IRON):
 		{
-			if (CurrentState == 1)
+			if (CurrentState == EBladeType::BT_BROADSWORD)
 			{
-
+				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+				return ResourceRef;
 			}
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			return ResourceRef;
+			else
+			{
+				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+				return ResourceRef;
+			}
 		}
 		case(EBladeMat::BM_STEEL):
 		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			return ResourceRef;
+			if (CurrentState == EBladeType::BT_BROADSWORD)
+			{
+				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+				return ResourceRef;
+			}
+			else
+			{
+				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+				return ResourceRef;
+			}
 		}
 	}
 	return nullptr;
@@ -202,15 +199,16 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 
 void AForgeAnvil::MorphStates()
 {
-	if (CurrentState == 1)
+	if (bHammerMinigamePlaying) return;
+	if (CurrentState == EBladeType::BT_BROADSWORD)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("hi"));
-		CurrentState = 2;
+		CurrentState = EBladeType::BT_KRIS;
 		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
 	}
-	else if (CurrentState == 2)
+	else if (CurrentState == EBladeType::BT_KRIS)
 	{
-		CurrentState = 1;
-		CurrentProducingItem->SetStaticMesh(StraightSwordBlade);
+		CurrentState = EBladeType::BT_BROADSWORD;
+		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 	}
 }

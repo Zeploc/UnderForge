@@ -46,38 +46,23 @@ void ACarpentaryStation::Tick(float DeltaTime)
 
 void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
-	material->Destroy();
-	if (CurrentState == 1)
+	if (material->ResourceType == EResource::R_WOOD)
 	{
-		MakeResource(EHandleType::HT_BROADSWORD);
-	}
-	else if (CurrentState == 2)
-	{
-		MakeResource(EHandleType::HT_KRIS);
-	}
-}
-
-void ACarpentaryStation::ItemDectection(AActor* actor, bool entering)
-{
-	if (AForgeMat* mat = Cast<AForgeMat>(actor))
-	{
-
-		if (mat->ResourceType == EResource::R_WOOD)
+		material->Destroy();
+		if (CurrentState == 1)
 		{
-			if (entering)
-			{
-				mat->CurrentTouchingStation = this;
-				PotentiallyInteracting = true;
-			}
-			else
-			{
-
-				mat->CurrentTouchingStation = nullptr;
-				PotentiallyInteracting = false;
-			}
+			MakeResource(EHandleType::HT_BROADSWORD);
+		}
+		else if (CurrentState == 2)
+		{
+			MakeResource(EHandleType::HT_KRIS);
 		}
 	}
+	else
+		ThrowAway(material);
+	
 }
+
 
 void ACarpentaryStation::MorphStates()
 {

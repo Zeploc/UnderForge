@@ -34,7 +34,8 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material);
 	virtual void ProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);
-	void ThrowAway(AActor* Actor);
+	UFUNCTION(BlueprintCallable)
+		void ThrowAway(AActor* Actor);
 
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
@@ -45,4 +46,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UBoxComponent* CollisionBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		class UArrowComponent* RefuseThrowDirection;
 };

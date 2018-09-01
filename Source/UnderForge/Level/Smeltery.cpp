@@ -50,35 +50,15 @@ void ASmeltery::Tick(float DeltaTime)
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
-	if (!bSmeltingMinigamePlaying)
+	if (bSmeltingMinigamePlaying || material->ResourceType != EResource::R_IRONORE)
 	{
-		CurrentlyProcessing = material->ResourceType;
-		material->Destroy();
-		bSmeltingMinigamePlaying = true;
+		ThrowAway(material);
+		return;
 	}
+	CurrentlyProcessing = material->ResourceType;
+	material->Destroy();
+	bSmeltingMinigamePlaying = true;
 }
-
-void ASmeltery::ItemDectection(AActor* actor, bool entering)
-{
-	if (AForgeMat* mat = Cast<AForgeMat>(actor))
-	{
-		if (entering)
-		{
-			if (mat->ResourceType == EResource::R_IRONORE)
-			{
-				mat->CurrentTouchingStation = this;
-			}
-		}
-		else
-		{
-			if (mat->ResourceType == EResource::R_IRONORE)
-			{
-				mat->CurrentTouchingStation = nullptr;
-			}
-		}
-	}
-}
-
 
 void ASmeltery::SmeltingMinigame(float DeltaTime)
 {
@@ -149,7 +129,7 @@ AForgePart * ASmeltery::MakeResource(EResource type)
 
 	case(EResource::R_STEELINGOT):
 		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelForgedPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelIngotPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			return ResourceRef;
 		}
 	}

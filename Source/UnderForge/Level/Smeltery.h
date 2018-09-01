@@ -31,7 +31,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void ProcessMatItem(AForgeMat* material) override;
-	virtual void ItemDectection(class AActor*, bool entering) override;
 
 	void SmeltingMinigame(float DeltaTime);
 	void MiniGameComplete();
@@ -42,7 +41,7 @@ public:
 		TSubclassOf<class AForgePart> IronIngotPart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> SteelForgedPart;
+		TSubclassOf<class AForgePart> SteelIngotPart;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

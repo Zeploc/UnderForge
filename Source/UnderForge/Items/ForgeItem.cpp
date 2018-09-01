@@ -16,7 +16,7 @@ AForgeItem::AForgeItem()
 	SetRootComponent(ItemMesh);
 	ItemMesh->SetSimulatePhysics(true);
 	ItemMesh->SetCollisionProfileName("PhysicsActor");
-	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel1, ECollisionResponse::ECR_Block);
+	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	InteractBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Interact Box"));
 	InteractBox->SetupAttachment(ItemMesh);

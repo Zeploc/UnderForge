@@ -13,6 +13,9 @@
 #include "Level/CarpentaryStation.h"
 #include "Level/Smeltery.h"
 #include "Level/ForgeAnvil.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -21,6 +24,8 @@ AForgePlayer::AForgePlayer()
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
