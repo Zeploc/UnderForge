@@ -4,6 +4,8 @@
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Engine/World.h"
+#include "Mechanics/ForgeLevel.h"
 
 // Sets default values
 AForgeItem::AForgeItem()
@@ -26,7 +28,8 @@ AForgeItem::AForgeItem()
 void AForgeItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
 }
 
 // Called every frame

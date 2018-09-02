@@ -70,6 +70,6 @@ public:
 		class UStaticMesh* IronIngot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* SteelIngot;
-	int CurrentState;
+	EResource CurrentState;
 
 };

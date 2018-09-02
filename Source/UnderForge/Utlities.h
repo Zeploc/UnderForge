@@ -8,6 +8,10 @@
 /**
  * 
  */
+#define ECC_Pickup		ECC_GameTraceChannel1
+#define ECC_Enemy		ECC_GameTraceChannel2
+#define ECC_Station		ECC_GameTraceChannel3
+
 UENUM(BlueprintType)
 enum class EResource : uint8
 {

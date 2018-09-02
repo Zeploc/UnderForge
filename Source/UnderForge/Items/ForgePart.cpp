@@ -3,6 +3,8 @@
 #include "ForgePart.h"
 #include "Components/StaticMeshComponent.h"
 #include "Level/ForgeStation.h"
+#include "Engine/World.h"
+#include "Mechanics/ForgeLevel.h"
 
 // Sets default values
 AForgePart::AForgePart()
@@ -22,6 +24,7 @@ void AForgePart::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
 }
 
 // Called every frame
