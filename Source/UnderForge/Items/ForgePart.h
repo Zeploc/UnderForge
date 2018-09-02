@@ -33,8 +33,11 @@ public:
 	class AForgeStation* CurrentTouchingStation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-		EPartType PartType;
+		ESwordPart SwordPart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource ResourceType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool IsHeld;
 };

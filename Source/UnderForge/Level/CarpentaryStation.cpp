@@ -10,6 +10,9 @@
 #include "Engine/World.h"
 #include "Utlities.h"
 
+// TEMP
+#include "Engine.h"
+
 ACarpentaryStation::ACarpentaryStation()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -24,7 +27,7 @@ ACarpentaryStation::ACarpentaryStation()
 	CurrentProducingItem->SetupAttachment(Rotator);
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
-	CurrentState = 1;
+	CurrentState = EHandleType::HT_BROADSWORD;
 
 	PotentiallyInteracting = false;
 }
@@ -48,32 +51,23 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
 	if (material->ResourceType == EResource::R_WOOD)
 	{
+		MakeResource(CurrentState);
 		material->Destroy();
-		if (CurrentState == 1)
-		{
-			MakeResource(EHandleType::HT_BROADSWORD);
-		}
-		else if (CurrentState == 2)
-		{
-			MakeResource(EHandleType::HT_KRIS);
-		}
 	}
 	else
-		ThrowAway(material);
-	
+		ThrowAway(material);	
 }
-
 
 void ACarpentaryStation::MorphStates()
 {
-	if (CurrentState == 1)
+	if (CurrentState == EHandleType::HT_BROADSWORD)
 	{
-		CurrentState = 2;
+		CurrentState = EHandleType::HT_KRIS;
 		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
 	}
-	else if(CurrentState == 2)
+	else if(CurrentState == EHandleType::HT_KRIS)
 	{
-		CurrentState = 1;
+		CurrentState = EHandleType::HT_BROADSWORD;
 		CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 	}
 }
@@ -82,17 +76,18 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 {
 	switch (type)
 	{
-	case EHandleType::HT_BROADSWORD:
-	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-		return ResourceRef;
+		case EHandleType::HT_BROADSWORD:
+		{
+			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			return ResourceRef;
+		}
+		case EHandleType::HT_KRIS:
+		{
+			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			return ResourceRef;
+		}
 	}
-	case EHandleType::HT_KRIS:
-	{
-		AForgePart* ResourceRef = GetWorld()->SpawnActor<AHandlePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-		return ResourceRef;
-	}
-	}
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "DIDN'T MAKE A DAMN PART");
 	return nullptr;
 }
 

@@ -20,7 +20,6 @@ public:
 	ACombineBench();
 
 	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
-	void ChangeMesh();
 	virtual void ProcessPartItem(AForgePart* Part) override;
 	
 	TArray<ESwordPart> CurrentParts;

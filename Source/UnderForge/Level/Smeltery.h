@@ -23,6 +23,7 @@ protected:
 
 
 	float SmeltingTimeMax;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float SmeltingTimeNeeded;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float SmeltingTimeKABOOM;
@@ -70,6 +71,8 @@ public:
 		class UStaticMesh* IronIngot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* SteelIngot;
-	EResource CurrentState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EResource CurrentState;
 
 };

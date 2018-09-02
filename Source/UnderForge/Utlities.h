@@ -59,6 +59,7 @@ enum class EPartType : uint8
 UENUM(BlueprintType)
 enum class ESwordPart : uint8
 {
+	PT_NONE UMETA(DisplayName = "None"),
 	PT_IRONKRISBLADE UMETA(DisplayName = "Iron Kris Blade"),
 	PT_IRONBROADSWORDBLADE UMETA(DisplayName = "Iron BroadSword Blade"),
 	PT_STEELKRISBLADE UMETA(DisplayName = "Steel Kris Blade"),

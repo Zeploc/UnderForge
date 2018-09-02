@@ -31,10 +31,10 @@ public:
 		void MorphStates();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AHandlePart> BroadswordHandlePart;
+		TSubclassOf<class AForgePart> BroadswordHandlePart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AHandlePart> KrisHandlePart;
+		TSubclassOf<class AForgePart> KrisHandlePart;
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EHandleType type);
@@ -49,6 +49,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* KrisSwordHandle;
 
-	int CurrentState;
+	EHandleType CurrentState;
 	bool PotentiallyInteracting;
 };
