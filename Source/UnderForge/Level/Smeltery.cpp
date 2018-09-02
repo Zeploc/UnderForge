@@ -28,7 +28,7 @@ ASmeltery::ASmeltery()
 	CurrentProducingItem->SetupAttachment(Rotator);
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
-	CurrentState = 1;
+	CurrentState = EResource::R_IRONINGOT;
 
 }
 
@@ -84,21 +84,19 @@ void ASmeltery::MiniGameComplete()
 	bSmeltingMinigamePlaying = false;
 	if (SmeltingTimePassed < SmeltingTimeNeeded)
 	{
-		bSmeltingMinigamePlaying = false;
 		MakeMat(CurrentlyProcessing);
 		CurrentlyProcessing = EResource::R_NONE;
 	}
 	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
 	{
-		bSmeltingMinigamePlaying = false;
 		switch (CurrentlyProcessing)
 		{
 		case(EResource::R_IRONORE):
-			if (CurrentState == 1)
+			if (CurrentState == EResource::R_IRONINGOT)
 			{
 				MakeResource(EResource::R_IRONINGOT);
 			}
-			else if(CurrentState == 2)
+			else if(CurrentState == EResource::R_STEELINGOT)
 			{
 				MakeResource(EResource::R_STEELINGOT);
 			}
@@ -108,7 +106,6 @@ void ASmeltery::MiniGameComplete()
 	}
 	else
 	{
-		bSmeltingMinigamePlaying = false;
 		CurrentlyProcessing = EResource::R_NONE;
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
@@ -118,7 +115,6 @@ void ASmeltery::MiniGameComplete()
 
 AForgePart * ASmeltery::MakeResource(EResource type)
 {
-
 	switch (type)
 	{
 	case(EResource::R_IRONINGOT):
@@ -152,14 +148,15 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 
 void ASmeltery::MorphStates()
 {
-	if (CurrentState == 1)
+	if (bSmeltingMinigamePlaying) return;
+	if (CurrentState == EResource::R_IRONINGOT)
 	{
-		CurrentState = 2;
+		CurrentState = EResource::R_STEELINGOT;
 		CurrentProducingItem->SetStaticMesh(SteelIngot);
 	}
-	else if (CurrentState == 2)
+	else if (CurrentState == EResource::R_STEELINGOT)
 	{
-		CurrentState = 1;
+		CurrentState = EResource::R_IRONINGOT;
 		CurrentProducingItem->SetStaticMesh(IronIngot);
 	}
 }
