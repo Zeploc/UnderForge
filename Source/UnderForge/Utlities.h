@@ -8,6 +8,10 @@
 /**
  * 
  */
+#define ECC_Pickup		ECC_GameTraceChannel1
+#define ECC_Enemy		ECC_GameTraceChannel2
+#define ECC_Station		ECC_GameTraceChannel3
+
 UENUM(BlueprintType)
 enum class EResource : uint8
 {
@@ -34,7 +38,7 @@ UENUM(BlueprintType)
 enum class EBladeType : uint8
 {
 	BT_BROADSWORD UMETA(DisplayName = "Broadsword Blade"),
-	BT_KRIS UMETA(DisplayName = "Kris Handle"),
+	BT_KRIS UMETA(DisplayName = "Kris Blade"),
 };
 
 UENUM(BlueprintType)

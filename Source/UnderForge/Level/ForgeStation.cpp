@@ -3,7 +3,12 @@
 #include "ForgeStation.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/ArrowComponent.h"
 #include "Items/ForgeMat.h"
+#include "Items/ForgePart.h"
+
+// TEMP
+#include "Engine.h"
 
 // Sets default values
 AForgeStation::AForgeStation()
@@ -22,6 +27,9 @@ AForgeStation::AForgeStation()
 	CollisionBox->bGenerateOverlapEvents = true;
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AForgeStation::OnOverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AForgeStation::OnOverlapEnd);
+
+	RefuseThrowDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("Refuse Throw Direction"));
+	RefuseThrowDirection->SetupAttachment(StationMesh);
 }
 
 // Called when the game starts or when spawned
@@ -38,20 +46,41 @@ void AForgeStation::Tick(float DeltaTime)
 
 void AForgeStation::ProcessMatItem(AForgeMat * material)
 {
-	
+	ThrowAway(material);	
 }
 
 void AForgeStation::ProcessPartItem(AForgePart * Part)
 {
+	ThrowAway(Part);
 }
 
-void AForgeStation::ItemDectection(AActor *, bool entering)
+void AForgeStation::ItemDectection(AActor * actor, bool entering)
 {
+	if (AForgeMat* mat = Cast<AForgeMat>(actor))
+	{
+		if (entering)
+			mat->CurrentTouchingStation = this;
+		else
+			mat->CurrentTouchingStation = nullptr;
+	}
+	else if (AForgePart* part = Cast<AForgePart>(actor))
+	{
+		if (entering)
+			part->CurrentTouchingStation = this;
+		else
+			part->CurrentTouchingStation = nullptr;
+	}
 }
 
 void AForgeStation::ThrowAway(AActor * Actor)
-{
+{	
 	// YEET THAT BOI
+	if (!Actor) return;
+	if (UStaticMeshComponent* StaticMeshComp = Cast<UStaticMeshComponent>(Actor->GetComponentByClass(UStaticMeshComponent::StaticClass())))
+	{
+		StaticMeshComp->SetSimulatePhysics(true);
+		StaticMeshComp->AddImpulse(RefuseThrowDirection->GetForwardVector() * 1000.0f);
+	}
 }
 
 void AForgeStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,

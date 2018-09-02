@@ -22,8 +22,10 @@ public:
 	bool CanHavePart(ESwordPart PartToCheck);
 	bool AddPart(ESwordPart PartToAdd);
 
-	bool IsHandle(ESwordPart SwordPart);
-	bool IsBlade(ESwordPart SwordPart);
+	UFUNCTION(BlueprintCallable)
+		bool IsHandle(ESwordPart SwordPart);
+	UFUNCTION(BlueprintCallable)
+		bool IsBlade(ESwordPart SwordPart);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<ESwordPart, UStaticMesh*> PartMeshes;
@@ -34,8 +36,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* BladeMesh;
 
-private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<ESwordPart> ForgeParts;
+private:
 
 };

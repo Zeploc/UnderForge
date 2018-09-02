@@ -10,11 +10,12 @@
 
 #include "Components/StaticMeshComponent.h"
 
+// TEMP
+#include "Engine.h"
+
 // Sets default values
 ACombineBench::ACombineBench()
 {
-	CurrentWeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
-	ObjectPosition->SetupAttachment(CurrentWeaponMesh);
 	ObjectPosition->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
@@ -44,7 +45,6 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 		ThrowAway(Part); // if it does throw it away
 		return; // Stop checking
 	}
-
 	if (CurrentItem == nullptr) // No current item/parts
 	{
 		if (Part->PartType == EPartType::PT_BLADE || Part->PartType == EPartType::PT_HANDLE) // is sword part
@@ -72,7 +72,7 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 				if (CurrentSwordItem->AddPart(SwordPart)) // Add the part
 				{
 					// Is complete
-					CurrentSwordItem = nullptr;
+					CurrentItem = nullptr;
 				}
 			}
 			else

@@ -13,6 +13,9 @@
 #include "Level/CarpentaryStation.h"
 #include "Level/Smeltery.h"
 #include "Level/ForgeAnvil.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -21,6 +24,8 @@ AForgePlayer::AForgePlayer()
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
@@ -52,13 +57,13 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AForgePlayer::MoveRight(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(0.f, 1.f, 0.f), Value);
+	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
 }
 
 void AForgePlayer::MoveUp(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
+	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
 
 void AForgePlayer::Interact()
@@ -66,18 +71,7 @@ void AForgePlayer::Interact()
 	FHitResult hit;
 	FVector EndLocation = GetActorLocation() + GetActorRotation().Vector() * InteractRange;
 	FCollisionQueryParams Traceparams(TEXT("Interact Trace"), false, this);
-
-	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_EngineTraceChannel3, Traceparams);
-	//AInteractActor* InteractActor = Cast<AInteractActor>(hit.Actor);
-	//if (InteractActor)
-	//{
-	//	InteractActor->Interact();
-	//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact with interact actor"));
-	//}
-	//else if (hit.bBlockingHit)
-	//{
-	//	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Interact Hit object " + hit.Actor.Get()->GetFName().ToString()));
-	//}
+	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_Station, Traceparams);
 	UE_LOG(LogTemp, Warning, TEXT("Interact"));
 	if (ASmeltery* smelty = Cast<ASmeltery>(hit.Actor))
 	{

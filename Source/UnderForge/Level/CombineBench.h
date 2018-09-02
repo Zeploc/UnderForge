@@ -30,6 +30,4 @@ public:
 
 	class AForgeItem* CurrentItem;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* CurrentWeaponMesh;
 };

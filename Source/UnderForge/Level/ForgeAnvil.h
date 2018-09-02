@@ -22,7 +22,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 public:
-	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
 	virtual void ProcessPartItem(AForgePart* Part) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -59,13 +58,12 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* StraightSwordBlade;
+		class UStaticMesh* BroadswordBlade;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* KrisSwordBlade;
+	
 
-
-
-	int CurrentState;
+	EBladeType CurrentState;
 	bool PotentiallyInteracting;
 
 	float HammerTimeMax;

@@ -14,7 +14,7 @@ AForgePart::AForgePart()
 	RootComponent = PartMesh;
 	PartMesh->SetSimulatePhysics(true);
 	PartMesh->SetCollisionProfileName("PhysicsActor");
-	PartMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel1, ECollisionResponse::ECR_Block);
+	PartMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned

@@ -26,7 +26,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void ProcessMatItem(AForgeMat* material) override;
-	virtual void ItemDectection(class AActor* ,bool entering) override;
 
 	UFUNCTION(BlueprintCallable)
 		void MorphStates();
