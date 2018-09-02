@@ -23,6 +23,7 @@ protected:
 
 
 	float SmeltingTimeMax;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float SmeltingTimeNeeded;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float SmeltingTimeKABOOM;

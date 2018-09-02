@@ -23,9 +23,9 @@ public:
 	bool AddPart(ESwordPart PartToAdd);
 
 	UFUNCTION(BlueprintCallable)
-		bool IsHandle(ESwordPart SwordPart);
+		static bool IsHandle(ESwordPart SwordPart);
 	UFUNCTION(BlueprintCallable)
-		bool IsBlade(ESwordPart SwordPart);
+		static bool IsBlade(ESwordPart SwordPart);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<ESwordPart, UStaticMesh*> PartMeshes;
@@ -38,6 +38,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<ESwordPart> ForgeParts;
+	
 private:
 
 };

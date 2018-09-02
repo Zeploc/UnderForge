@@ -82,6 +82,7 @@ void ASmeltery::SmeltingMinigame(float DeltaTime)
 void ASmeltery::MiniGameComplete()
 {
 	bSmeltingMinigamePlaying = false;
+	CurrentRemainingTime = 0.0f;
 	if (SmeltingTimePassed < SmeltingTimeNeeded)
 	{
 		MakeMat(CurrentlyProcessing);

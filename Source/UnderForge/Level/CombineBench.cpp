@@ -29,47 +29,32 @@ void ACombineBench::ItemDectection(class AActor* OverlappActor, bool entering)
 			return;
 		}		
 		Part->CurrentTouchingStation = this;
-	}
-	
-}
-
-void ACombineBench::ChangeMesh()
-{
-
+	}	
 }
 
 void ACombineBench::ProcessPartItem(AForgePart * Part)
 {
-	if (Part->PartType != EPartType::PT_BLADE && Part->PartType != EPartType::PT_HANDLE) // Check if its not a valid part
+	if (Part->SwordPart == ESwordPart::PT_NONE) // Check if its not a valid part
 	{
 		ThrowAway(Part); // if it does throw it away
 		return; // Stop checking
 	}
 	if (CurrentItem == nullptr) // No current item/parts
 	{
-		if (Part->PartType == EPartType::PT_BLADE || Part->PartType == EPartType::PT_HANDLE) // is sword part
-		{
-			ESwordPart SwordPart = UUtilities::GetSwordPartEnum(Part);
-			ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			NewSwordItem->ItemMesh->SetSimulatePhysics(false);
-			NewSwordItem->AddPart(SwordPart);
-			CurrentItem = NewSwordItem;
-			Part->Destroy();
-		}
-		else // Is not valid part
-		{
-			ThrowAway(Part); // throw it away
-		}
+		ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		NewSwordItem->ItemMesh->SetSimulatePhysics(false);
+		NewSwordItem->AddPart(Part->SwordPart);
+		CurrentItem = NewSwordItem;
+		Part->Destroy();
 	}
 	else // item exists, check valid part
 	{
 		if (ASwordItem* CurrentSwordItem = Cast<ASwordItem>(CurrentItem)) // Item is a sword
 		{
-			ESwordPart SwordPart = UUtilities::GetSwordPartEnum(Part);
-			if (CurrentSwordItem->CanHavePart(SwordPart)) // If the sword needs that type of part
+			if (CurrentSwordItem->CanHavePart(Part->SwordPart)) // If the sword needs that type of part
 			{
 				Part->Destroy(); // Destroy part actor
-				if (CurrentSwordItem->AddPart(SwordPart)) // Add the part
+				if (CurrentSwordItem->AddPart(Part->SwordPart)) // Add the part
 				{
 					// Is complete
 					CurrentItem = nullptr;
