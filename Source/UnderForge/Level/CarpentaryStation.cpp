@@ -58,17 +58,38 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 		ThrowAway(material);	
 }
 
-void ACarpentaryStation::MorphStates()
+void ACarpentaryStation::MorphStates(bool Next)
 {
-	if (CurrentState == EHandleType::HT_BROADSWORD)
+	switch (CurrentState)
 	{
-		CurrentState = EHandleType::HT_KRIS;
-		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
+	case EHandleType::HT_BROADSWORD:
+	{
+		if (Next)
+			CurrentState = EHandleType::HT_KRIS;
+		else
+			CurrentState = EHandleType::HT_KRIS;
+		break;
 	}
-	else if(CurrentState == EHandleType::HT_KRIS)
+	case EHandleType::HT_KRIS:
 	{
-		CurrentState = EHandleType::HT_BROADSWORD;
+		if (Next)
+			CurrentState = EHandleType::HT_BROADSWORD;
+		else
+			CurrentState = EHandleType::HT_BROADSWORD;
+		break;
+	}
+	}
+
+	switch (CurrentState)
+	{
+	case EHandleType::HT_BROADSWORD:
 		CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
+		break;
+	case EHandleType::HT_KRIS:
+		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
+		break;
+	default:
+		break;
 	}
 }
 

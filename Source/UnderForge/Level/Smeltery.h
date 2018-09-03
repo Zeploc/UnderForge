@@ -36,7 +36,7 @@ public:
 	void SmeltingMinigame(float DeltaTime);
 	void MiniGameComplete();
 	UFUNCTION(BlueprintCallable)
-		void MorphStates();
+		void MorphStates(bool Next);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> IronIngotPart;

@@ -25,7 +25,7 @@ public:
 	virtual void ProcessPartItem(AForgePart* Part) override;
 
 	UFUNCTION(BlueprintCallable)
-		void MorphStates();
+		void MorphStates(bool Next);
 
 	void HammeringMinigame(float Deltatime);
 	void HammeringCycle();

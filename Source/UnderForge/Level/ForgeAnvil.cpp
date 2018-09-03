@@ -162,18 +162,39 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 }
 
 
-void AForgeAnvil::MorphStates()
+void AForgeAnvil::MorphStates(bool Next)
 {
 	if (bHammerMinigamePlaying) return;
-	if (CurrentState == EBladeType::BT_BROADSWORD)
+
+	switch (CurrentState)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("hi"));
-		CurrentState = EBladeType::BT_KRIS;
-		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+	case EBladeType::BT_BROADSWORD:
+	{
+		if (Next)
+			CurrentState = EBladeType::BT_KRIS;
+		else
+			CurrentState = EBladeType::BT_KRIS;
+		break;
 	}
-	else if (CurrentState == EBladeType::BT_KRIS)
+	case EBladeType::BT_KRIS:
 	{
-		CurrentState = EBladeType::BT_BROADSWORD;
+		if (Next)
+			CurrentState = EBladeType::BT_BROADSWORD;
+		else
+			CurrentState = EBladeType::BT_BROADSWORD;
+		break;
+	}
+	}
+
+	switch (CurrentState)
+	{
+	case EBladeType::BT_BROADSWORD:
 		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
+		break;
+	case EBladeType::BT_KRIS:
+		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+		break;
+	default:
+		break;
 	}
 }
