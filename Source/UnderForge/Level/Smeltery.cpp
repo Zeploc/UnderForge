@@ -147,17 +147,38 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 	return nullptr;
 }
 
-void ASmeltery::MorphStates()
+void ASmeltery::MorphStates(bool Next)
 {
 	if (bSmeltingMinigamePlaying) return;
-	if (CurrentState == EResource::R_IRONINGOT)
+	switch (CurrentState)
 	{
-		CurrentState = EResource::R_STEELINGOT;
-		CurrentProducingItem->SetStaticMesh(SteelIngot);
+	case EResource::R_IRONINGOT:
+	{
+		if (Next)
+			CurrentState = EResource::R_STEELINGOT;
+		else
+			CurrentState = EResource::R_STEELINGOT;
+		break;
 	}
-	else if (CurrentState == EResource::R_STEELINGOT)
+	case EResource::R_STEELINGOT:
 	{
-		CurrentState = EResource::R_IRONINGOT;
+		if (Next)
+			CurrentState = EResource::R_IRONINGOT;
+		else
+			CurrentState = EResource::R_IRONINGOT;
+		break;
+	}
+	}
+
+	switch (CurrentState)
+	{
+	case EResource::R_IRONINGOT:
 		CurrentProducingItem->SetStaticMesh(IronIngot);
+		break;
+	case EResource::R_STEELINGOT:
+		CurrentProducingItem->SetStaticMesh(SteelIngot);
+		break;
+	default:
+		break;
 	}
 }

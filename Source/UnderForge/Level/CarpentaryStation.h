@@ -28,7 +28,7 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
 	UFUNCTION(BlueprintCallable)
-		void MorphStates();
+		void MorphStates(bool Next);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> BroadswordHandlePart;

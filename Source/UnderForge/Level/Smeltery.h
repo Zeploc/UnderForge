@@ -36,7 +36,7 @@ public:
 	void SmeltingMinigame(float DeltaTime);
 	void MiniGameComplete();
 	UFUNCTION(BlueprintCallable)
-		void MorphStates();
+		void MorphStates(bool Next);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> IronIngotPart;
@@ -53,7 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		class AForgeMat* MakeMat(EResource type);
 
-	bool bSmeltingMinigamePlaying;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bSmeltingMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
 		float SmeltingTimePassed;
 	EResource CurrentlyProcessing;
