@@ -95,7 +95,7 @@ void AForgePlayer::Interact()
 
 void AForgePlayer::SecondaryInteract()
 {
-	if (FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent())
+	/*if (FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent())
 	{
 		if (Cast<UStaticMeshComponent>(FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent()))
 		{
@@ -113,5 +113,5 @@ void AForgePlayer::SecondaryInteract()
 				}
 			}
 		}
-	}
+	}*/
 }

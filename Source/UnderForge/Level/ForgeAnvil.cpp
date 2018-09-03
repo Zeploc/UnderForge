@@ -5,29 +5,16 @@
 #include "Engine/World.h"
 #include "Engine.h"
 #include "Components/SceneComponent.h"
-#include <ctime>
+#include "TimerManager.h"
 
 AForgeAnvil::AForgeAnvil()
 {
-	srand(static_cast <unsigned> (time(0)));
-
-	HammerTimeMax = 2.0f;
-	HammerTimeNeeded = 1.0f;
-	HammerTimeKABOOM = 3.0f;
-	HammingCycles = 0;
-	MaxCycles = 5;
 
 	bHammerMinigamePlaying = false;
-	HammerTimePassed = 0.0f;
 	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
 	Rotator->SetupAttachment(StationMesh);
 	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
-
-	StationMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
-	StationMesh2->SetupAttachment(StationMesh);
-	StationMesh2->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	StationMesh2->SetVisibility(false, false);
-
+	
 	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh3"));
 	CurrentProducingItem->SetupAttachment(Rotator);
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
@@ -68,12 +55,14 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	case(EResource::R_STEELINGOT):
 		{
 			CurrentResource = EBladeMat::BM_STEEL;
+			RandomiseRange();
 			bHammerMinigamePlaying = true;
 			break;
 		}
 	case(EResource::R_IRONINGOT):
 		{
 			CurrentResource = EBladeMat::BM_IRON;
+			RandomiseRange();
 			bHammerMinigamePlaying = true;
 			break;
 		}
@@ -89,77 +78,53 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 
 void AForgeAnvil::HammeringMinigame(float Deltatime)
 {
-	if (bHammerMinigamePlaying)
-	{
-		HammerTimePassed += Deltatime;
-		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "TimePassed: " + FString::SanitizeFloat(HammerTimePassed));
-		if (HammerTimePassed > HammerTimeKABOOM)
-		{
-			bHammerMinigamePlaying = false;
-			HammerTimePassed = 0.0f;
-			HammerTimeMax = 2.0f;
-			HammerTimeNeeded = 1.0f;
-			CurrentResource = EBladeMat::BM_NONE;
-			CurrentlyProcessing = EResource::R_NONE;
-			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
-			//KABOOM
-		}
-		else if (HammerTimePassed > HammerTimeNeeded && HammerTimePassed < HammerTimeMax)
-		{
-			if (!StationMesh2->IsVisible())
-			{
-				StationMesh2->SetVisibility(true, false);
-			}
-		}
-		else if (HammerTimePassed < HammerTimeNeeded || HammerTimePassed > HammerTimeMax)
-		{
-			if (StationMesh2->IsVisible())
-			{
-				StationMesh2->SetVisibility(false, false);
-			}
-		}
-	}
+	if (SuccessHit || !bHammerMinigamePlaying) return;
+	if (CurrentMarkerPos >= 1.0f) CurrentMarkerMoveSpeed = -MarkerMoveSpeed;
+	else if (CurrentMarkerPos <= 0.0f) CurrentMarkerMoveSpeed = MarkerMoveSpeed;
+
+	CurrentMarkerPos += CurrentMarkerMoveSpeed * Deltatime;
 }
 
 void AForgeAnvil::HammeringCycle()
 {
-	if (HammerTimePassed > HammerTimeNeeded && HammerTimePassed < HammerTimeMax)
+	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
+		// Play success hit sound (or in animation)
 		HammingCycles++;
-		HammerTimePassed = 0.0f;
+		SuccessHit = true;
+		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
 	}
-	else
+	else // Missed, fail
 	{
+		// Play fail sound
 		bHammerMinigamePlaying = false;
+		HammingCycles = 0;
 		CurrentResource = EBladeMat::BM_NONE;
 		CurrentlyProcessing = EResource::R_NONE;
-		HammerTimePassed = 0.0f;
-		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
-
-
-		HammingCycles = 0;
-		//KABOOM
 	}
+}
+
+void AForgeAnvil::SuccessTimeComplete()
+{
+	SuccessHit = false;
 	if (HammingCycles >= MaxCycles)
 	{
 		MakeResource(CurrentResource);
 		bHammerMinigamePlaying = false;
 		CurrentResource = EBladeMat::BM_NONE;
 		CurrentlyProcessing = EResource::R_NONE;
-		HammerTimePassed = 0.0f;
-		HammerTimeMax = 2.0f;
-		HammerTimeNeeded = 1.0f;
-		StationMesh2->SetVisibility(false, false);
-		HammingCycles = 0;
 	}
-	RandomizeHammeringWindow();
+	else
+		RandomiseRange();
+
+	GetWorldTimerManager().ClearTimer(SuccessHitTimerHandle);
 }
 
-void AForgeAnvil::RandomizeHammeringWindow()
+void AForgeAnvil::RandomiseRange()
 {
-	float r = 0.5f + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/ (2.6f - 0.5f));
-	HammerTimeMax = r + 0.3f;
-	HammerTimeNeeded = r - 0.3f;
+	float RangeSize = FMath::RandRange(RangeMin, RangeMax);
+	CurrentMinRange = FMath::RandRange(0.0f, 1.0f - RangeSize);
+	CurrentMaxRange = CurrentMinRange + RangeSize;
 }
 
 AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
@@ -197,18 +162,39 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 }
 
 
-void AForgeAnvil::MorphStates()
+void AForgeAnvil::MorphStates(bool Next)
 {
 	if (bHammerMinigamePlaying) return;
-	if (CurrentState == EBladeType::BT_BROADSWORD)
+
+	switch (CurrentState)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("hi"));
-		CurrentState = EBladeType::BT_KRIS;
-		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+	case EBladeType::BT_BROADSWORD:
+	{
+		if (Next)
+			CurrentState = EBladeType::BT_KRIS;
+		else
+			CurrentState = EBladeType::BT_KRIS;
+		break;
 	}
-	else if (CurrentState == EBladeType::BT_KRIS)
+	case EBladeType::BT_KRIS:
 	{
-		CurrentState = EBladeType::BT_BROADSWORD;
+		if (Next)
+			CurrentState = EBladeType::BT_BROADSWORD;
+		else
+			CurrentState = EBladeType::BT_BROADSWORD;
+		break;
+	}
+	}
+
+	switch (CurrentState)
+	{
+	case EBladeType::BT_BROADSWORD:
 		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
+		break;
+	case EBladeType::BT_KRIS:
+		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+		break;
+	default:
+		break;
 	}
 }
