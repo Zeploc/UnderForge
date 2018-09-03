@@ -51,4 +51,10 @@ public:
 
 	EHandleType CurrentState;
 	bool PotentiallyInteracting;
+
+	void BeginMinigame(float x, float y);
+	void SpinningMinigame();
+
+	bool bSpinningGamePlaying;
+	float SpinningTotal;
 };

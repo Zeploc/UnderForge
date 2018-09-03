@@ -91,3 +91,12 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	return nullptr;
 }
 
+void ACarpentaryStation::BeginMinigame(float x, float y)
+{
+
+}
+
+void ACarpentaryStation::SpinningMinigame()
+{
+
+}
