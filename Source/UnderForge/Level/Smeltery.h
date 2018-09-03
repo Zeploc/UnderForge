@@ -53,7 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		class AForgeMat* MakeMat(EResource type);
 
-	bool bSmeltingMinigamePlaying;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bSmeltingMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
 		float SmeltingTimePassed;
 	EResource CurrentlyProcessing;
