@@ -25,4 +25,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void Seeker(FVector location);
+	int iHealth;
+	void TakeDamage(int iDamage);
 };
