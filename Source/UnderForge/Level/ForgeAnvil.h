@@ -29,7 +29,6 @@ public:
 
 	void HammeringMinigame(float Deltatime);
 	void HammeringCycle();
-	void RandomizeHammeringWindow();
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EBladeMat type);
@@ -45,11 +44,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> IronBroadBladePart;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* StationMesh2;
-
-
+	
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;
@@ -65,15 +60,39 @@ public:
 
 	EBladeType CurrentState;
 	bool PotentiallyInteracting;
+	
+	FTimerHandle SuccessHitTimerHandle;
 
-	float HammerTimeMax;
-	float HammerTimeNeeded;
-	float HammerTimeKABOOM;
-	int HammingCycles;
-	int MaxCycles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float MarkerMoveSpeed = 0.8f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float RangeMin = 0.15f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float RangeMax = 0.6f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int MaxCycles = 5;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float CurrentMinRange = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float CurrentMaxRange = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float CurrentMarkerPos = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float PauseTimeOnSuccess = 0.5f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool SuccessHit = false;
+
+	int HammingCycles = 0;
+
+	float CurrentMarkerMoveSpeed = 0.8f;
+	void SuccessTimeComplete();
+	void RandomiseRange();
 
 	EBladeMat CurrentResource;
-	bool bHammerMinigamePlaying;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bHammerMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
 		float HammerTimePassed;
 	EResource CurrentlyProcessing;
