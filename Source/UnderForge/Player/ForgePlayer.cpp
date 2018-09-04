@@ -16,6 +16,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 
+
 // Sets default values
 AForgePlayer::AForgePlayer()
 {

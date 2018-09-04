@@ -41,6 +41,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void LockPosition(bool IsLocked);
+
+
 	
 	
 	//TEST
