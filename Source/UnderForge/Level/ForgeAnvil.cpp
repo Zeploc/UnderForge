@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "Components/SceneComponent.h"
 #include "TimerManager.h"
+#include "Player/ForgePlayer.h"
 
 AForgeAnvil::AForgeAnvil()
 {
@@ -85,8 +86,9 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 	CurrentMarkerPos += CurrentMarkerMoveSpeed * Deltatime;
 }
 
-void AForgeAnvil::HammeringCycle()
+void AForgeAnvil::HammeringCycle(class AForgePlayer* Player)
 {
+	if (!Player->IsHoldingHammer) return;
 	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
 		// Play success hit sound (or in animation)
@@ -103,6 +105,7 @@ void AForgeAnvil::HammeringCycle()
 		CurrentlyProcessing = EResource::R_NONE;
 	}
 }
+
 
 void AForgeAnvil::SuccessTimeComplete()
 {

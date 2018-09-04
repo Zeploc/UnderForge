@@ -31,6 +31,9 @@ public:
 		class AForgePlayer* CurrentPlayer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class AForgeStation* ToolStation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool IsHeld = false;
 
 	UFUNCTION(BlueprintCallable)

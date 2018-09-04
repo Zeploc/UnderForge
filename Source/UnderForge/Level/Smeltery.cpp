@@ -182,3 +182,8 @@ void ASmeltery::MorphStates(bool Next)
 		break;
 	}
 }
+
+void ASmeltery::DamageForge(float Damage)
+{
+	ForgeHealth -= Damage;
+}

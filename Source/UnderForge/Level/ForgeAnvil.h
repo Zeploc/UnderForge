@@ -28,7 +28,7 @@ public:
 		void MorphStates(bool Next);
 
 	void HammeringMinigame(float Deltatime);
-	void HammeringCycle();
+	void HammeringCycle(class AForgePlayer* Player);
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EBladeMat type);
@@ -82,7 +82,7 @@ public:
 		float PauseTimeOnSuccess = 0.5f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool SuccessHit = false;
-
+	
 	int HammingCycles = 0;
 
 	float CurrentMarkerMoveSpeed = 0.8f;

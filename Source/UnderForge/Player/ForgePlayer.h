@@ -32,8 +32,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Returns true if interacted (With station)
 	UFUNCTION(BlueprintCallable)
-		void Interact();
+		bool Interact();
 	UFUNCTION(BlueprintCallable)
 		void SecondaryInteract();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -42,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void LockPosition(bool IsLocked);
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool IsHoldingHammer = false;
 
 	
 	
