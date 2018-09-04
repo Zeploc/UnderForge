@@ -122,6 +122,14 @@ void AForgePlayer::SecondaryInteract()
 	}*/
 }
 
+void AForgePlayer::LockPosition(bool IsLocked)
+{
+	if (IsLocked)
+		DisableInput(Cast<APlayerController>(GetController()));
+	else
+		EnableInput(Cast<APlayerController>(GetController()));
+}
+
 
 
 
