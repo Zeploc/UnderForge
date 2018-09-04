@@ -109,6 +109,7 @@ void AForgeAnvil::SuccessTimeComplete()
 	SuccessHit = false;
 	if (HammingCycles >= MaxCycles)
 	{
+		HammingCycles = 0;
 		MakeResource(CurrentResource);
 		bHammerMinigamePlaying = false;
 		CurrentResource = EBladeMat::BM_NONE;
