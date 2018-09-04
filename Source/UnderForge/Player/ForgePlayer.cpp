@@ -15,8 +15,9 @@
 #include "Level/ForgeAnvil.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
-
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Sound/SoundBase.h"
 // Sets default values
 AForgePlayer::AForgePlayer()
 {

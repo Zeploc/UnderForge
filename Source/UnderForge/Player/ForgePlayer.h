@@ -42,7 +42,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void LockPosition(bool IsLocked);
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USoundBase* Attack1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USoundBase* Attack2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USoundBase* Attack3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool IsHoldingHammer = false;

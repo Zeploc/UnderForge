@@ -18,6 +18,10 @@ class UNDERFORGE_API AForgeAnvil : public AForgeStation
 	GENERATED_BODY()
 
 protected:
+	//sound
+	class USoundBase* Success;
+	class USoundBase* Failure;
+	//---------
 	AForgeAnvil();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
