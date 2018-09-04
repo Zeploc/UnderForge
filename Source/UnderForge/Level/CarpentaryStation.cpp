@@ -39,6 +39,7 @@ void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
+	SpinningRequired = 25.0f;
 }
 
 // Called every frame
@@ -63,36 +64,39 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 
 void ACarpentaryStation::MorphStates(bool Next)
 {
-	switch (CurrentState)
+	if (!bSpinningGamePlaying)
 	{
-	case EHandleType::HT_BROADSWORD:
-	{
-		if (Next)
-			CurrentState = EHandleType::HT_KRIS;
-		else
-			CurrentState = EHandleType::HT_KRIS;
-		break;
-	}
-	case EHandleType::HT_KRIS:
-	{
-		if (Next)
-			CurrentState = EHandleType::HT_BROADSWORD;
-		else
-			CurrentState = EHandleType::HT_BROADSWORD;
-		break;
-	}
-	}
+		switch (CurrentState)
+		{
+		case EHandleType::HT_BROADSWORD:
+		{
+			if (Next)
+				CurrentState = EHandleType::HT_KRIS;
+			else
+				CurrentState = EHandleType::HT_KRIS;
+			break;
+		}
+		case EHandleType::HT_KRIS:
+		{
+			if (Next)
+				CurrentState = EHandleType::HT_BROADSWORD;
+			else
+				CurrentState = EHandleType::HT_BROADSWORD;
+			break;
+		}
+		}
 
-	switch (CurrentState)
-	{
-	case EHandleType::HT_BROADSWORD:
-		CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
-		break;
-	case EHandleType::HT_KRIS:
-		CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
-		break;
-	default:
-		break;
+		switch (CurrentState)
+		{
+		case EHandleType::HT_BROADSWORD:
+			CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
+			break;
+		case EHandleType::HT_KRIS:
+			CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -155,8 +159,9 @@ void ACarpentaryStation::SpinningMinigame()
 		}
 		PreviousX = CurrentX;
 		PreviousY = CurrentY;
-		if (SpinningTotal > 30)
+		if (SpinningTotal > SpinningRequired)
 		{
+			SpinningTotal = 0.0f;
 			bSpinningGamePlaying = false;
 			MakeResource(CurrentState);
 		}

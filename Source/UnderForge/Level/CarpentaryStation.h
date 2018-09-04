@@ -47,8 +47,8 @@ public:
 		class UStaticMesh* BroadSwordHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* KrisSwordHandle;
-
-	EHandleType CurrentState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EHandleType CurrentState;
 	bool PotentiallyInteracting;
 
 
@@ -68,5 +68,8 @@ public:
 		void SpinningMinigame();
 
 	bool bSpinningGamePlaying;
-	float SpinningTotal;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float SpinningTotal;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float SpinningRequired;
 };
