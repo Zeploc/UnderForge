@@ -9,7 +9,9 @@
 #include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
-
+#include "Runtime/Core/Public/Math/Vector.h"
+#include <string>
+#include <cmath>
 // TEMP
 #include "Engine.h"
 
@@ -45,13 +47,14 @@ void ACarpentaryStation::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	FRotator rotate(0,1,0);
 	Rotator->AddWorldRotation(rotate);
+	SpinningMinigame();
 }
 
 void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
 	if (material->ResourceType == EResource::R_WOOD)
 	{
-		MakeResource(CurrentState);
+		BeginMinigame();
 		material->Destroy();
 	}
 	else
@@ -112,12 +115,51 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	return nullptr;
 }
 
-void ACarpentaryStation::BeginMinigame(float x, float y)
+void ACarpentaryStation::SetXValue(float x)
 {
+	CurrentX = x;
+	return;
+}
 
+void ACarpentaryStation::SetYValue(float y)
+{
+	CurrentY = y;
+	return;
+}
+
+
+void ACarpentaryStation::BeginMinigame()
+{
+	bSpinningGamePlaying = true;
+	PreviousX = CurrentX;
+	PreviousY = CurrentY;
+	SpinningTotal = 0.0f;
+	return;
 }
 
 void ACarpentaryStation::SpinningMinigame()
 {
-
+	if (bSpinningGamePlaying)
+	{
+		FVector currentStickPos(CurrentX, CurrentY, 0.0f);
+		currentStickPos.Normalize();
+		FVector PreviousStickPos(PreviousX, PreviousY, 0.0f);
+		PreviousStickPos.Normalize();
+		float change = FVector::DotProduct(PreviousStickPos,currentStickPos);
+		if (change > 0.0f)
+		{
+			change = abs(1.0f - change);
+			SpinningTotal += change;
+			FString TheFloatStr = FString::SanitizeFloat(SpinningTotal);
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Total: " + TheFloatStr));
+		}
+		PreviousX = CurrentX;
+		PreviousY = CurrentY;
+		if (SpinningTotal > 30)
+		{
+			bSpinningGamePlaying = false;
+			MakeResource(CurrentState);
+		}
+	}
+	return;
 }

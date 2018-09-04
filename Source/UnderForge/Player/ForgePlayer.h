@@ -39,5 +39,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractRange = 100.0f;
 	
-
+	
+	
+	//TEST
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class ACarpentaryStation* currentLathe;
+	UFUNCTION(BlueprintCallable)
+		void SetXValue(float x);
+	UFUNCTION(BlueprintCallable)
+		void SetYValue(float y);
+	float CurrentX;
+	float CurrentY;
 };

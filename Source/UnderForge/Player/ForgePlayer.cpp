@@ -51,6 +51,8 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	// set up gameplay key bindings
 	PlayerInputComponent->BindAxis("MoveRight", this, &AForgePlayer::MoveRight);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AForgePlayer::MoveUp);
+	PlayerInputComponent->BindAxis("SpinningXAxis", this, &AForgePlayer::SetXValue);
+	PlayerInputComponent->BindAxis("SpinningYAxis", this, &AForgePlayer::SetYValue);
 	PlayerInputComponent->BindAction("SecondaryInteract", IE_Pressed, this, &AForgePlayer::SecondaryInteract);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AForgePlayer::Interact);
 }
@@ -91,6 +93,10 @@ void AForgePlayer::Interact()
 			anvil->HammeringCycle();
 		}
 	}
+	else if (ACarpentaryStation* Lathe = Cast<ACarpentaryStation>(hit.Actor))
+	{
+		currentLathe = Lathe;
+	}
 }
 
 void AForgePlayer::SecondaryInteract()
@@ -114,4 +120,41 @@ void AForgePlayer::SecondaryInteract()
 			}
 		}
 	}*/
+}
+
+
+
+
+
+
+
+//TEMP
+
+#include "Engine.h"
+
+
+void AForgePlayer::SetXValue(float x)
+{
+	//CurrentX = x;
+
+	//FString TheFloatStr = FString::SanitizeFloat(CurrentX);
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("X: " + TheFloatStr));
+	//return;
+	if (currentLathe)
+	{
+		currentLathe->SetXValue(x);
+	}
+}
+
+void AForgePlayer::SetYValue(float y)
+{
+	//CurrentY = y;
+
+	//FString TheFloatStr = FString::SanitizeFloat(CurrentY);
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Y: " + TheFloatStr));
+	//return;
+	if (currentLathe)
+	{
+		currentLathe->SetYValue(y);
+	}
 }

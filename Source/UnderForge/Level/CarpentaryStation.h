@@ -24,7 +24,6 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -52,8 +51,21 @@ public:
 	EHandleType CurrentState;
 	bool PotentiallyInteracting;
 
-	void BeginMinigame(float x, float y);
-	void SpinningMinigame();
+
+	//Spining minigame Section
+	float CurrentX;
+	float CurrentY;
+	float PreviousX;
+	float PreviousY;
+
+	UFUNCTION(BlueprintCallable)
+		void SetXValue(float x);
+	UFUNCTION(BlueprintCallable)
+		void SetYValue(float y);
+	UFUNCTION(BlueprintCallable)
+		void BeginMinigame();
+	UFUNCTION(BlueprintCallable)
+		void SpinningMinigame();
 
 	bool bSpinningGamePlaying;
 	float SpinningTotal;
