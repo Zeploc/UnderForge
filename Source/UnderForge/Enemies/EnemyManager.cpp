@@ -26,11 +26,11 @@ void AEnemyManager::BeginPlay()
 		}
 	}
 
-	SpawnLocations.Push(FVector(0.0f, 0.0f, 200.0f));
-	SpawnLocations.Push(FVector(200.0f, 200.0f, 200.0f));
-	SpawnLocations.Push(FVector(200.0f, -200.0f, 200.0f));
-	SpawnLocations.Push(FVector(-200.0f, -200.0f, 200.0f));
-	SpawnLocations.Push(FVector(-200.0f, 200.0f, 200.0f));
+	SpawnLocations.Push(FVector(740.0f, -215.0f, 77.0f));
+	SpawnLocations.Push(FVector(590.0f, -290.0f, 77.0f));
+	SpawnLocations.Push(FVector(590.0f, 85.0f, 77.0f));
+	SpawnLocations.Push(FVector(740.0f, 130.0f, 77.0f));
+	
 
 	GetWorld()->GetTimerManager().SetTimer(timer, this, &AEnemyManager::SpawnEnemy, 1.0f, true);
 }
