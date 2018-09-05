@@ -38,7 +38,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<ESwordPart> ForgeParts;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USoundBase* SuccessCombine;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USoundBase* FailureCombine;
 private:
 
 };

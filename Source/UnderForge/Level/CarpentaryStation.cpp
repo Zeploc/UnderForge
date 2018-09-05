@@ -13,6 +13,12 @@
 #include <string>
 #include <cmath>
 #include "Components/WidgetComponent.h"
+
+
+
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Sound/SoundBase.h"
 // TEMP
 #include "Engine.h"
 
@@ -33,6 +39,7 @@ ACarpentaryStation::ACarpentaryStation()
 	CurrentState = EHandleType::HT_BROADSWORD;
 	OutputName = FString("Rough Hilt");
 	PotentiallyInteracting = false;
+	SpinningRequired = 25.0f;
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +47,6 @@ void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
-	SpinningRequired = 25.0f;
 	InteractTimer = 0;
 }
 
