@@ -158,8 +158,8 @@ void ACarpentaryStation::SpinningMinigame()
 		{
 			change = abs(1.0f - change);
 			SpinningTotal += change;
-			FString TheFloatStr = FString::SanitizeFloat(SpinningTotal);
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Total: " + TheFloatStr));
+			//FString TheFloatStr = FString::SanitizeFloat(SpinningTotal);
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Total: " + TheFloatStr));
 		}
 		PreviousX = CurrentX;
 		PreviousY = CurrentY;

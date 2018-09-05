@@ -29,8 +29,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* PartMesh;
-
-	class AForgeStation* CurrentTouchingStation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class AForgeStation* CurrentTouchingStation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		ESwordPart SwordPart;

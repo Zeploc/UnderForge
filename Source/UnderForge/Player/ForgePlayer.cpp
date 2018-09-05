@@ -60,12 +60,14 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 void AForgePlayer::MoveRight(float Value)
 {
+	if (currentLathe) return;
 	// add movement in that direction
 	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
 }
 
 void AForgePlayer::MoveUp(float Value)
 {
+	if (currentLathe) return;
 	// add movement in that direction
 	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
@@ -99,8 +101,10 @@ bool AForgePlayer::Interact()
 	}
 	else if (ACarpentaryStation* Lathe = Cast<ACarpentaryStation>(hit.Actor))
 	{
-		currentLathe = Lathe;
-
+		if (Lathe->bSpinningGamePlaying)
+		{
+			//currentLathe = Lathe;
+		}
 		return false;
 	}
 	return false;
@@ -147,6 +151,11 @@ void AForgePlayer::LockPosition(bool IsLocked)
 
 #include "Engine.h"
 
+
+void AForgePlayer::latheReset()
+{
+	currentLathe = nullptr;
+}
 
 void AForgePlayer::SetXValue(float x)
 {
