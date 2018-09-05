@@ -96,6 +96,7 @@ bool AForgePlayer::Interact()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
 			anvil->HammeringCycle(this);
+			SwingingHammer = true;
 		}
 		return true;
 	}

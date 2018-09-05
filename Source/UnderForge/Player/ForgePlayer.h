@@ -52,7 +52,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool IsHoldingHammer = false;
 
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool SwingingHammer = false;
 	
 	//TEST
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
