@@ -30,12 +30,15 @@ AForgeStation::AForgeStation()
 
 	RefuseThrowDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("Refuse Throw Direction"));
 	RefuseThrowDirection->SetupAttachment(StationMesh);
+
+	PotentiallyInteracting = false;
 }
 
 // Called when the game starts or when spawned
 void AForgeStation::BeginPlay()
 {
 	Super::BeginPlay();
+	InteractTimer = 0;
 }
 
 // Called every frame

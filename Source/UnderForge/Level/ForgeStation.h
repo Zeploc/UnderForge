@@ -49,4 +49,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UArrowComponent* RefuseThrowDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool PotentiallyInteracting;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float InteractTimer;
 };
