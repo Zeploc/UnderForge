@@ -6,6 +6,11 @@
 #include "Engine.h"
 #include "Components/SceneComponent.h"
 #include "TimerManager.h"
+#include "Player/ForgePlayer.h"
+
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Sound/SoundBase.h"
 
 AForgeAnvil::AForgeAnvil()
 {
@@ -24,6 +29,11 @@ AForgeAnvil::AForgeAnvil()
 	CurrentState = EBladeType::BT_BROADSWORD;
 
 	CurrentResource = EBladeMat::BM_NONE;
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> SoundSuccess(TEXT("SoundWave'/Game/Sounds/SoundRourke/SmithingHit_Sound.SmithingHit_Sound'"));
+	Success = SoundSuccess.Object;
+	static ConstructorHelpers::FObjectFinder<USoundBase> SoundFail(TEXT("SoundWave'/Game/Sounds/SoundRourke/Error_or_Drop_Sound.Error_or_Drop_Sound'"));
+	Failure = SoundFail.Object;
 }
 void AForgeAnvil::BeginPlay()
 {
@@ -85,24 +95,28 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 	CurrentMarkerPos += CurrentMarkerMoveSpeed * Deltatime;
 }
 
-void AForgeAnvil::HammeringCycle()
+void AForgeAnvil::HammeringCycle(class AForgePlayer* Player)
 {
+	if (!Player->IsHoldingHammer) return;
 	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
-		// Play success hit sound (or in animation)
+		UGameplayStatics::PlaySound2D(GetWorld(),Success, 1.0f, 1.0f, 0.0f);
+
 		HammingCycles++;
 		SuccessHit = true;
 		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
 	}
 	else // Missed, fail
 	{
-		// Play fail sound
+		UGameplayStatics::PlaySound2D(GetWorld(), Failure, 1.0f, 1.0f, 0.0f);
+
 		bHammerMinigamePlaying = false;
 		HammingCycles = 0;
 		CurrentResource = EBladeMat::BM_NONE;
 		CurrentlyProcessing = EResource::R_NONE;
 	}
 }
+
 
 void AForgeAnvil::SuccessTimeComplete()
 {

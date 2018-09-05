@@ -63,6 +63,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float CurrentRemainingTime = 0.0f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float ForgeHealth = 1.0f;
+
+	UFUNCTION(BlueprintCallable)
+		void DamageForge(float Damage);
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)

@@ -18,6 +18,10 @@ class UNDERFORGE_API AForgeAnvil : public AForgeStation
 	GENERATED_BODY()
 
 protected:
+	//sound
+	class USoundBase* Success;
+	class USoundBase* Failure;
+	//---------
 	AForgeAnvil();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -28,7 +32,7 @@ public:
 		void MorphStates(bool Next);
 
 	void HammeringMinigame(float Deltatime);
-	void HammeringCycle();
+	void HammeringCycle(class AForgePlayer* Player);
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EBladeMat type);
@@ -82,7 +86,7 @@ public:
 		float PauseTimeOnSuccess = 0.5f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool SuccessHit = false;
-
+	
 	int HammingCycles = 0;
 
 	float CurrentMarkerMoveSpeed = 0.8f;

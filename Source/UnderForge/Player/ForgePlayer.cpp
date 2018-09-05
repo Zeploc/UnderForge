@@ -15,7 +15,9 @@
 #include "Level/ForgeAnvil.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Sound/SoundBase.h"
 // Sets default values
 AForgePlayer::AForgePlayer()
 {
@@ -54,7 +56,7 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("SpinningXAxis", this, &AForgePlayer::SetXValue);
 	PlayerInputComponent->BindAxis("SpinningYAxis", this, &AForgePlayer::SetYValue);
 	PlayerInputComponent->BindAction("SecondaryInteract", IE_Pressed, this, &AForgePlayer::SecondaryInteract);
-	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AForgePlayer::Interact);
+	//PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AForgePlayer::Interact);
 }
 void AForgePlayer::MoveRight(float Value)
 {
@@ -68,7 +70,7 @@ void AForgePlayer::MoveUp(float Value)
 	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
 
-void AForgePlayer::Interact()
+bool AForgePlayer::Interact()
 {
 	FHitResult hit;
 	FVector EndLocation = GetActorLocation() + GetActorRotation().Vector() * InteractRange;
@@ -83,6 +85,7 @@ void AForgePlayer::Interact()
 			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
 			smelty->MiniGameComplete();
 		}
+		return true;
 	}
 	else if (AForgeAnvil* anvil = Cast<AForgeAnvil>(hit.Actor))
 	{
@@ -90,13 +93,16 @@ void AForgePlayer::Interact()
 		if (anvil->bHammerMinigamePlaying)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
-			anvil->HammeringCycle();
+			anvil->HammeringCycle(this);
 		}
+		return true;
 	}
 	else if (ACarpentaryStation* Lathe = Cast<ACarpentaryStation>(hit.Actor))
 	{
 		currentLathe = Lathe;
+		return false;
 	}
+	return false;
 }
 
 void AForgePlayer::SecondaryInteract()
