@@ -4,7 +4,10 @@
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-
+#include "Engine/World.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Sound/SoundBase.h"
 ASwordItem::ASwordItem()
 {
 	HandleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Handle Mesh"));
@@ -21,6 +24,9 @@ ASwordItem::ASwordItem()
 	ItemMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	BladeMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	HandleMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> SoundSuccess(TEXT("SoundWave'/Game/Sounds/SoundRourke/FinishCrafting_Sound.FinishCrafting_Sound'"));
+	SuccessCombine = SoundSuccess.Object;
 }
 
 bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
@@ -63,6 +69,7 @@ bool ASwordItem::AddPart(ESwordPart PartToAdd)
 	if (HasHandle && HadBlade)
 	{
 		ItemMesh->SetSimulatePhysics(true);
+		UGameplayStatics::PlaySound2D(GetWorld(), SuccessCombine);
 		//ItemMesh->SetVisibility(true);
 		//HandleMesh->SetVisibility(false);
 		//BladeMesh->SetVisibility(false);
