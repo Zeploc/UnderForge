@@ -58,6 +58,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class ACarpentaryStation* currentLathe;
 	UFUNCTION(BlueprintCallable)
+		void latheReset();
+
+	UFUNCTION(BlueprintCallable)
 		void SetXValue(float x);
 	UFUNCTION(BlueprintCallable)
 		void SetYValue(float y);

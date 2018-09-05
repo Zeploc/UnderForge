@@ -32,8 +32,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
 		void DropOnStation();
-
-	AForgeStation* CurrentTouchingStation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		AForgeStation* CurrentTouchingStation;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* MatMesh;
