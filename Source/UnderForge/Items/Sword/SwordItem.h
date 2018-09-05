@@ -43,6 +43,25 @@ public:
 		class USoundBase* SuccessCombine;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USoundBase* FailureCombine;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> BroadswordHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> KrisHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> IronBroadBladePart;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> IronKrisBladePart;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> SteelBroadBladePart;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AForgePart> SteelKrisBladePart;
+
+	UFUNCTION(BlueprintCallable)
+		void Disassemble();
+
+	class AForgePart * MakeResource(ESwordPart type);
 private:
 
 };

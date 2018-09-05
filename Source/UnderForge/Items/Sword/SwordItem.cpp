@@ -100,3 +100,57 @@ bool ASwordItem::IsBlade(ESwordPart SwordPart)
 	}
 	return false;
 }
+
+void ASwordItem::Disassemble()
+{
+	for (int i = 0; i < ForgeParts.Num(); i++)
+	{
+		MakeResource(ForgeParts[i]);
+	}
+	Destroy();
+}
+
+AForgePart * ASwordItem::MakeResource(ESwordPart type)
+{
+	switch (type)
+	{
+		case ESwordPart::PT_BROADSWORDHANDLE:
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandle, GetActorLocation(), GetActorRotation());
+			return ResourceRef;
+			break;
+		}
+		case ESwordPart::PT_KRISHANDLE:
+		{
+
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandle, GetActorLocation(), GetActorRotation());
+			return ResourceRef;
+			break;
+		}
+		case ESwordPart::PT_IRONBROADSWORDBLADE:
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronBroadBladePart, GetActorLocation(), GetActorRotation());
+			return ResourceRef;
+			break;
+		}
+		case ESwordPart::PT_IRONKRISBLADE:
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronKrisBladePart, GetActorLocation(), GetActorRotation());
+			return ResourceRef;
+			break;
+		}
+		case ESwordPart::PT_STEELBROADSWORDBLADE:
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, GetActorLocation(), GetActorRotation());
+			return ResourceRef;
+			break;
+		}
+		case ESwordPart::PT_STEELKRISBLADE:
+		{
+			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, GetActorLocation(), GetActorRotation());
+			return ResourceRef;
+			break;
+		}
+	}
+	return nullptr;
+}
