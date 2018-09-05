@@ -34,11 +34,14 @@ AForgeAnvil::AForgeAnvil()
 	Success = SoundSuccess.Object;
 	static ConstructorHelpers::FObjectFinder<USoundBase> SoundFail(TEXT("SoundWave'/Game/Sounds/SoundRourke/Error_or_Drop_Sound.Error_or_Drop_Sound'"));
 	Failure = SoundFail.Object;
+
+	PotentiallyInteracting = false;
 }
 void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadswordBlade);
+	InteractTimer = 0;
 }
 
 void AForgeAnvil::Tick(float DeltaTime)

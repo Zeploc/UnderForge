@@ -30,6 +30,8 @@ ASmeltery::ASmeltery()
 	CurrentProducingItem->SetVisibility(true, false);
 	CurrentState = EResource::R_IRONINGOT;
 	OutputName = FString("Iron Ingot");
+
+	PotentiallyInteracting = false;
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +39,7 @@ void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(IronIngot);
+	InteractTimer = 0;
 }
 
 // Called every frame

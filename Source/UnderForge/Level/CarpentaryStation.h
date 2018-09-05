@@ -49,10 +49,6 @@ public:
 		class UStaticMesh* KrisSwordHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EHandleType CurrentState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool PotentiallyInteracting;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float InteractTimer;
 
 
 
