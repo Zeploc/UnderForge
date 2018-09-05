@@ -100,4 +100,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		float HammerTimePassed;
 	EResource CurrentlyProcessing;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString OutputName;
 };

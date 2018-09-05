@@ -30,7 +30,7 @@ ACarpentaryStation::ACarpentaryStation()
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
 	CurrentState = EHandleType::HT_BROADSWORD;
-
+	OutputName = FString("Rough Hilt");
 	PotentiallyInteracting = false;
 }
 
@@ -89,9 +89,11 @@ void ACarpentaryStation::MorphStates(bool Next)
 		switch (CurrentState)
 		{
 		case EHandleType::HT_BROADSWORD:
+			OutputName = FString("Rough Hilt");
 			CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 			break;
 		case EHandleType::HT_KRIS:
+			OutputName = FString("Smooth Hilt");
 			CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
 			break;
 		default:

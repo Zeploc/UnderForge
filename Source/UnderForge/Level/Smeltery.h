@@ -82,4 +82,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EResource CurrentState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString OutputName;
+
 };

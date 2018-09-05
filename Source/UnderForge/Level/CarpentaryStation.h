@@ -72,4 +72,8 @@ public:
 		float SpinningTotal;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SpinningRequired;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString OutputName;
 };

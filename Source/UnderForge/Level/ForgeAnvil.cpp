@@ -27,7 +27,7 @@ AForgeAnvil::AForgeAnvil()
 
 	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 	CurrentState = EBladeType::BT_BROADSWORD;
-
+	OutputName = FString("BroadBlade");
 	CurrentResource = EBladeMat::BM_NONE;
 
 	static ConstructorHelpers::FObjectFinder<USoundBase> SoundSuccess(TEXT("SoundWave'/Game/Sounds/SoundRourke/SmithingHit_Sound.SmithingHit_Sound'"));
@@ -204,9 +204,11 @@ void AForgeAnvil::MorphStates(bool Next)
 	switch (CurrentState)
 	{
 	case EBladeType::BT_BROADSWORD:
+		OutputName = FString("BroadBlade");
 		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 		break;
 	case EBladeType::BT_KRIS:
+		OutputName = FString("KrisBlade");
 		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
 		break;
 	default:
