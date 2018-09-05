@@ -29,7 +29,7 @@ ASmeltery::ASmeltery()
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
 	CurrentState = EResource::R_IRONINGOT;
-
+	OutputName = FString("Iron Ingot");
 }
 
 // Called when the game starts or when spawned
@@ -173,9 +173,11 @@ void ASmeltery::MorphStates(bool Next)
 	switch (CurrentState)
 	{
 	case EResource::R_IRONINGOT:
+		OutputName = FString("Iron Ingot");
 		CurrentProducingItem->SetStaticMesh(IronIngot);
 		break;
 	case EResource::R_STEELINGOT:
+		OutputName = FString("Steel Ingot");
 		CurrentProducingItem->SetStaticMesh(SteelIngot);
 		break;
 	default:

@@ -100,6 +100,7 @@ bool AForgePlayer::Interact()
 	else if (ACarpentaryStation* Lathe = Cast<ACarpentaryStation>(hit.Actor))
 	{
 		currentLathe = Lathe;
+
 		return false;
 	}
 	return false;

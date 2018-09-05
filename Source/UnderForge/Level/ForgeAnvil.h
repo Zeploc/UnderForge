@@ -61,8 +61,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMesh* KrisSwordBlade;
 	
-
-	EBladeType CurrentState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EBladeType CurrentState;
 	bool PotentiallyInteracting;
 	
 	FTimerHandle SuccessHitTimerHandle;
@@ -93,11 +93,16 @@ public:
 	void SuccessTimeComplete();
 	void RandomiseRange();
 
-	EBladeMat CurrentResource;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EBladeMat CurrentResource;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bHammerMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
 		float HammerTimePassed;
 	EResource CurrentlyProcessing;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString OutputName;
 };

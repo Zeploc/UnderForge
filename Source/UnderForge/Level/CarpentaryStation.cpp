@@ -12,6 +12,7 @@
 #include "Runtime/Core/Public/Math/Vector.h"
 #include <string>
 #include <cmath>
+#include "Components/WidgetComponent.h"
 // TEMP
 #include "Engine.h"
 
@@ -30,7 +31,7 @@ ACarpentaryStation::ACarpentaryStation()
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
 	CurrentState = EHandleType::HT_BROADSWORD;
-
+	OutputName = FString("Rough Hilt");
 	PotentiallyInteracting = false;
 }
 
@@ -40,6 +41,7 @@ void ACarpentaryStation::BeginPlay()
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 	SpinningRequired = 25.0f;
+	InteractTimer = 0;
 }
 
 // Called every frame
@@ -89,9 +91,11 @@ void ACarpentaryStation::MorphStates(bool Next)
 		switch (CurrentState)
 		{
 		case EHandleType::HT_BROADSWORD:
+			OutputName = FString("Rough Hilt");
 			CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 			break;
 		case EHandleType::HT_KRIS:
+			OutputName = FString("Smooth Hilt");
 			CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
 			break;
 		default:

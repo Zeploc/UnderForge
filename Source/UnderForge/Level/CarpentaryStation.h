@@ -49,7 +49,12 @@ public:
 		class UStaticMesh* KrisSwordHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EHandleType CurrentState;
-	bool PotentiallyInteracting;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool PotentiallyInteracting;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float InteractTimer;
+
+
 
 
 	//Spining minigame Section
@@ -67,9 +72,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SpinningMinigame();
 
-	bool bSpinningGamePlaying;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bSpinningGamePlaying;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SpinningTotal;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SpinningRequired;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString OutputName;
 };
