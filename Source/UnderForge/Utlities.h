@@ -68,6 +68,15 @@ enum class ESwordPart : uint8
 	PT_BROADSWORDHANDLE UMETA(DisplayName = "Broadsword Handle"),
 };
 
+
+UENUM(BlueprintType)
+enum class ETools : uint8
+{
+	T_NONE UMETA(DisplayName = "None"),
+	T_HAMMER UMETA(DisplayName = "Hammer Tool"),
+};
+
+
 UENUM(BlueprintType)
 enum class EEquipable : uint8
 {

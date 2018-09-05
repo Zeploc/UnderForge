@@ -12,6 +12,7 @@
 #include "Runtime/Core/Public/Math/Vector.h"
 #include <string>
 #include <cmath>
+#include "Components/WidgetComponent.h"
 // TEMP
 #include "Engine.h"
 
@@ -40,6 +41,7 @@ void ACarpentaryStation::BeginPlay()
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 	SpinningRequired = 25.0f;
+	InteractTimer = 0;
 }
 
 // Called every frame
