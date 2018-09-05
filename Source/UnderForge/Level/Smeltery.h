@@ -69,6 +69,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void DamageForge(float Damage);
 
+	UFUNCTION(BlueprintCallable)
+		void RestartHealth();
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)

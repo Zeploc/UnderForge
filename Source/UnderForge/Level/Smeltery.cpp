@@ -192,3 +192,8 @@ void ASmeltery::DamageForge(float Damage)
 {
 	ForgeHealth -= Damage;
 }
+
+void ASmeltery::RestartHealth()
+{
+	ForgeHealth = 1.0f;
+}

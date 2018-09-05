@@ -7,7 +7,7 @@
 #include "Utlities.h"
 #include "SwordItem.generated.h"
 
-
+//class AForgePart;
 /**
  * 
  */
@@ -61,7 +61,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void Disassemble();
 
-	class AForgePart * MakeResource(ESwordPart type);
+	//UFUNCTION(BlueprintCallable)
+		//class AForgePart* MakeResource(ESwordPart type);
 private:
 
 };

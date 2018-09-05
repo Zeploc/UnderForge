@@ -89,5 +89,5 @@ class UNDERFORGE_API UUtilities : public UObject
 	GENERATED_BODY()
 
 public:
-	static ESwordPart GetSwordPartEnum(class AForgePart* Part);
+	//static ESwordPart GetSwordPartEnum(class AForgePart* Part);
 };
