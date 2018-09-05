@@ -30,7 +30,8 @@ public:
 	TArray<AForgePlayer*> PlayerArray;
 	TArray<AEnemiesZombo*> EnemyArray;
 
-	TArray<FVector> SpawnLocations;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
+		TArray<FVector> SpawnLocations;
 
 	UPROPERTY(EditAnywhere, Category = Enemy)
 		TSubclassOf<class AEnemiesZombo> EnemyZomboClass;
