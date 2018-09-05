@@ -100,7 +100,7 @@ void AForgeAnvil::HammeringCycle(class AForgePlayer* Player)
 	if (!Player->IsHoldingHammer) return;
 	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(),Success, 1.0f, 1.0f, 0.0f);
+		UGameplayStatics::PlaySound2D(GetWorld(), Success);
 
 		HammingCycles++;
 		SuccessHit = true;
