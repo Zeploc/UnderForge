@@ -12,7 +12,6 @@
 #include "Runtime/Core/Public/Math/Vector.h"
 #include <string>
 #include <cmath>
-#include "Components/WidgetComponent.h"
 
 
 
