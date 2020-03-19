@@ -24,7 +24,7 @@ AForgeStation::AForgeStation()
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	CollisionBox->SetupAttachment(StationMesh);
 
-	CollisionBox->bGenerateOverlapEvents = true;
+	CollisionBox->SetGenerateOverlapEvents(true);
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AForgeStation::OnOverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AForgeStation::OnOverlapEnd);
 
