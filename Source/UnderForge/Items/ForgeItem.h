@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+//#include "GameFramework/Actor.h"
+#include "PickUpItem.h"
 #include "ForgeItem.generated.h"
 
 
 
 UCLASS()
-class UNDERFORGE_API AForgeItem : public AActor
+class UNDERFORGE_API AForgeItem : public APickUpItem
 {
 	GENERATED_BODY()
 	

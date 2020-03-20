@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+//#include "GameFramework/Actor.h"
+#include "PickUpItem.h"
 #include "Utlities.h"
 #include "ForgeMat.generated.h"
 
@@ -11,7 +12,7 @@
 class AForgeStation;
 
 UCLASS()
-class UNDERFORGE_API AForgeMat : public AActor
+class UNDERFORGE_API AForgeMat : public APickUpItem
 {
 	GENERATED_BODY()
 	

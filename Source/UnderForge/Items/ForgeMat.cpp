@@ -16,6 +16,8 @@ AForgeMat::AForgeMat()
 	MatMesh->SetSimulatePhysics(true);
 	MatMesh->SetCollisionProfileName("PhysicsActor");
 	MatMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+	AttachOffset.SetScale3D(FVector(0.5f));
 }
 
 // Called when the game starts or when spawned
