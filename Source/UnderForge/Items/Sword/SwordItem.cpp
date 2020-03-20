@@ -31,6 +31,7 @@ ASwordItem::ASwordItem()
 	SuccessCombine = SoundSuccess.Object;
 
 	AttachOffset.SetScale3D(FVector(0.3f));
+	CanBePickedUp = false;
 }
 
 bool ASwordItem::CanHavePart(ESwordPart PartToCheck)

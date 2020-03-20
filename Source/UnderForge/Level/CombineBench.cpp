@@ -44,6 +44,7 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 		ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 		NewSwordItem->ItemMesh->SetSimulatePhysics(false);
 		NewSwordItem->AddPart(Part->SwordPart);
+		CurrentParts.Add(Part->SwordPart);
 		CurrentItem = NewSwordItem;
 		Part->Destroy();
 	}
@@ -53,12 +54,13 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 		{
 			if (CurrentSwordItem->CanHavePart(Part->SwordPart)) // If the sword needs that type of part
 			{
-				Part->Destroy(); // Destroy part actor
 				if (CurrentSwordItem->AddPart(Part->SwordPart)) // Add the part
 				{
+					CurrentParts.Add(Part->SwordPart);
 					// Is complete
 					CurrentItem = nullptr;
 				}
+				Part->Destroy(); // Destroy part actor
 			}
 			else
 			{

@@ -27,6 +27,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FTransform AttachOffset;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool CanBePickedUp = true;
+
 public:
 
 

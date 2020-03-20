@@ -22,11 +22,13 @@ public:
 	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
 	virtual void ProcessPartItem(AForgePart* Part) override;
 	
+	UPROPERTY(BlueprintReadWrite)
 	TArray<ESwordPart> CurrentParts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class ASwordItem> SwordItem;
 
+	UPROPERTY(BlueprintReadWrite)
 	class AForgeItem* CurrentItem;
 
 };
