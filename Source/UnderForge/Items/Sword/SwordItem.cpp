@@ -29,6 +29,8 @@ ASwordItem::ASwordItem()
 
 	static ConstructorHelpers::FObjectFinder<USoundBase> SoundSuccess(TEXT("SoundWave'/Game/Sounds/SoundRourke/FinishCrafting_Sound.FinishCrafting_Sound'"));
 	SuccessCombine = SoundSuccess.Object;
+
+	AttachOffset.SetScale3D(FVector(0.3f));
 }
 
 bool ASwordItem::CanHavePart(ESwordPart PartToCheck)

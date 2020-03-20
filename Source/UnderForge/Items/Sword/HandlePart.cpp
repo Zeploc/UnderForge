@@ -3,5 +3,8 @@
 #include "HandlePart.h"
 
 
-
+AHandlePart::AHandlePart()
+{
+	AttachOffset.SetScale3D(FVector(0.3f));
+}
 

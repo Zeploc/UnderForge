@@ -14,7 +14,8 @@ UCLASS()
 class UNDERFORGE_API AHandlePart : public AForgePart
 {
 	GENERATED_BODY()
-	
+
+		AHandlePart();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
