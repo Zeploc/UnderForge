@@ -68,6 +68,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DamageForge(float Damage);
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+		class USoundBase* SmelteryTakeDamageSound;
 
 	UFUNCTION(BlueprintCallable)
 		void RestartHealth();

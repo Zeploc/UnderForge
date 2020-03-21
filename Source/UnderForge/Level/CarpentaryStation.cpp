@@ -64,6 +64,7 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 	{
 		BeginMinigame();
 		material->Destroy();
+		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	}
 	else
 		ThrowAway(material);	

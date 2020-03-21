@@ -54,4 +54,10 @@ public:
 		bool PotentiallyInteracting;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractTimer;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+		class USoundBase* SuccessInteractSound;
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+		class USoundBase* FailInteractSound;
 };

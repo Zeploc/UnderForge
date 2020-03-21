@@ -58,6 +58,7 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 		ThrowAway(material);
 		return;
 	}
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	CurrentlyProcessing = material->ResourceType;
 	material->Destroy();
 	bSmeltingMinigamePlaying = true;
@@ -190,6 +191,7 @@ void ASmeltery::MorphStates(bool Next)
 
 void ASmeltery::DamageForge(float Damage)
 {
+	UGameplayStatics::PlaySound2D(GetWorld(), SmelteryTakeDamageSound);
 	ForgeHealth -= Damage;
 }
 

@@ -31,4 +31,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	class AForgeItem* CurrentItem;
 
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+		class USoundBase* NewItemAddedSound;
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+		class USoundBase* DisassembledSound;
+
 };
