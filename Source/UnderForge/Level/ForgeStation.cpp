@@ -76,7 +76,8 @@ void AForgeStation::ItemDectection(AActor * actor, bool entering)
 }
 
 void AForgeStation::ThrowAway(AActor * Actor)
-{	
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), FailInteractSound);
 	// YEET THAT BOI
 	if (!Actor) return;
 	if (UStaticMeshComponent* StaticMeshComp = Cast<UStaticMeshComponent>(Actor->GetComponentByClass(UStaticMeshComponent::StaticClass())))

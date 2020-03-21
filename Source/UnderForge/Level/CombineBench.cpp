@@ -47,6 +47,7 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 		CurrentParts.Add(Part->SwordPart);
 		CurrentItem = NewSwordItem;
 		Part->Destroy();
+		UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 	}
 	else // item exists, check valid part
 	{
@@ -62,6 +63,7 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 					CurrentItem = nullptr;
 				}
 				Part->Destroy(); // Destroy part actor
+				UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 			}
 			else
 			{

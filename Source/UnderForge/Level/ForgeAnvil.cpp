@@ -86,6 +86,7 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 			break;
 		}
 	}
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	Part->Destroy();
 }
 
