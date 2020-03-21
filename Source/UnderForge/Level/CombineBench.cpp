@@ -56,7 +56,8 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 			{
 				if (CurrentSwordItem->AddPart(Part->SwordPart)) // Add the part
 				{
-					CurrentParts.Add(Part->SwordPart);
+					CurrentParts.Empty();
+					CurrentItem->CanBePickedUp = true;
 					// Is complete
 					CurrentItem = nullptr;
 				}

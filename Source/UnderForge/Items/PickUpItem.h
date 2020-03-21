@@ -23,12 +23,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool CanBePickedUp = true;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FTransform AttachOffset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool CanBePickedUp = true;
 
 public:
 
