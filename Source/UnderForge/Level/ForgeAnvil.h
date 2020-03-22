@@ -19,7 +19,9 @@ class UNDERFORGE_API AForgeAnvil : public AForgeStation
 
 protected:
 	//sound
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 	class USoundBase* Success;
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 	class USoundBase* Failure;
 	//---------
 	AForgeAnvil();
