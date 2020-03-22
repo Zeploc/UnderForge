@@ -10,6 +10,7 @@
 #include "Engine/World.h"
 #include "Utlities.h"
 #include "Runtime/Core/Public/Math/Vector.h"
+#include "Player/ForgePlayer.h"
 #include <string>
 #include <cmath>
 
@@ -62,8 +63,17 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
 	if (material->ResourceType == EResource::R_WOOD)
 	{
+		SetOwner(material->HeldPlayer);
+		/*if (material->HeldPlayer)
+		{
+			if (material->HeldPlayer->Controller)
+			{
+				SetOwner(material->HeldPlayer->Controller);
+			}
+		}*/
 		BeginMinigame();
 		material->Destroy();
+		
 		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	}
 	else
@@ -112,6 +122,11 @@ void ACarpentaryStation::MorphStates(bool Next)
 
 AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 {
+	if (!HasAuthority())
+	{
+		SERVER_MakeResource(type);
+		return nullptr;
+	}
 	switch (type)
 	{
 		case EHandleType::HT_BROADSWORD:
@@ -127,6 +142,15 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "DIDN'T MAKE A DAMN PART");
 	return nullptr;
+}
+
+void ACarpentaryStation::SERVER_MakeResource_Implementation(EHandleType type)
+{
+	MakeResource(type);
+}
+bool ACarpentaryStation::SERVER_MakeResource_Validate(EHandleType type)
+{
+	return true;
 }
 
 void ACarpentaryStation::SetXValue(float x)

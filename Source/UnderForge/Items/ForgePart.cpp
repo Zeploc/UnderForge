@@ -18,6 +18,8 @@ AForgePart::AForgePart()
 	PartMesh->SetCollisionProfileName("PhysicsActor");
 	PartMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
+	bReplicates = true;
+	bReplayRewindable = true;
 
 	AttachOffset.SetScale3D(FVector(0.5f));
 }
@@ -27,7 +29,13 @@ void AForgePart::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
+	if (HasAuthority())
+	{
+		if (GetWorld()->GetAuthGameMode())
+		{
+			Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
+		}
+	}
 }
 
 // Called every frame

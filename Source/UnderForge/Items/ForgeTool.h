@@ -28,14 +28,10 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* ToolMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class AForgePlayer* CurrentPlayer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class AForgeStation* ToolStation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool IsHeld = false;
 
 	UFUNCTION(BlueprintCallable)
 		void PickUp(class AForgePlayer* NewPlayer);

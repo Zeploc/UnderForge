@@ -17,6 +17,10 @@ class UNDERFORGE_API AServingBench : public AForgeStation
 	virtual void ItemDectection(class AActor* Item, bool entering) override;
 
 public:
+	UFUNCTION(BlueprintImplementableEvent)
+		void NewItem(AForgeItem* ForgeItem);
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<class AForgeItem*> ForgeItems;
 };

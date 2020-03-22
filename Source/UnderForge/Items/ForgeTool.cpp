@@ -16,6 +16,9 @@ AForgeTool::AForgeTool()
 	ToolMesh->SetSimulatePhysics(true);
 	ToolMesh->SetCollisionProfileName("PhysicsActor");
 	ToolMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+	bReplicates = true;
+	bReplayRewindable = true;
 }
 
 // Called when the game starts or when spawned
@@ -35,16 +38,14 @@ void AForgeTool::Tick(float DeltaTime)
 
 void AForgeTool::PickUp(AForgePlayer * NewPlayer)
 {
-	IsHeld = true;
-	CurrentPlayer = NewPlayer;
+	HeldPlayer = NewPlayer;
 	ToolMesh->SetSimulatePhysics(false);
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Tool Picked Up");
 }
 
 void AForgeTool::Drop()
 {
-	IsHeld = false;
-	CurrentPlayer = nullptr;
+	HeldPlayer = nullptr;
 	ToolMesh->SetSimulatePhysics(true);
 }
 

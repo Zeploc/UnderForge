@@ -7,9 +7,6 @@
 
 #include "UnderForge.h"
 
-#include "Engine/World.h"
-
-
 
 bool UCommonFunctions::IsWithEditor()
 {
@@ -33,4 +30,27 @@ void UCommonFunctions::AddDebugMessage(FString _Message, bool _Error, bool _Prin
 	{
 		UE_LOG(LogTemp, Log, TEXT("%s"), *_Message);
 	}
+}
+
+bool UCommonFunctions::IsHandle(ESwordPart SwordPart)
+{
+	if (SwordPart == ESwordPart::PT_BROADSWORDHANDLE ||
+		SwordPart == ESwordPart::PT_KRISHANDLE)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool UCommonFunctions::IsBlade(ESwordPart SwordPart)
+{
+	if (SwordPart == ESwordPart::PT_IRONBROADSWORDBLADE ||
+		SwordPart == ESwordPart::PT_IRONKRISBLADE ||
+		SwordPart == ESwordPart::PT_STEELBROADSWORDBLADE ||
+		SwordPart == ESwordPart::PT_STEELKRISBLADE)
+	{
+		return true;
+	}
+	return false;
 }

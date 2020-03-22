@@ -91,6 +91,7 @@ bool AForgePlayer::Interact()
 	}
 	else if (AForgeAnvil* anvil = Cast<AForgeAnvil>(hit.Actor))
 	{
+		anvil->SetOwner(this);
 		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
 		if (anvil->bHammerMinigamePlaying)
 		{

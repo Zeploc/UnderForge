@@ -8,6 +8,8 @@
 #include "Utlities.h"
 #include "Engine/World.h"
 
+#include "UnrealNetwork.h"
+
 #include "Components/StaticMeshComponent.h"
 
 // TEMP
@@ -41,11 +43,14 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 	}
 	if (CurrentItem == nullptr) // No current item/parts
 	{
-		ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-		NewSwordItem->ItemMesh->SetSimulatePhysics(false);
-		NewSwordItem->AddPart(Part->SwordPart);
-		CurrentParts.Add(Part->SwordPart);
-		CurrentItem = NewSwordItem;
+		if (HasAuthority())
+		{
+			ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			NewSwordItem->ItemMesh->SetSimulatePhysics(false);
+			NewSwordItem->AddPart(Part->SwordPart);
+			CurrentParts.Add(Part->SwordPart);
+			CurrentItem = NewSwordItem;
+		}		
 		Part->Destroy();
 		UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 	}
@@ -76,4 +81,11 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 			ThrowAway(Part); // throw it away
 		}
 	}	
+}
+
+void ACombineBench::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACombineBench, CurrentItem);
+	DOREPLIFETIME(ACombineBench, CurrentParts);
 }

@@ -15,6 +15,7 @@ void AServingBench::ItemDectection(AActor* Item, bool entering)
 		{
 			ForgeItems.Add(ForgeItem);
 			ForgeItem->ItemMesh->SetSimulatePhysics(false);
+			NewItem(ForgeItem);
 		}
 	}
 }

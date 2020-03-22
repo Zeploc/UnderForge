@@ -13,6 +13,8 @@ AForgeItem::AForgeItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
+	bReplayRewindable = true;
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	SetRootComponent(ItemMesh);
@@ -28,8 +30,13 @@ AForgeItem::AForgeItem()
 void AForgeItem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
+	if (HasAuthority())
+	{
+		if (GetWorld()->GetAuthGameMode())
+		{
+			Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
+		}
+	}
 }
 
 // Called every frame

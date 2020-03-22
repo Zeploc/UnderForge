@@ -8,6 +8,8 @@
 #include "TimerManager.h"
 #include "Player/ForgePlayer.h"
 
+#include "UnrealNetwork.h"
+
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Sound/SoundBase.h"
@@ -105,6 +107,7 @@ void AForgeAnvil::HammeringCycle(class AForgePlayer* Player)
 	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), Success);
+		SetOwner(Player);
 
 		HammingCycles++;
 		SuccessHit = true;
@@ -148,6 +151,11 @@ void AForgeAnvil::RandomiseRange()
 
 AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 {
+	if (!HasAuthority())
+	{
+		SERVER_MakeResource(type);
+		return nullptr;
+	}
 	switch (type)
 	{
 		case(EBladeMat::BM_IRON):
@@ -180,6 +188,14 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 	return nullptr;
 }
 
+void AForgeAnvil::SERVER_MakeResource_Implementation(EBladeMat type)
+{
+	MakeResource(type);
+}
+bool AForgeAnvil::SERVER_MakeResource_Validate(EBladeMat type)
+{
+	return true;
+}
 
 void AForgeAnvil::MorphStates(bool Next)
 {
@@ -219,3 +235,11 @@ void AForgeAnvil::MorphStates(bool Next)
 		break;
 	}
 }
+
+//void AForgeAnvil::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//	//DOREPLIFETIME(AForgeAnvil, CurrentMinRange);
+//	//DOREPLIFETIME(AForgeAnvil, CurrentMaxRange);
+//	//DOREPLIFETIME(AForgeAnvil, CurrentMarkerPos);
+//}

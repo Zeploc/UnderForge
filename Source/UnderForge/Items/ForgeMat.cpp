@@ -18,6 +18,9 @@ AForgeMat::AForgeMat()
 	MatMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	AttachOffset.SetScale3D(FVector(0.5f));
+
+	bReplicates = true;
+	bReplayRewindable = true;
 }
 
 // Called when the game starts or when spawned

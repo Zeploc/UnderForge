@@ -33,7 +33,5 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UBoxComponent* InteractBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool IsHeld;
 
 };

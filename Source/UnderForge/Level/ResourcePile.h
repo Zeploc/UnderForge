@@ -25,4 +25,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		class AForgeMat* GetResource();
+	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
+		void SERVER_GetResource();
 };

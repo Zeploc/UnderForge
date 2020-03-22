@@ -26,6 +26,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool CanBePickedUp = true;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class AForgePlayer* HeldPlayer;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FTransform AttachOffset;

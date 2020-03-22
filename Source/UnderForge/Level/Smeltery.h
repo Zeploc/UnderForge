@@ -52,6 +52,10 @@ public:
 		class AForgePart* MakeResource(EResource type);
 	UFUNCTION(BlueprintCallable)
 		class AForgeMat* MakeMat(EResource type);
+	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
+		void SERVER_MakeResource(EResource type);
+	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
+		void SERVER_MakeMat(EResource type);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bSmeltingMinigamePlaying;

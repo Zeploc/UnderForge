@@ -22,10 +22,8 @@ public:
 	bool CanHavePart(ESwordPart PartToCheck);
 	bool AddPart(ESwordPart PartToAdd);
 
-	UFUNCTION(BlueprintCallable)
-		static bool IsHandle(ESwordPart SwordPart);
-	UFUNCTION(BlueprintCallable)
-		static bool IsBlade(ESwordPart SwordPart);
+	UFUNCTION(NetMulticast, Reliable)
+	void MULTI_AddPart(ESwordPart PartToAdd);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<ESwordPart, UStaticMesh*> PartMeshes;

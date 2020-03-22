@@ -39,6 +39,4 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource ResourceType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool IsHeld;
 };

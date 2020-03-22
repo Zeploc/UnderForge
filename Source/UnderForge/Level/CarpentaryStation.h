@@ -37,6 +37,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EHandleType type);
+	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
+		void SERVER_MakeResource(EHandleType type);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;

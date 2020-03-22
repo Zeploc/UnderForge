@@ -9,6 +9,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Sound/SoundBase.h"
 #include "Items/ForgeItem.h"
+#include "CommonFunctions.h"
 
 ASwordItem::ASwordItem()
 {
@@ -38,11 +39,11 @@ bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
 {
 	for (int i = 0; i < ForgeParts.Num(); i++)
 	{
-		if (IsHandle(ForgeParts[i]) && IsHandle(PartToCheck))
+		if (UCommonFunctions::IsHandle(ForgeParts[i]) && UCommonFunctions::IsHandle(PartToCheck))
 		{
 			return false;
 		}
-		else if (IsBlade(ForgeParts[i]) && IsBlade(PartToCheck))
+		else if (UCommonFunctions::IsBlade(ForgeParts[i]) && UCommonFunctions::IsBlade(PartToCheck))
 		{
 			return false;
 		}
@@ -52,6 +53,10 @@ bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
 
 bool ASwordItem::AddPart(ESwordPart PartToAdd)
 {
+	if (HasAuthority())
+	{
+		MULTI_AddPart(PartToAdd);
+	}
 	ForgeParts.Add(PartToAdd); // Add the part
 
 	bool HasHandle = false;
@@ -59,12 +64,12 @@ bool ASwordItem::AddPart(ESwordPart PartToAdd)
 
 	for (int i = 0; i < ForgeParts.Num(); i++)
 	{
-		if (IsHandle(ForgeParts[i]))
+		if (UCommonFunctions::IsHandle(ForgeParts[i]))
 		{
 			HasHandle = true;
 			HandleMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
 		}
-		else if (IsBlade(ForgeParts[i]))
+		else if (UCommonFunctions::IsBlade(ForgeParts[i]))
 		{
 			HadBlade = true;
 			BladeMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
@@ -83,28 +88,15 @@ bool ASwordItem::AddPart(ESwordPart PartToAdd)
 	return false;
 }
 
-bool ASwordItem::IsHandle(ESwordPart SwordPart)
+void ASwordItem::MULTI_AddPart_Implementation(ESwordPart PartToAdd)
 {
-	if (SwordPart == ESwordPart::PT_BROADSWORDHANDLE ||
-		SwordPart == ESwordPart::PT_KRISHANDLE)
+	if (!HasAuthority())
 	{
-		return true;
+		AddPart(PartToAdd);
 	}
-
-	return false;
 }
 
-bool ASwordItem::IsBlade(ESwordPart SwordPart)
-{
-	if (SwordPart == ESwordPart::PT_IRONBROADSWORDBLADE ||
-		SwordPart == ESwordPart::PT_IRONKRISBLADE ||
-		SwordPart == ESwordPart::PT_STEELBROADSWORDBLADE ||
-		SwordPart == ESwordPart::PT_STEELKRISBLADE)
-	{
-		return true;
-	}
-	return false;
-}
+
 
 void ASwordItem::Disassemble()
 {

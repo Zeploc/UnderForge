@@ -120,6 +120,11 @@ void ASmeltery::MiniGameComplete()
 
 AForgePart * ASmeltery::MakeResource(EResource type)
 {
+	if (!HasAuthority())
+	{
+		//SERVER_MakeResource(type);
+		return nullptr;
+	}
 	switch (type)
 	{
 	case(EResource::R_IRONINGOT):
@@ -139,7 +144,11 @@ AForgePart * ASmeltery::MakeResource(EResource type)
 
 AForgeMat * ASmeltery::MakeMat(EResource type)
 {
-
+	if (!HasAuthority())
+	{
+		//SERVER_MakeMat(type);
+		return nullptr;
+	}
 	switch (type)
 	{
 		case(EResource::R_IRONORE):
@@ -149,6 +158,24 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 		}
 	}
 	return nullptr;
+}
+
+void ASmeltery::SERVER_MakeResource_Implementation(EResource type)
+{
+	MakeResource(type);
+}
+bool ASmeltery::SERVER_MakeResource_Validate(EResource type)
+{
+	return true;
+}
+
+void ASmeltery::SERVER_MakeMat_Implementation(EResource type)
+{
+	MakeMat(type);
+}
+bool ASmeltery::SERVER_MakeMat_Validate(EResource type)
+{
+	return true;
 }
 
 void ASmeltery::MorphStates(bool Next)

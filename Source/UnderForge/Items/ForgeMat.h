@@ -39,6 +39,4 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* MatMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool IsHeld;
 };

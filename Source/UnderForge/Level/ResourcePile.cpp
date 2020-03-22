@@ -6,6 +6,20 @@
 
 AForgeMat * AResourcePile::GetResource()
 {
+	if (!HasAuthority())
+	{
+		//SERVER_GetResource();
+		return nullptr;
+	}
 	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 	return ResourceRef;
+}
+
+void AResourcePile::SERVER_GetResource_Implementation()
+{
+	GetResource();
+}
+bool AResourcePile::SERVER_GetResource_Validate()
+{
+	return true;
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Utlities.h"
 #include "CommonFunctions.generated.h"
 
 /**
@@ -16,10 +17,16 @@ class UNDERFORGE_API UCommonFunctions : public UBlueprintFunctionLibrary
 
 public:
 				
-		UFUNCTION(BlueprintPure)
-			static bool IsWithEditor();
+	UFUNCTION(BlueprintPure)
+		static bool IsWithEditor();
 
 
-		UFUNCTION(BlueprintCallable)
-			static void AddDebugMessage(FString _Message, bool _Error = false, bool _PrintToConsole = true);
+	UFUNCTION(BlueprintCallable)
+		static void AddDebugMessage(FString _Message, bool _Error = false, bool _PrintToConsole = true);
+
+
+	UFUNCTION(BlueprintPure)
+		static bool IsHandle(ESwordPart SwordPart);
+	UFUNCTION(BlueprintPure)
+		static bool IsBlade(ESwordPart SwordPart);
 };

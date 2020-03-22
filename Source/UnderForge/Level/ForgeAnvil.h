@@ -38,6 +38,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EBladeMat type);
+	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
+		void SERVER_MakeResource(EBladeMat type);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> SteelKrisBladePart;
@@ -78,11 +80,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int MaxCycles = 5;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
 		float CurrentMinRange = 0.0f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
 		float CurrentMaxRange = 0.0f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
 		float CurrentMarkerPos = 0.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float PauseTimeOnSuccess = 0.5f;
