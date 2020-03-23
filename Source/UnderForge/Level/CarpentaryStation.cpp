@@ -3,7 +3,7 @@
 #include "CarpentaryStation.h"
 #include "Items/ForgeMat.h"
 #include "Items/ForgePart.h"
-#include "Items/Sword/HandlePart.h"
+//#include "Items/Sword/HandlePart.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"

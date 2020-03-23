@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ForgeAnvil.h"
-#include "Items/Sword/BladePart.h"
+#include "Items/ForgePart.h"
 #include "Engine/World.h"
 #include "Engine.h"
 #include "Components/SceneComponent.h"

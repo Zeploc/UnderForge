@@ -33,6 +33,7 @@ ASwordItem::ASwordItem()
 
 	AttachOffset.SetScale3D(FVector(0.3f));
 	CanBePickedUp = false;
+	iAttackDamage = 25;
 }
 
 bool ASwordItem::CanHavePart(ESwordPart PartToCheck)

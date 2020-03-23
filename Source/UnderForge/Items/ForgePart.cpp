@@ -19,7 +19,8 @@ AForgePart::AForgePart()
 	PartMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	bReplicates = true;
-	bReplayRewindable = true;
+	bReplicateMovement = true;
+	PickUpType = EPickUpType::PT_PART;
 
 	AttachOffset.SetScale3D(FVector(0.5f));
 }

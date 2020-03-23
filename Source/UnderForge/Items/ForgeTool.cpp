@@ -18,7 +18,10 @@ AForgeTool::AForgeTool()
 	ToolMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	bReplicates = true;
-	bReplayRewindable = true;
+	bReplicateMovement = true;
+	PickUpType = EPickUpType::PT_TOOL;
+	iAttackDamage = 20;
+	
 }
 
 // Called when the game starts or when spawned

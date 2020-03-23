@@ -20,7 +20,8 @@ AForgeMat::AForgeMat()
 	AttachOffset.SetScale3D(FVector(0.5f));
 
 	bReplicates = true;
-	bReplayRewindable = true;
+	bReplicateMovement = true;
+	PickUpType = EPickUpType::PT_MAT;
 }
 
 // Called when the game starts or when spawned

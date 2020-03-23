@@ -14,7 +14,8 @@ AForgeItem::AForgeItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
-	bReplayRewindable = true;
+	bReplicateMovement = true;
+	PickUpType = EPickUpType::PT_WEAPON;
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	SetRootComponent(ItemMesh);
@@ -24,6 +25,7 @@ AForgeItem::AForgeItem()
 
 	InteractBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Interact Box"));
 	InteractBox->SetupAttachment(ItemMesh);
+
 }
 
 // Called when the game starts or when spawned

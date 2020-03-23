@@ -83,6 +83,15 @@ enum class EEquipable : uint8
 	PT_BRONZEKRISBLADE UMETA(DisplayName = "Bronze Kris Blade"),
 };
 
+UENUM(BlueprintType)
+enum class EPickUpType : uint8
+{
+	PT_MAT UMETA(DisplayName = "Material"),
+	PT_PART UMETA(DisplayName = "Part"),
+	PT_WEAPON UMETA(DisplayName = "Weapon"),
+	PT_TOOL UMETA(DisplayName = "Tool"),
+};
+
 UCLASS()
 class UNDERFORGE_API UUtilities : public UObject
 {

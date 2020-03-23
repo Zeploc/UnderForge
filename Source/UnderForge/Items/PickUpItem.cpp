@@ -10,7 +10,7 @@ APickUpItem::APickUpItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
-	bReplayRewindable = true;
+	bReplicateMovement = true;
 }
 
 // Called when the game starts or when spawned

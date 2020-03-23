@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utlities.h"
 #include "PickUpItem.generated.h"
 
 UCLASS()
@@ -28,6 +29,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class AForgePlayer* HeldPlayer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EPickUpType PickUpType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int iAttackDamage = 0;
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
