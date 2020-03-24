@@ -18,6 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	AForgeItem();
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,10 +26,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* ItemMesh;
+		
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UBoxComponent* InteractBox;

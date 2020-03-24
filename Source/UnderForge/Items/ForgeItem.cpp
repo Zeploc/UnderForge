@@ -17,11 +17,6 @@ AForgeItem::AForgeItem()
 	bReplicateMovement = true;
 	PickUpType = EPickUpType::PT_WEAPON;
 
-	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
-	SetRootComponent(ItemMesh);
-	ItemMesh->SetSimulatePhysics(true);
-	ItemMesh->SetCollisionProfileName("PhysicsActor");
-	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	InteractBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Interact Box"));
 	InteractBox->SetupAttachment(ItemMesh);

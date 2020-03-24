@@ -17,6 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	AForgePart();
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -24,14 +25,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable, Category = "ForgeStation")
-		void DropOnStation();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class UStaticMeshComponent* PartMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class AForgeStation* CurrentTouchingStation;
+		
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		ESwordPart SwordPart;

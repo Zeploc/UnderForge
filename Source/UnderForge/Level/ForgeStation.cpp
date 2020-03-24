@@ -47,6 +47,18 @@ void AForgeStation::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AForgeStation::ProcessItem(APickUpItem * Item)
+{
+	if (AForgeMat* mat = Cast<AForgeMat>(Item))
+	{
+		ProcessMatItem(mat);
+	}
+	else if (AForgePart* part = Cast<AForgePart>(Item))
+	{
+		ProcessPartItem(part);
+	}
+}
+
 void AForgeStation::ProcessMatItem(AForgeMat * material)
 {
 	ThrowAway(material);	

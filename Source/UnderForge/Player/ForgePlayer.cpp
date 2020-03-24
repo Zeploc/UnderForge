@@ -154,6 +154,20 @@ void AForgePlayer::LockPosition(bool IsLocked)
 #include "Engine.h"
 
 
+bool AForgePlayer::HoldingWeapon()
+{
+	if (!HoldItem)
+		return false;
+	return (HoldItem->PickUpType == EPickUpType::PT_WEAPON);
+}
+
+bool AForgePlayer::HoldingHammer()
+{
+	if (!HoldItem)
+		return false;
+	return (HoldItem->ToolType == EToolType::TT_HAMMER);
+}
+
 void AForgePlayer::latheReset()
 {
 	currentLathe = nullptr;

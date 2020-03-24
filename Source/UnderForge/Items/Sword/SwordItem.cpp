@@ -23,8 +23,8 @@ ASwordItem::ASwordItem()
 	BladeMesh->SetCollisionProfileName("OverlapAll");
 
 	ItemMesh->SetSimulatePhysics(false);
-	ItemMesh->SetVisibility(false);
-	ItemMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	//ItemMesh->SetVisibility(false);
+	//ItemMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	BladeMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	HandleMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 

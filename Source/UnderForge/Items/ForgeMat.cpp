@@ -11,11 +11,6 @@ AForgeMat::AForgeMat()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MatMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mat Mesh"));
-	RootComponent = MatMesh;
-	MatMesh->SetSimulatePhysics(true);
-	MatMesh->SetCollisionProfileName("PhysicsActor");
-	MatMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	AttachOffset.SetScale3D(FVector(0.5f));
 
@@ -29,14 +24,6 @@ void AForgeMat::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-void AForgeMat::DropOnStation()
-{
-	if (CurrentTouchingStation)
-	{
-		CurrentTouchingStation->ProcessMatItem(this);
-	}
 }
 
 // Called every frame

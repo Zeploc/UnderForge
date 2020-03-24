@@ -12,11 +12,6 @@ AForgePart::AForgePart()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	PartMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mat Mesh"));
-	RootComponent = PartMesh;
-	PartMesh->SetSimulatePhysics(true);
-	PartMesh->SetCollisionProfileName("PhysicsActor");
-	PartMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	bReplicates = true;
 	bReplicateMovement = true;
@@ -46,11 +41,4 @@ void AForgePart::Tick(float DeltaTime)
 
 }
 
-void AForgePart::DropOnStation()
-{
-	if (CurrentTouchingStation)
-	{
-		CurrentTouchingStation->ProcessPartItem(this);
-	}
-}
 
