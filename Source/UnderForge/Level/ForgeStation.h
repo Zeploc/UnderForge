@@ -31,6 +31,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+	void ProcessItem(class APickUpItem* Item);
+
 	virtual void ProcessMatItem(AForgeMat* material);
 	virtual void ProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);

@@ -92,6 +92,14 @@ enum class EPickUpType : uint8
 	PT_TOOL UMETA(DisplayName = "Tool"),
 };
 
+UENUM(BlueprintType)
+enum class EToolType : uint8
+{
+	TT_NONE UMETA(DisplayName = "None"),
+	TT_HAMMER UMETA(DisplayName = "Hammer"),
+	TT_CALIPERS UMETA(DisplayName = "Calipers"),
+};
+
 UCLASS()
 class UNDERFORGE_API UUtilities : public UObject
 {

@@ -50,8 +50,12 @@ public:
 		class USoundBase* Attack3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool IsHoldingHammer = false;
+		class APickUpItem* HoldItem;
 
+	UFUNCTION(BlueprintPure)
+		bool HoldingWeapon();
+	UFUNCTION(BlueprintPure)
+		bool HoldingHammer();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool SwingingHammer = false;

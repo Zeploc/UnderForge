@@ -10,13 +10,7 @@ AForgeTool::AForgeTool()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	ToolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tool Mesh"));
-	RootComponent = ToolMesh;
-	ToolMesh->SetSimulatePhysics(true);
-	ToolMesh->SetCollisionProfileName("PhysicsActor");
-	ToolMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-
+		
 	bReplicates = true;
 	bReplicateMovement = true;
 	PickUpType = EPickUpType::PT_TOOL;
@@ -39,16 +33,4 @@ void AForgeTool::Tick(float DeltaTime)
 
 }
 
-void AForgeTool::PickUp(AForgePlayer * NewPlayer)
-{
-	HeldPlayer = NewPlayer;
-	ToolMesh->SetSimulatePhysics(false);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Tool Picked Up");
-}
-
-void AForgeTool::Drop()
-{
-	HeldPlayer = nullptr;
-	ToolMesh->SetSimulatePhysics(true);
-}
 

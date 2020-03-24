@@ -16,6 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	AForgeTool();
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -24,18 +25,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* ToolMesh;
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class AForgeStation* ToolStation;
-
-
-	UFUNCTION(BlueprintCallable)
-		void PickUp(class AForgePlayer* NewPlayer);
-
-	UFUNCTION(BlueprintCallable)
-		void Drop();
+		
 };
