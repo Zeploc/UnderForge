@@ -31,10 +31,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual bool TryInteract(class AForgePlayer* _Player) override;
+	virtual void Interacted(class AForgePlayer* _Player) override;
+
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
 	void SmeltingMinigame(float DeltaTime);
-	void MiniGameComplete();
 	UFUNCTION(BlueprintCallable)
 		void MorphStates(bool Next);
 

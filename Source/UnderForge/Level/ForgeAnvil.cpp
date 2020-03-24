@@ -45,6 +45,41 @@ void AForgeAnvil::BeginPlay()
 	CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 	InteractTimer = 0;
 }
+bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
+{
+	SetOwner(_Player);
+	//UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
+	if (bHammerMinigamePlaying)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Minigame Interact"));
+		//HammeringCycle(_Player);
+		return Super::TryInteract(_Player);
+	}
+	return false;
+}
+
+void AForgeAnvil::Interacted(AForgePlayer * _Player)
+{
+	if (!_Player->HoldingHammer() || SuccessHit) return;
+	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), Success);
+		SetOwner(_Player);
+
+		HammingCycles++;
+		SuccessHit = true;
+		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
+	}
+	else // Missed, fail
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), Failure, 1.0f, 1.0f, 0.0f);
+
+		bHammerMinigamePlaying = false;
+		HammingCycles = 0;
+		CurrentResource = EBladeMat::BM_NONE;
+		CurrentlyProcessing = EResource::R_NONE;
+	}
+}
 
 void AForgeAnvil::Tick(float DeltaTime)
 {
@@ -99,29 +134,6 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 	else if (CurrentMarkerPos <= 0.0f) CurrentMarkerMoveSpeed = MarkerMoveSpeed;
 
 	CurrentMarkerPos += CurrentMarkerMoveSpeed * Deltatime;
-}
-
-void AForgeAnvil::HammeringCycle(class AForgePlayer* Player)
-{
-	if (!Player->HoldingHammer() || SuccessHit) return;
-	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
-	{
-		UGameplayStatics::PlaySound2D(GetWorld(), Success);
-		SetOwner(Player);
-
-		HammingCycles++;
-		SuccessHit = true;
-		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
-	}
-	else // Missed, fail
-	{
-		UGameplayStatics::PlaySound2D(GetWorld(), Failure, 1.0f, 1.0f, 0.0f);
-
-		bHammerMinigamePlaying = false;
-		HammingCycles = 0;
-		CurrentResource = EBladeMat::BM_NONE;
-		CurrentlyProcessing = EResource::R_NONE;
-	}
 }
 
 

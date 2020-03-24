@@ -26,6 +26,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
+	virtual void Interacted(class AForgePlayer* _Player) override;
+
 	UFUNCTION(BlueprintCallable)
 		void MorphStates(bool Next);
 

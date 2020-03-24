@@ -24,7 +24,9 @@ public:
 		TSubclassOf<class AForgeMat> ForgeMat;
 
 	UFUNCTION(BlueprintCallable)
-		class AForgeMat* GetResource();
-	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
-		void SERVER_GetResource();
+		class AForgeMat* GetResource(AForgePlayer * _OwningPlayer);
+	//UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
+	//	void SERVER_GetResource();
+
+	virtual void Interacted(class AForgePlayer* _Player) override;
 };

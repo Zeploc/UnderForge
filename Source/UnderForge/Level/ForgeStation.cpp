@@ -6,6 +6,7 @@
 #include "Components/ArrowComponent.h"
 #include "Items/ForgeMat.h"
 #include "Items/ForgePart.h"
+#include "Player/ForgePlayer.h"
 
 // TEMP
 #include "Engine.h"
@@ -45,6 +46,20 @@ void AForgeStation::BeginPlay()
 void AForgeStation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+bool AForgeStation::TryInteract(AForgePlayer * _Player)
+{
+	if (!HasAuthority())
+		_Player->SERVER_InteractWith(this);
+
+	Interacted(_Player);
+	// Called from derived if successful
+	return true;
+}
+
+void AForgeStation::Interacted(AForgePlayer * _Player)
+{
 }
 
 void AForgeStation::ProcessItem(APickUpItem * Item)

@@ -35,6 +35,13 @@ public:
 	// Returns true if interacted (With station)
 	UFUNCTION(BlueprintCallable)
 		bool Interact();
+
+	UFUNCTION(Server, WithValidation, Reliable)
+		void SERVER_InteractWith(class AForgeStation* Station);
+
+	UFUNCTION(Client, Reliable)
+		void CLIENT_PickUp(class APickUpItem* PickUp);
+
 	UFUNCTION(BlueprintCallable)
 		void SecondaryInteract();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -56,10 +63,7 @@ public:
 		bool HoldingWeapon();
 	UFUNCTION(BlueprintPure)
 		bool HoldingHammer();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool SwingingHammer = false;
-	
+		
 	//TEST
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class ACarpentaryStation* currentLathe;

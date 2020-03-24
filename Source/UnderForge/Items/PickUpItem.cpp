@@ -45,6 +45,7 @@ void APickUpItem::Drop()
 {
 	HeldPlayer = nullptr;
 	ItemMesh->SetSimulatePhysics(true);
+	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 
 	if (CurrentTouchingStation)
 	{
@@ -54,10 +55,15 @@ void APickUpItem::Drop()
 
 void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 {
+	if (HeldPlayer)
+	{
+		HeldPlayer->HoldItem = nullptr;
+	}
 	HeldPlayer = NewPlayer;
 	ItemMesh->SetSimulatePhysics(false);
 	AttachToComponent(NewPlayer->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
 	SetActorRelativeTransform(AttachOffset);
+	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Picked Up");
 }

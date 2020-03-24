@@ -31,6 +31,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual bool TryInteract(class AForgePlayer* _Player);
+	virtual void Interacted(class AForgePlayer* _Player);
 
 	void ProcessItem(class APickUpItem* Item);
 

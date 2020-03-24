@@ -3,6 +3,7 @@
 #include "Smeltery.h"
 #include "Items/ForgeMat.h"
 #include "Items/ForgePart.h"
+#include "Player/ForgePlayer.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
@@ -51,39 +52,19 @@ void ASmeltery::Tick(float DeltaTime)
 	Rotator->AddWorldRotation(rotate);
 }
 
-void ASmeltery::ProcessMatItem(AForgeMat* material)
+bool ASmeltery::TryInteract(AForgePlayer * _Player)
 {
-	if (bSmeltingMinigamePlaying || material->ResourceType != EResource::R_IRONORE)
-	{
-		ThrowAway(material);
-		return;
-	}
-	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
-	CurrentlyProcessing = material->ResourceType;
-	material->Destroy();
-	bSmeltingMinigamePlaying = true;
-}
-
-void ASmeltery::SmeltingMinigame(float DeltaTime)
-{
+	//UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
 	if (bSmeltingMinigamePlaying)
 	{
-		SmeltingTimePassed += DeltaTime;
-		CurrentRemainingTime = SmeltingTimeNeeded - SmeltingTimePassed;
-		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
-		if (SmeltingTimePassed > SmeltingTimeKABOOM)
-		{
-			bSmeltingMinigamePlaying = false;
-			SmeltingTimePassed = 0.0f;
-			CurrentRemainingTime = 0.0f;
-			CurrentlyProcessing = EResource::R_NONE;
-			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
-			//KABOOM
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Minigame Interact"));
+		return Super::TryInteract(_Player);
+		//smelty->MiniGameComplete();
 	}
+	return false;
 }
 
-void ASmeltery::MiniGameComplete()
+void ASmeltery::Interacted(AForgePlayer * _Player)
 {
 	bSmeltingMinigamePlaying = false;
 	CurrentRemainingTime = 0.0f;
@@ -116,6 +97,38 @@ void ASmeltery::MiniGameComplete()
 		//KABOOM
 	}
 	SmeltingTimePassed = 0.0f;
+}
+
+void ASmeltery::ProcessMatItem(AForgeMat* material)
+{
+	if (bSmeltingMinigamePlaying || material->ResourceType != EResource::R_IRONORE)
+	{
+		ThrowAway(material);
+		return;
+	}
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
+	CurrentlyProcessing = material->ResourceType;
+	material->Destroy();
+	bSmeltingMinigamePlaying = true;
+}
+
+void ASmeltery::SmeltingMinigame(float DeltaTime)
+{
+	if (bSmeltingMinigamePlaying)
+	{
+		SmeltingTimePassed += DeltaTime;
+		CurrentRemainingTime = SmeltingTimeNeeded - SmeltingTimePassed;
+		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
+		if (SmeltingTimePassed > SmeltingTimeKABOOM)
+		{
+			bSmeltingMinigamePlaying = false;
+			SmeltingTimePassed = 0.0f;
+			CurrentRemainingTime = 0.0f;
+			CurrentlyProcessing = EResource::R_NONE;
+			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
+			//KABOOM
+		}
+	}
 }
 
 AForgePart * ASmeltery::MakeResource(EResource type)

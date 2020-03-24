@@ -80,6 +80,11 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 		ThrowAway(material);	
 }
 
+void ACarpentaryStation::Interacted(AForgePlayer * _Player)
+{
+	SetOwner(_Player);
+}
+
 void ACarpentaryStation::MorphStates(bool Next)
 {
 	if (!bSpinningGamePlaying)
@@ -197,7 +202,10 @@ void ACarpentaryStation::SpinningMinigame()
 		{
 			SpinningTotal = 0.0f;
 			bSpinningGamePlaying = false;
-			MakeResource(CurrentState);
+			if (HasAuthority())
+				MakeResource(CurrentState);
+			else
+				SERVER_MakeResource(CurrentState);
 		}
 	}
 	return;

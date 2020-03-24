@@ -79,37 +79,30 @@ bool AForgePlayer::Interact()
 	FCollisionQueryParams Traceparams(TEXT("Interact Trace"), false, this);
 	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_Station, Traceparams);
 	UE_LOG(LogTemp, Warning, TEXT("Interact"));
-	if (ASmeltery* smelty = Cast<ASmeltery>(hit.Actor))
+	if (AForgeStation* Station = Cast<AForgeStation>(hit.Actor))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
-		if (smelty->bSmeltingMinigamePlaying)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
-			smelty->MiniGameComplete();
-		}
-		return true;
+		return Station->TryInteract(this);
 	}
-	else if (AForgeAnvil* anvil = Cast<AForgeAnvil>(hit.Actor))
-	{
-		anvil->SetOwner(this);
-		UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
-		if (anvil->bHammerMinigamePlaying)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Minigame Finish"));
-			anvil->HammeringCycle(this);
-			SwingingHammer = true;
-		}
-		return true;
-	}
-	else if (ACarpentaryStation* Lathe = Cast<ACarpentaryStation>(hit.Actor))
-	{
-		if (Lathe->bSpinningGamePlaying)
-		{
-			//currentLathe = Lathe;
-		}
-		return false;
-	}
+
 	return false;
+}
+
+void AForgePlayer::SERVER_InteractWith_Implementation(AForgeStation * Station)
+{
+	Station->TryInteract(this);
+}
+bool AForgePlayer::SERVER_InteractWith_Validate(AForgeStation * Station)
+{
+	return true;
+}
+
+void AForgePlayer::CLIENT_PickUp_Implementation(APickUpItem * PickUp)
+{
+	if (!PickUp)
+		return;
+
+	PickUp->PickUp(this);
+	HoldItem = PickUp;
 }
 
 void AForgePlayer::SecondaryInteract()

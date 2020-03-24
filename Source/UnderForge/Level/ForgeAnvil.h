@@ -30,11 +30,13 @@ protected:
 public:
 	virtual void ProcessPartItem(AForgePart* Part) override;
 
+	virtual bool TryInteract(class AForgePlayer* _Player) override;
+	virtual void Interacted(class AForgePlayer* _Player) override;
+
 	UFUNCTION(BlueprintCallable)
 		void MorphStates(bool Next);
 
 	void HammeringMinigame(float Deltatime);
-	void HammeringCycle(class AForgePlayer* Player);
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EBladeMat type);

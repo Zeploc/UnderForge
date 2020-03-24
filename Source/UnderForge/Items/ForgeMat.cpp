@@ -2,6 +2,7 @@
 
 #include "ForgeMat.h"
 #include "Level/ForgeStation.h"
+#include "Player/ForgePlayer.h"
 
 #include "Components/StaticMeshComponent.h"
 
@@ -24,6 +25,26 @@ void AForgeMat::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Sync up client to use servers version
+	if (GetOwner() && !HasAuthority())
+	{
+		if (AForgePlayer* OwnerForgePlayer = Cast<AForgePlayer>(GetOwner()))
+		{
+			if (OwnerForgePlayer->HoldItem)
+			{
+				if (AForgeMat* HeldMat = Cast<AForgeMat>(OwnerForgePlayer->HoldItem))
+				{
+					if (HeldMat->ResourceType == ResourceType)
+					{
+						HeldMat->Destroy();
+						PickUp(OwnerForgePlayer);
+						OwnerForgePlayer->HoldItem = this;
+						
+					}
+				}
+			}
+		}
+	}
 }
 
 // Called every frame
