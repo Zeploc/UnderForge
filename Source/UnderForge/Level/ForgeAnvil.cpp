@@ -103,7 +103,7 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 
 void AForgeAnvil::HammeringCycle(class AForgePlayer* Player)
 {
-	if (!Player->HoldingHammer()) return;
+	if (!Player->HoldingHammer() || SuccessHit) return;
 	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), Success);
