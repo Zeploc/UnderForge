@@ -62,6 +62,10 @@ void AForgeStation::Interacted(AForgePlayer * _Player)
 {
 }
 
+void AForgeStation::MorphStates(bool Next)
+{
+}
+
 void AForgeStation::ProcessItem(APickUpItem * Item)
 {
 	if (AForgeMat* mat = Cast<AForgeMat>(Item))

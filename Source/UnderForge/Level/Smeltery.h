@@ -37,8 +37,7 @@ public:
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
 	void SmeltingMinigame(float DeltaTime);
-	UFUNCTION(BlueprintCallable)
-		void MorphStates(bool Next);
+	virtual void MorphStates(bool Next) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> IronIngotPart;

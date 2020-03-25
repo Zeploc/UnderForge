@@ -28,8 +28,7 @@ public:
 
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
-	UFUNCTION(BlueprintCallable)
-		void MorphStates(bool Next);
+	virtual void MorphStates(bool Next) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> BroadswordHandlePart;

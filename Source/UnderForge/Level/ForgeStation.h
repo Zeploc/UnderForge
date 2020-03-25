@@ -34,6 +34,9 @@ public:
 	virtual bool TryInteract(class AForgePlayer* _Player);
 	virtual void Interacted(class AForgePlayer* _Player);
 
+	UFUNCTION(BlueprintCallable)
+		virtual void MorphStates(bool Next);
+
 	void ProcessItem(class APickUpItem* Item);
 
 	virtual void ProcessMatItem(AForgeMat* material);
