@@ -130,7 +130,6 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	if (!HasAuthority())
 	{
 		SERVER_MakeResource(type);
-		return nullptr;
 	}
 	switch (type)
 	{
@@ -202,10 +201,7 @@ void ACarpentaryStation::SpinningMinigame()
 		{
 			SpinningTotal = 0.0f;
 			bSpinningGamePlaying = false;
-			if (HasAuthority())
-				MakeResource(CurrentState);
-			else
-				SERVER_MakeResource(CurrentState);
+			MakeResource(CurrentState);
 		}
 	}
 	return;
