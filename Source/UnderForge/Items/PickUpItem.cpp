@@ -22,6 +22,7 @@ APickUpItem::APickUpItem()
 	ItemMesh->SetCollisionProfileName("PhysicsActor");
 	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+	ItemMesh->SetRenderCustomDepth(true);
 
 	bReplicates = true;
 	bReplicateMovement = true;
