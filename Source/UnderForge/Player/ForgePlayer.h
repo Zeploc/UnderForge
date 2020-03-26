@@ -47,6 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractRange = 100.0f;
 
+
 	UFUNCTION(BlueprintCallable)
 		void LockPosition(bool IsLocked);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -65,10 +66,6 @@ public:
 		bool HoldingHammer();
 		
 	//TEST
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class ACarpentaryStation* currentLathe;
-	UFUNCTION(BlueprintCallable)
-		void latheReset();
 
 	UFUNCTION(BlueprintCallable)
 		void SetXValue(float x);

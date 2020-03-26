@@ -3,6 +3,7 @@
 #include "ForgePart.h"
 #include "Components/StaticMeshComponent.h"
 #include "Level/ForgeStation.h"
+#include "Player/ForgePlayer.h"
 #include "Engine/World.h"
 #include "Mechanics/ForgeLevel.h"
 
@@ -30,6 +31,26 @@ void AForgePart::BeginPlay()
 		if (GetWorld()->GetAuthGameMode())
 		{
 			Cast<AForgeLevel>(GetWorld()->GetAuthGameMode())->TotalPartsCreated++;
+		}
+	}
+
+	// Sync up client to use servers version
+	if (GetOwner() && !HasAuthority())
+	{
+		if (AForgePlayer* OwnerForgePlayer = Cast<AForgePlayer>(GetOwner()))
+		{
+			if (OwnerForgePlayer->HoldItem)
+			{
+				if (AForgePart* HeldMat = Cast<AForgePart>(OwnerForgePlayer->HoldItem))
+				{
+					if (HeldMat->SwordPart == SwordPart)
+					{
+						HeldMat->Destroy();
+						PickUp(OwnerForgePlayer);
+						OwnerForgePlayer->HoldItem = this;
+					}
+				}
+			}
 		}
 	}
 }

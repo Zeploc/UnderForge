@@ -53,7 +53,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EHandleType CurrentState;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		AForgePlayer * CurrentPlayer;
 
 
 	//Spining minigame Section
@@ -62,10 +63,11 @@ public:
 	float PreviousX;
 	float PreviousY;
 
-	UFUNCTION(BlueprintCallable)
-		void SetXValue(float x);
-	UFUNCTION(BlueprintCallable)
-		void SetYValue(float y);
+	//UFUNCTION(BlueprintCallable)
+	//	void SetXValue(float x);
+	//UFUNCTION(BlueprintCallable)
+	//	void SetYValue(float y);
+
 	UFUNCTION(BlueprintCallable)
 		void BeginMinigame();
 	UFUNCTION(BlueprintCallable)

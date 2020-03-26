@@ -44,14 +44,15 @@ void APickUpItem::Tick(float DeltaTime)
 
 void APickUpItem::Drop()
 {
-	HeldPlayer = nullptr;
 	ItemMesh->SetSimulatePhysics(true);
+	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 
 	if (CurrentTouchingStation)
 	{
 		CurrentTouchingStation->ProcessItem(this);
 	}
+	HeldPlayer = nullptr;
 }
 
 void APickUpItem::PickUp(AForgePlayer * NewPlayer)
@@ -65,6 +66,7 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 	AttachToComponent(NewPlayer->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
 	SetActorRelativeTransform(AttachOffset);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
+	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Picked Up");
 }

@@ -60,14 +60,12 @@ void AForgePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 void AForgePlayer::MoveRight(float Value)
 {
-	if (currentLathe) return;
 	// add movement in that direction
 	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
 }
 
 void AForgePlayer::MoveUp(float Value)
 {
-	if (currentLathe) return;
 	// add movement in that direction
 	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
@@ -138,10 +136,6 @@ void AForgePlayer::LockPosition(bool IsLocked)
 
 
 
-
-
-
-
 //TEMP
 
 #include "Engine.h"
@@ -161,33 +155,13 @@ bool AForgePlayer::HoldingHammer()
 	return (HoldItem->ToolType == EToolType::TT_HAMMER);
 }
 
-void AForgePlayer::latheReset()
-{
-	currentLathe = nullptr;
-}
 
 void AForgePlayer::SetXValue(float x)
 {
-	//CurrentX = x;
-
-	//FString TheFloatStr = FString::SanitizeFloat(CurrentX);
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("X: " + TheFloatStr));
-	//return;
-	if (currentLathe)
-	{
-		currentLathe->SetXValue(x);
-	}
+	CurrentX = x;
 }
 
 void AForgePlayer::SetYValue(float y)
 {
-	//CurrentY = y;
-
-	//FString TheFloatStr = FString::SanitizeFloat(CurrentY);
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Y: " + TheFloatStr));
-	//return;
-	if (currentLathe)
-	{
-		currentLathe->SetYValue(y);
-	}
+	CurrentY = y;
 }

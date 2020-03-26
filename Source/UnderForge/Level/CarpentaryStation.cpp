@@ -63,14 +63,9 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
 	if (material->ResourceType == EResource::R_WOOD)
 	{
-		SetOwner(material->HeldPlayer);
-		/*if (material->HeldPlayer)
-		{
-			if (material->HeldPlayer->Controller)
-			{
-				SetOwner(material->HeldPlayer->Controller);
-			}
-		}*/
+		CurrentPlayer = material->HeldPlayer;
+		SetOwner(CurrentPlayer);
+
 		BeginMinigame();
 		material->Destroy();
 		
@@ -130,17 +125,22 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	if (!HasAuthority())
 	{
 		SERVER_MakeResource(type);
+		return nullptr;
 	}
+	/*FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = CurrentPlayer;
+	CurrentPlayer = nullptr;*/
 	switch (type)
 	{
 		case EHandleType::HT_BROADSWORD:
 		{
-			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());// , SpawnParams);
 			return ResourceRef;
 		}
 		case EHandleType::HT_KRIS:
 		{
-			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());//, SpawnParams);
 			return ResourceRef;
 		}
 	}
@@ -157,17 +157,17 @@ bool ACarpentaryStation::SERVER_MakeResource_Validate(EHandleType type)
 	return true;
 }
 
-void ACarpentaryStation::SetXValue(float x)
-{
-	CurrentX = x;
-	return;
-}
-
-void ACarpentaryStation::SetYValue(float y)
-{
-	CurrentY = y;
-	return;
-}
+//void ACarpentaryStation::SetXValue(float x)
+//{
+//	CurrentX = x;
+//	return;
+//}
+//
+//void ACarpentaryStation::SetYValue(float y)
+//{
+//	CurrentY = y;
+//	return;
+//}
 
 
 void ACarpentaryStation::BeginMinigame()
@@ -183,6 +183,12 @@ void ACarpentaryStation::SpinningMinigame()
 {
 	if (bSpinningGamePlaying)
 	{
+		if (CurrentPlayer)
+		{
+			CurrentX = CurrentPlayer->CurrentX;// GetInputAxisKeyValue("SpinningXAxis");
+			CurrentY = CurrentPlayer->CurrentY;// GetInputAxisKeyValue("SpinningYAxis");
+		}
+
 		FVector currentStickPos(CurrentX, CurrentY, 0.0f);
 		currentStickPos.Normalize();
 		FVector PreviousStickPos(PreviousX, PreviousY, 0.0f);
