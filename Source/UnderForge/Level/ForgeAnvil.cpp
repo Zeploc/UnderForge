@@ -66,18 +66,23 @@ void AForgeAnvil::Interacted(AForgePlayer * _Player)
 		UGameplayStatics::PlaySound2D(GetWorld(), Success);
 		SetOwner(_Player);
 
-		HammingCycles++;
+		CurrentOrb++;
 		SuccessHit = true;
 		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
 	}
 	else // Missed, fail
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), Failure, 1.0f, 1.0f, 0.0f);
-
-		bHammerMinigamePlaying = false;
-		HammingCycles = 0;
-		CurrentResource = EBladeMat::BM_NONE;
-		CurrentlyProcessing = EResource::R_NONE;
+		CurrentOrb--;
+		if (CurrentOrb <= 0)
+		{
+			bHammerMinigamePlaying = false;
+			CurrentOrb = OrbCount / 2;
+			CurrentResource = EBladeMat::BM_NONE;
+			CurrentlyProcessing = EResource::R_NONE;
+		}
+		else
+			RandomiseRange();
 	}
 }
 
@@ -140,9 +145,9 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 void AForgeAnvil::SuccessTimeComplete()
 {
 	SuccessHit = false;
-	if (HammingCycles >= MaxCycles)
+	if (CurrentOrb >= OrbCount)
 	{
-		HammingCycles = 0;
+		CurrentOrb = OrbCount / 2;
 		MakeResource(CurrentResource);
 		bHammerMinigamePlaying = false;
 		CurrentResource = EBladeMat::BM_NONE;

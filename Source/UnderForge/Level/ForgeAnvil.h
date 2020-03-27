@@ -79,7 +79,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float RangeMax = 0.6f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int MaxCycles = 5;
+		int CurrentOrb = 5;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int OrbCount = 10;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
 		float CurrentMinRange = 0.0f;
