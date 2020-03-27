@@ -23,6 +23,8 @@ protected:
 	class USoundBase* Success;
 	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 	class USoundBase* Failure;
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+		class USoundBase* FullyCompletedCrafting;
 	//---------
 	AForgeAnvil();
 	virtual void BeginPlay() override;
@@ -78,7 +80,7 @@ public:
 		float RangeMin = 0.15f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float RangeMax = 0.6f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 		int CurrentOrb = 5;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int OrbCount = 10;
