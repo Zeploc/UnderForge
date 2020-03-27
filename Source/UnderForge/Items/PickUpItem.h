@@ -52,6 +52,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int iAttackDamage = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float fKnockbackMultiplier = 1.0f;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 		FTransform AttachOffset;
