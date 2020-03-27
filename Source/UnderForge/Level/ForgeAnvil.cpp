@@ -44,6 +44,8 @@ void AForgeAnvil::BeginPlay()
 	Super::BeginPlay();
 	CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 	InteractTimer = 0;
+
+	CurrentOrb = OrbCount / 2;
 }
 bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
 {
@@ -152,6 +154,7 @@ void AForgeAnvil::SuccessTimeComplete()
 		bHammerMinigamePlaying = false;
 		CurrentResource = EBladeMat::BM_NONE;
 		CurrentlyProcessing = EResource::R_NONE;
+		UGameplayStatics::PlaySound2D(GetWorld(), FullyCompletedCrafting);
 	}
 	else
 		RandomiseRange();
