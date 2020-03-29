@@ -73,6 +73,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DamageForge(float Damage);
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+		void MULTI_UpdateForgeHealth(float _NewHealth);
 	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 		class USoundBase* SmelteryTakeDamageSound;
 
