@@ -82,6 +82,7 @@ void ACarpentaryStation::Interacted(AForgePlayer * _Player)
 
 void ACarpentaryStation::MorphStates(bool Next)
 {
+	return; // REMOVING CHANGE MECHANIC
 	if (!bSpinningGamePlaying)
 	{
 		switch (CurrentState)

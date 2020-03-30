@@ -101,7 +101,7 @@ void AForgeAnvil::Tick(float DeltaTime)
 
 void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 {
-	if (Part->SwordPart != ESwordPart::PT_NONE || (Part->ResourceType != EResource::R_IRONINGOT && Part->ResourceType != EResource::R_STEELINGOT) || bHammerMinigamePlaying)
+	if (Part->SwordPart != EWeaponPart::WP_NONE || (Part->ResourceType != EResource::R_IRONINGOT && Part->ResourceType != EResource::R_STEELINGOT) || bHammerMinigamePlaying)
 	{
 		ThrowAway(Part);
 		return;

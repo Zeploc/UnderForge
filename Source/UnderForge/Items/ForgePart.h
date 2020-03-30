@@ -28,7 +28,7 @@ public:
 		
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-		ESwordPart SwordPart;
+		EWeaponPart SwordPart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource ResourceType;

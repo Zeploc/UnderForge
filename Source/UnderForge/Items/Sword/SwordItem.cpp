@@ -10,6 +10,9 @@
 #include "Runtime/Engine/Classes/Sound/SoundBase.h"
 #include "Items/ForgeItem.h"
 #include "CommonFunctions.h"
+#include "UnderForgeSingleton.h"
+
+#include "UnderForge.h"
 
 ASwordItem::ASwordItem()
 {
@@ -34,11 +37,51 @@ ASwordItem::ASwordItem()
 	AttachOffset.SetScale3D(FVector(0.3f));
 	CanBePickedUp = false;
 	iAttackDamage = 25;
+
+	if (WeaponType != EWeapon::W_NONE)
+	{
+		SetUpWeapon(WeaponType);
+	}
 }
 
-bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
+bool ASwordItem::CanHavePart(EWeaponPart PartToCheck)
 {
-	for (int i = 0; i < ForgeParts.Num(); i++)
+	// if no parts are added, is valid
+	if (ForgeParts.Num() <= 0)
+	{
+		return true;
+	}
+
+	// Check if part already exists in forgeparts
+	for (EWeaponPart ForgePart : ForgeParts)
+	{
+		// Part already exists
+		if (PartToCheck == ForgePart)
+			return false;
+	}
+
+
+	// Checks
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return false;
+
+	FWeapon* FoundWeapon = GameSingleton->Weapons.Find(WeaponType);
+	if (!FoundWeapon)
+		return false;
+
+
+	// Check if part is in current weapon
+	for (EWeaponPart WeaponPart : FoundWeapon->Parts)
+	{
+		// Part is in required weapon parts, so is valid part
+		if (PartToCheck == WeaponPart)
+			return true;
+	}
+
+	return false;
+
+	/*for (int i = 0; i < ForgeParts.Num(); i++)
 	{
 		if (UCommonFunctions::IsHandle(ForgeParts[i]) && UCommonFunctions::IsHandle(PartToCheck))
 		{
@@ -49,47 +92,103 @@ bool ASwordItem::CanHavePart(ESwordPart PartToCheck)
 			return false;
 		}
 	}
-	return true;
+	return true;*/
 }
 
-bool ASwordItem::AddPart(ESwordPart PartToAdd)
+bool ASwordItem::AddPart(EWeaponPart PartToAdd)
 {
 	if (HasAuthority())
 	{
 		MULTI_AddPart(PartToAdd);
 	}
+
+	// If forge parts empty, set current weapon to found
+	bool FirstPart = false;
+	if (ForgeParts.Num() <= 0)
+		FirstPart = true;
+
+	// Add part and mesh
 	ForgeParts.Add(PartToAdd); // Add the part
+	AddPartMesh(PartToAdd, FName(TEXT("Part %d"), ForgeParts.Num()));
 
-	bool HasHandle = false;
-	bool HadBlade = false;
+	// Checks
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return false;
 
-	for (int i = 0; i < ForgeParts.Num(); i++)
+	// First part, so set weapon type
+	if (FirstPart)
 	{
-		if (UCommonFunctions::IsHandle(ForgeParts[i]))
+		// Get all weapons
+		TArray<EWeapon> Weapons;
+		GameSingleton->Weapons.GenerateKeyArray(Weapons);
+		for (EWeapon Weapon : Weapons)
 		{
-			HasHandle = true;
-			HandleMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
-		}
-		else if (UCommonFunctions::IsBlade(ForgeParts[i]))
-		{
-			HadBlade = true;
-			BladeMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
+			// Find weapon's required parts
+			FWeapon* FoundWeapon = GameSingleton->Weapons.Find(Weapon);
+			if (FoundWeapon)
+			{
+				// Check if the part is contained in this weapon's parts
+				for (EWeaponPart WeaponPart : FoundWeapon->Parts)
+				{
+					// Part is in this weapon parts
+					if (WeaponPart == PartToAdd)
+					{
+						// Set current weapon and break
+						WeaponType = Weapon;
+						break;
+					}
+				}
+			}
+			// Weapon has been found, exit loop check
+			if (WeaponType != EWeapon::W_NONE)
+				break;
 		}
 	}
+	
+	FWeapon* FoundWeapon = GameSingleton->Weapons.Find(WeaponType);
+	if (!FoundWeapon)
+		return false;
 
-	if (HasHandle && HadBlade)
+	// Check through each parts of the weapon
+	for (EWeaponPart WeaponPart : FoundWeapon->Parts)
 	{
-		ItemMesh->SetSimulatePhysics(true);
-		UGameplayStatics::PlaySound2D(GetWorld(), SuccessCombine);
-		//ItemMesh->SetVisibility(true);
-		//HandleMesh->SetVisibility(false);
-		//BladeMesh->SetVisibility(false);
-		return true;
+		// If part not contained, weapon not complete
+		if (!ForgeParts.Contains(WeaponPart))
+			return false;
 	}
-	return false;
+
+	return true;
+
+	//bool HasHandle = false;
+	//bool HadBlade = false;
+
+	//for (int i = 0; i < ForgeParts.Num(); i++)
+	//{
+	//	if (UCommonFunctions::IsHandle(ForgeParts[i]))
+	//	{
+	//		HasHandle = true;
+	//		HandleMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
+	//	}
+	//	else if (UCommonFunctions::IsBlade(ForgeParts[i]))
+	//	{
+	//		HadBlade = true;
+	//		BladeMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
+	//	}
+	//}
+
+	//if (HasHandle && HadBlade)
+	//{
+	//	ItemMesh->SetSimulatePhysics(true);
+	//	UGameplayStatics::PlaySound2D(GetWorld(), SuccessCombine);
+	//	//ItemMesh->SetVisibility(true);
+	//	//HandleMesh->SetVisibility(false);
+	//	//BladeMesh->SetVisibility(false);
+	//	return true;
+	//}
+	//return false;
 }
-
-void ASwordItem::MULTI_AddPart_Implementation(ESwordPart PartToAdd)
+void ASwordItem::MULTI_AddPart_Implementation(EWeaponPart PartToAdd)
 {
 	if (!HasAuthority())
 	{
@@ -97,10 +196,66 @@ void ASwordItem::MULTI_AddPart_Implementation(ESwordPart PartToAdd)
 	}
 }
 
+void ASwordItem::SetUpWeapon(EWeapon _Weapon)
+{
+	
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return;
+
+	FWeapon* FoundWeapon = GameSingleton->Weapons.Find(_Weapon);
+	if (!FoundWeapon)
+		return;
+
+	ClearCurrentParts();
+
+	int PartID = 1;
+	for (EWeaponPart WeaponPart : FoundWeapon->Parts)
+	{
+		FName PartName = FName(TEXT("Part %d"), PartID);
+		AddPartMesh(WeaponPart, PartName);
+		PartID++;
+	}
+}
+
+void ASwordItem::AddPartMesh(EWeaponPart WeaponPart, const FName PartName)
+{
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	FWeaponPart* FoundWeaponPart = GameSingleton->Parts.Find(WeaponPart);
+	if (!FoundWeaponPart)
+		return;
+
+	UStaticMeshComponent* NewMeshComp = NewObject<UStaticMeshComponent>(this, PartName);
+	if (!NewMeshComp)
+		return;
+
+	if (FoundWeaponPart->PartMesh)
+		NewMeshComp->SetStaticMesh(FoundWeaponPart->PartMesh);
+	NewMeshComp->SetCollisionProfileName("NoCollision");
+	NewMeshComp->RegisterComponent();
+
+	NewMeshComp->AttachToComponent(ItemMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	NewMeshComp->SetRelativeTransform(FoundWeaponPart->Offset);
+	PartComponents.Add(WeaponPart, NewMeshComp);
+}
+
+void ASwordItem::ClearCurrentParts()
+{
+	TArray<UStaticMeshComponent*> Comps;
+	PartComponents.GenerateValueArray(Comps);
+	for (UStaticMeshComponent* StaticMeshComp : Comps)
+	{
+		StaticMeshComp->DestroyComponent();
+	}
+	PartComponents.Empty();
+}
+
+
 
 
 void ASwordItem::Disassemble()
 {
+	WeaponType = EWeapon::W_NONE;
 	for (int i = 0; i < ForgeParts.Num(); i++)
 	{
 		//MakeResource(ForgeParts[i]);

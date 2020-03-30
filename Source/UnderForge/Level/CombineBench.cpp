@@ -6,6 +6,7 @@
 #include "Items/ForgeItem.h"
 #include "Items/Sword/SwordItem.h"
 #include "Utlities.h"
+#include "UnderForgeSingleton.h"
 #include "Engine/World.h"
 
 #include "UnrealNetwork.h"
@@ -36,7 +37,7 @@ void ACombineBench::ItemDectection(class AActor* OverlappActor, bool entering)
 
 void ACombineBench::ProcessPartItem(AForgePart * Part)
 {
-	if (Part->SwordPart == ESwordPart::PT_NONE) // Check if its not a valid part
+	if (Part->SwordPart == EWeaponPart::WP_NONE) // Check if its not a valid part
 	{
 		ThrowAway(Part); // if it does throw it away
 		return; // Stop checking
@@ -48,7 +49,6 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 			ASwordItem* NewSwordItem = GetWorld()->SpawnActor<ASwordItem>(SwordItem, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 			NewSwordItem->ItemMesh->SetSimulatePhysics(false);
 			NewSwordItem->AddPart(Part->SwordPart);
-			CurrentParts.Add(Part->SwordPart);
 			CurrentItem = NewSwordItem;
 		}		
 		Part->Destroy();
@@ -56,36 +56,56 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 	}
 	else // item exists, check valid part
 	{
-		if (ASwordItem* CurrentSwordItem = Cast<ASwordItem>(CurrentItem)) // Item is a sword
+		if (CurrentItem->CanHavePart(Part->SwordPart)) // If the sword needs that type of part
 		{
-			if (CurrentSwordItem->CanHavePart(Part->SwordPart)) // If the sword needs that type of part
+			if (CurrentItem->AddPart(Part->SwordPart)) // Add the part
 			{
-				if (CurrentSwordItem->AddPart(Part->SwordPart)) // Add the part
-				{
-					CurrentParts.Empty();
-					CurrentItem->CanBePickedUp = true;
-					// Is complete
-					CurrentItem = nullptr;
-				}
-				Part->Destroy(); // Destroy part actor
-				UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
+				CurrentItem->CanBePickedUp = true;
+				// Is complete
+				CurrentItem = nullptr;
 			}
-			else
-			{
-				ThrowAway(Part); // if it does throw it away
-				return; // Stop checking
-			}
+			Part->Destroy(); // Destroy part actor
+			UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 		}
-		else // Is not valid part
+		else
 		{
-			ThrowAway(Part); // throw it away
+			ThrowAway(Part); // if it does throw it away
+			return; // Stop checking
 		}
 	}	
+}
+void ACombineBench::S_Disassemble()
+{
+	if (!HasAuthority())
+		return;
+
+	if (!CurrentItem)
+		return;
+
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (GameSingleton && GetWorld())
+	{
+		for (EWeaponPart WeaponPart : CurrentItem->ForgeParts)
+		{
+			FWeaponPart* FoundPart = GameSingleton->Parts.Find(WeaponPart);
+			if (FoundPart)
+			{
+				if (!FoundPart->PartClass)
+					continue;
+
+				AForgePart* NewPart = GetWorld()->SpawnActor<AForgePart>(FoundPart->PartClass, RefuseThrowDirection->GetComponentLocation(), RefuseThrowDirection->GetComponentRotation());
+				ThrowAway(NewPart); // Throw out
+			}			
+		}
+	}
+
+
+	CurrentItem->Disassemble();
+	CurrentItem = nullptr;
 }
 
 void ACombineBench::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACombineBench, CurrentItem);
-	DOREPLIFETIME(ACombineBench, CurrentParts);
 }

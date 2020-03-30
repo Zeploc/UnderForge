@@ -24,6 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		static void AddDebugMessage(FString _Message, bool _Error = false, bool _PrintToConsole = true);
 
+	UFUNCTION(BlueprintPure, Category = "Underforge Singleton")
+		static class UUnderForgeSingleton* GetGameSingleton(bool& IsValid);
 
 	UFUNCTION(BlueprintPure)
 		static bool IsHandle(ESwordPart SwordPart);

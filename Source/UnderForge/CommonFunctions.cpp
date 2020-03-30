@@ -5,6 +5,8 @@
 
 #include "Engine/World.h"
 
+#include "UnderForgeSingleton.h"
+
 #include "UnderForge.h"
 
 
@@ -30,6 +32,18 @@ void UCommonFunctions::AddDebugMessage(FString _Message, bool _Error, bool _Prin
 	{
 		UE_LOG(LogTemp, Log, TEXT("%s"), *_Message);
 	}
+}
+
+UUnderForgeSingleton * UCommonFunctions::GetGameSingleton(bool & IsValid)
+{
+	IsValid = false;
+	UUnderForgeSingleton* DataInstance = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+
+	if (!DataInstance) return NULL;
+	if (!DataInstance->IsValidLowLevel()) return NULL;
+
+	IsValid = true;
+	return DataInstance;
 }
 
 bool UCommonFunctions::IsHandle(ESwordPart SwordPart)

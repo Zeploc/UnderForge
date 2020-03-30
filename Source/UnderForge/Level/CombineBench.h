@@ -21,15 +21,15 @@ public:
 
 	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
 	virtual void ProcessPartItem(AForgePart* Part) override;
-	
-	UPROPERTY(BlueprintReadWrite, Replicated)
-	TArray<ESwordPart> CurrentParts;
 
+	UFUNCTION(BlueprintCallable)
+		void S_Disassemble();
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class ASwordItem> SwordItem;
 
 	UPROPERTY(BlueprintReadWrite, Replicated)
-	class AForgeItem* CurrentItem;
+	class ASwordItem* CurrentItem;
 
 	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 		class USoundBase* NewItemAddedSound;

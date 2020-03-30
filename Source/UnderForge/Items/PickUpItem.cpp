@@ -3,6 +3,7 @@
 
 #include "PickUpItem.h"
 
+#include "UnrealNetwork.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
@@ -69,4 +70,10 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Picked Up");
+}
+
+void APickUpItem::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(APickUpItem, CanBePickedUp);
 }

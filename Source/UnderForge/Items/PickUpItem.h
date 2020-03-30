@@ -33,7 +33,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		virtual void PickUp(class AForgePlayer* NewPlayer);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 		bool CanBePickedUp = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

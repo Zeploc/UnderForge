@@ -100,6 +100,72 @@ enum class EToolType : uint8
 	TT_CALIPERS UMETA(DisplayName = "Calipers"),
 };
 
+
+UENUM(BlueprintType)
+enum class EWeaponPart : uint8
+{
+	WP_NONE UMETA(DisplayName = "None"),
+	WP_BASICHANDLE UMETA(DisplayName = "Basic Handle"),
+	WP_THREEQUARTERHANDLE UMETA(DisplayName = "Three Quarter Handle"),
+	WP_DAGGERBLADE UMETA(DisplayName = "Dagger Blade"),
+	WP_AXEHEAD UMETA(DisplayName = "Axe Head"),
+	WP_BROADSWORDBLADE UMETA(DisplayName = "Broad Sword Blade"),
+	WP_CUDGELHEAD UMETA(DisplayName = "Cudgel Head"),
+	WP_RAPIERBLADE UMETA(DisplayName = "Rapier Blade"),
+	WP_SPIKEDMACEHEAD UMETA(DisplayName = "Spiked Mace Head"),
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponPart
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UStaticMesh* PartMesh;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FTransform Offset;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* IconImage;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TSubclassOf<class AForgePart> PartClass;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TArray<EResource> ResourcesRequired;
+};
+
+USTRUCT(BlueprintType)
+struct FWeapon
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TArray<EWeaponPart> Parts;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* IconImage;
+};
+
+USTRUCT(BlueprintType)
+struct FResource
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* IconImage;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TSubclassOf<class APickUpItem> ResourceClass;
+};
+
+UENUM(BlueprintType)
+enum class EWeapon : uint8
+{
+	W_NONE UMETA(DisplayName = "None"),
+	W_DAGGER UMETA(DisplayName = "Dagger"),
+	W_BROADSWORD UMETA(DisplayName = "Broad Sword"),
+	W_AXE UMETA(DisplayName = "Axe"),
+	W_CUDGEL UMETA(DisplayName = "Cudgel"),
+	W_RAPIER UMETA(DisplayName = "Rapier"),
+	W_SPIKEDMACE UMETA(DisplayName = "Spiked Mace"),
+};
+
 UCLASS()
 class UNDERFORGE_API UUtilities : public UObject
 {

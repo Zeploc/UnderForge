@@ -194,6 +194,7 @@ bool ASmeltery::SERVER_MakeMat_Validate(EResource type)
 
 void ASmeltery::MorphStates(bool Next)
 {
+	return; // REMOVING CHANGE MECHANIC
 	if (bSmeltingMinigamePlaying) return;
 	switch (CurrentState)
 	{

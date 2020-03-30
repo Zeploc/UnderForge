@@ -26,18 +26,24 @@ public:
 		class UStaticMeshComponent* BladeMesh;
 
 public:
-	bool CanHavePart(ESwordPart PartToCheck);
-	bool AddPart(ESwordPart PartToAdd);
+	bool CanHavePart(EWeaponPart PartToCheck);
+	bool AddPart(EWeaponPart PartToAdd);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MULTI_AddPart(ESwordPart PartToAdd);
+	void MULTI_AddPart(EWeaponPart PartToAdd);
+
+	void SetUpWeapon(EWeapon _Weapon);
+	void AddPartMesh(EWeaponPart WeaponPart, const FName PartName);
+	void ClearCurrentParts();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<ESwordPart, UStaticMesh*> PartMeshes;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TMap<EWeaponPart, UStaticMeshComponent*> PartComponents;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<ESwordPart> ForgeParts;
+		TArray<EWeaponPart> ForgeParts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USoundBase* SuccessCombine;
@@ -57,6 +63,9 @@ public:
 		TSubclassOf<class AForgePart> SteelBroadBladePart;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AForgePart> SteelKrisBladePart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EWeapon WeaponType = EWeapon::W_NONE;
 
 	UFUNCTION(BlueprintCallable)
 		void Disassemble();
