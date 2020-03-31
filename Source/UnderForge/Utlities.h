@@ -149,6 +149,8 @@ struct FWeaponPart
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* IconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* HorizontalIconImage;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class AForgePart> PartClass;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EResource> ResourcesRequired;
@@ -163,6 +165,8 @@ struct FWeapon
 		TArray<EWeaponPart> Parts;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* IconImage;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* HorizontalIconImage;
 };
 
 USTRUCT(BlueprintType)
