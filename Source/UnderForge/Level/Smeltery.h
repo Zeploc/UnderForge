@@ -36,6 +36,11 @@ public:
 
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnNewResource(EResource _Resource);
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnRemoveResource(EResource _Resource);
+
 	void ProcessSmelting(float DeltaTime);
 	virtual void MorphStates(bool Next) override;
 
