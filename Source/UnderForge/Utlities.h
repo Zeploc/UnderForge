@@ -122,7 +122,7 @@ struct FIngotRecipe
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		int iCoalCount = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EResource> Resources;

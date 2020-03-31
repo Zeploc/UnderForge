@@ -40,36 +40,32 @@ public:
 	void HammeringMinigame(float Deltatime);
 
 	UFUNCTION(BlueprintCallable)
-		class AForgePart* MakeResource(EBladeMat type);
+		class AForgePart* MakeResource(EResource type);
 	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
-		void SERVER_MakeResource(EBladeMat type);
+		void SERVER_MakeResource(EResource type);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> SteelKrisBladePart;
+		UFUNCTION(BlueprintPure)
+	static EWeaponPart FindPartFromResource(EResource _Resource);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> SteelBroadBladePart;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<class AForgePart> SteelKrisBladePart;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronKrisBladePart;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<class AForgePart> SteelBroadBladePart;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronBroadBladePart;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<class AForgePart> IronKrisBladePart;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<class AForgePart> IronBroadBladePart;
 	
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class USceneComponent* Rotator;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* BroadswordBlade;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* KrisSwordBlade;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EBladeType CurrentState;
+	
 	bool PotentiallyInteracting;
 	
 	FTimerHandle SuccessHitTimerHandle;
@@ -103,13 +99,12 @@ public:
 	void RandomiseRange();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EBladeMat CurrentResource;
+		EResource CurrentResource;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bHammerMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
 		float HammerTimePassed;
-	EResource CurrentlyProcessing;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -71,19 +71,8 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 	EResource ResourceToMake = EResource::R_NONE;
 	if (CurrentRecipe)
 	{
-		TArray<EResource> Recipies;
-		IngotRecipies.GenerateKeyArray(Recipies);
-		for (EResource RecipeResource : Recipies)
-		{
-			if (IngotRecipies[RecipeResource] == *CurrentRecipe)
-			{
-				ResourceToMake = RecipeResource;
-				break;
-			}
-		}
-		
+		ResourceToMake = GetResourceFromRecipe(*CurrentRecipe);
 	}
-
 	
 	if (SmeltingTimePassed < CurrentRecipeSmeltingTimeNeeded)
 	{
@@ -132,7 +121,22 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 			}
 		}
 		CurrentRecipe = nullptr;
+		CurrentResourceCreating = EResource::R_NONE;
 	}
+}
+
+EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
+{
+	TArray<EResource> Recipies;
+	IngotRecipies.GenerateKeyArray(Recipies);
+	for (EResource RecipeResource : Recipies)
+	{
+		if (IngotRecipies[RecipeResource] == _IngotRecipe)
+		{
+			return RecipeResource;
+		}
+	}
+	return EResource::R_NONE;
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
@@ -168,6 +172,7 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 				{
 					bCanHaveResource = true;
 					CurrentRecipe = new FIngotRecipe(Recipie);
+					CurrentResourceCreating = GetResourceFromRecipe(Recipie);
 					CurrentRecipeSmeltingTimeNeeded = CurrentRecipe->fSmeltTime;
 					SmeltingTimeKABOOM = CurrentRecipeSmeltingTimeNeeded + 5.0f;
 					break;
