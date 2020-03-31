@@ -24,7 +24,7 @@ protected:
 
 	float SmeltingTimeMax;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float SmeltingTimeNeeded;
+	float CurrentRecipeSmeltingTimeNeeded;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float SmeltingTimeKABOOM;
 public:	
@@ -36,7 +36,7 @@ public:
 
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
-	void SmeltingMinigame(float DeltaTime);
+	void ProcessSmelting(float DeltaTime);
 	virtual void MorphStates(bool Next) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -62,7 +62,15 @@ public:
 		bool bSmeltingMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
 		float SmeltingTimePassed;
-	EResource CurrentlyProcessing;
+
+	UPROPERTY(BlueprintReadWrite)
+	 TArray<EResource> CurrentlyProcessing;
+
+	UPROPERTY(EditDefaultsOnly)
+	TMap<EResource, FIngotRecipe> IngotRecipies;
+
+	FIngotRecipe* CurrentRecipe;
+
 	FTimerHandle timer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

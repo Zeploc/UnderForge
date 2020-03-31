@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "Utlities.h"
 #include "Engine.h"
+#include "UnderForgeSingleton.h"
 
 // Sets default values
 ASmeltery::ASmeltery()
@@ -18,7 +19,7 @@ ASmeltery::ASmeltery()
 	SmeltingTimePassed = 0.0f;
 	bSmeltingMinigamePlaying = false;
 	SmeltingTimeKABOOM = 10.0f;
-	SmeltingTimeNeeded = 5.0f;
+	CurrentRecipeSmeltingTimeNeeded = 5.0f;
 	SmeltingTimeMax = 8.0f;
 
 	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
@@ -48,7 +49,7 @@ void ASmeltery::BeginPlay()
 void ASmeltery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SmeltingMinigame(DeltaTime);
+	ProcessSmelting(DeltaTime);
 	FRotator rotate(0, 1, 0);
 	Rotator->AddWorldRotation(rotate);
 }
@@ -67,68 +68,120 @@ bool ASmeltery::TryInteract(AForgePlayer * _Player)
 
 void ASmeltery::Interacted(AForgePlayer * _Player)
 {
-	bSmeltingMinigamePlaying = false;
-	CurrentRemainingTime = 0.0f;
-	if (SmeltingTimePassed < SmeltingTimeNeeded)
+	EResource ResourceToMake = EResource::R_NONE;
+	if (CurrentRecipe)
 	{
-		MakeMat(CurrentlyProcessing);
-		CurrentlyProcessing = EResource::R_NONE;
+		TArray<EResource> Recipies;
+		IngotRecipies.GenerateKeyArray(Recipies);
+		for (EResource RecipeResource : Recipies)
+		{
+			if (IngotRecipies[RecipeResource] == *CurrentRecipe)
+			{
+				ResourceToMake = RecipeResource;
+				break;
+			}
+		}
+
+		//const EResource* FoundRecipeResource = IngotRecipies.FindKey(*CurrentRecipe);
+		/*if (FoundRecipeResource)
+		{
+			ResourceToMake = *FoundRecipeResource;
+		}*/
+
+	}
+
+	// If no coal left
+	if (!CurrentlyProcessing.Contains(EResource::R_COAL))
+	{
+		bSmeltingMinigamePlaying = false;
+		CurrentRemainingTime = 0.0f;
+	}
+	if (SmeltingTimePassed < CurrentRecipeSmeltingTimeNeeded)
+	{
+		for (EResource Resource : CurrentRecipe->Resources)
+		{
+			MakeMat(Resource);
+		}
 	}
 	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
 	{
-		switch (CurrentlyProcessing)
-		{
-		case(EResource::R_IRONORE):
-			if (CurrentState == EResource::R_IRONINGOT)
-			{
-				MakeResource(EResource::R_IRONINGOT);
-			}
-			else if(CurrentState == EResource::R_STEELINGOT)
-			{
-				MakeResource(EResource::R_STEELINGOT);
-			}
-			break;
-		}
-		CurrentlyProcessing = EResource::R_NONE;
+		MakeResource(ResourceToMake);		
 	}
 	else
 	{
-		CurrentlyProcessing = EResource::R_NONE;
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
 	}
 	SmeltingTimePassed = 0.0f;
+
+	if (CurrentRecipe)
+	{
+		for (EResource Resource : CurrentRecipe->Resources)
+		{
+			CurrentlyProcessing.Remove(Resource);
+		}
+		CurrentRecipe = nullptr;
+	}
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
-	if (bSmeltingMinigamePlaying || material->ResourceType != EResource::R_IRONORE)
+	bool bCanHaveResource = false;
+	if (material->ResourceType == EResource::R_COAL)
+		bCanHaveResource = true;
+
+	if (!bCanHaveResource)
+	{
+		TArray<FIngotRecipe> Recipes;
+		IngotRecipies.GenerateValueArray(Recipes);
+		for (FIngotRecipe Recipie : Recipes)
+		{
+			// Create required for this recipe
+			TArray<EResource> RecipeRequired = Recipie.Resources;
+			for (EResource CurrentResource : CurrentlyProcessing)
+			{
+				// Removes current resource from required
+				RecipeRequired.Remove(CurrentResource);
+			}
+			// If required resources still contains given resource
+			if (RecipeRequired.Contains(material->ResourceType))
+			{
+				// Is need for recipe
+				bCanHaveResource = true;
+				CurrentRecipe = new FIngotRecipe(Recipie);
+				CurrentRecipeSmeltingTimeNeeded = CurrentRecipe->fSmeltTime;
+				break;
+			}
+		}
+	}
+
+	if (!bCanHaveResource)
 	{
 		ThrowAway(material);
 		return;
 	}
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
-	CurrentlyProcessing = material->ResourceType;
+	CurrentlyProcessing.Add(material->ResourceType);
 	material->Destroy();
 	bSmeltingMinigamePlaying = true;
 }
 
-void ASmeltery::SmeltingMinigame(float DeltaTime)
+void ASmeltery::ProcessSmelting(float DeltaTime)
 {
-	if (bSmeltingMinigamePlaying)
+	if (!bSmeltingMinigamePlaying)
+		return;
+
+	SmeltingTimePassed += DeltaTime;
+	CurrentRemainingTime = CurrentRecipeSmeltingTimeNeeded - SmeltingTimePassed;
+	GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
+	if (SmeltingTimePassed > SmeltingTimeKABOOM)
 	{
-		SmeltingTimePassed += DeltaTime;
-		CurrentRemainingTime = SmeltingTimeNeeded - SmeltingTimePassed;
-		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
-		if (SmeltingTimePassed > SmeltingTimeKABOOM)
-		{
-			bSmeltingMinigamePlaying = false;
-			SmeltingTimePassed = 0.0f;
-			CurrentRemainingTime = 0.0f;
-			CurrentlyProcessing = EResource::R_NONE;
-			UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
-			//KABOOM
-		}
+		bSmeltingMinigamePlaying = false;
+		SmeltingTimePassed = 0.0f;
+		CurrentRemainingTime = 0.0f;
+		CurrentlyProcessing.Empty();
+		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
+		//KABOOM
 	}
 }
 
@@ -139,20 +192,20 @@ AForgePart * ASmeltery::MakeResource(EResource type)
 		//SERVER_MakeResource(type);
 		return nullptr;
 	}
-	switch (type)
-	{
-	case(EResource::R_IRONINGOT):
-		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronIngotPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			return ResourceRef;
-		}
+	
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return nullptr;
 
-	case(EResource::R_STEELINGOT):
-		{
-			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelIngotPart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			return ResourceRef;
-		}
+	FResource* FoundResource = GameSingleton->Resources.Find(type);
+
+	if (FoundResource)
+	{		
+		APickUpItem * ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		AForgePart* ForgeResouce = Cast<AForgePart>(ResourceRef);
+		return ForgeResouce;
 	}
+	
 	return nullptr;
 }
 
@@ -163,14 +216,20 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 		//SERVER_MakeMat(type);
 		return nullptr;
 	}
-	switch (type)
+
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return nullptr;
+
+	FResource* FoundResource = GameSingleton->Resources.Find(type);
+
+	if (FoundResource)
 	{
-		case(EResource::R_IRONORE):
-		{
-			AForgeMat * ResourceRef = GetWorld()->SpawnActor<AForgeMat>(IronMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-			return ResourceRef;
-		}
+		APickUpItem * ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		AForgeMat* ForgeMat = Cast<AForgeMat>(ResourceRef);
+		return ForgeMat;
 	}
+
 	return nullptr;
 }
 

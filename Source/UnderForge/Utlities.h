@@ -17,6 +17,7 @@ enum class EResource : uint8
 {
 	R_WOOD UMETA(DisplayName = "Wood"),
 	R_IRONORE UMETA(DisplayName = "Iron Ore"),
+	R_COAL UMETA(DisplayName = "Coal"),
 
 	R_STEELINGOT UMETA(DisplayName = "Steel Ingot"),
 	R_IRONINGOT UMETA(DisplayName = "Iron Ingot"),
@@ -115,6 +116,27 @@ enum class EWeaponPart : uint8
 	WP_SPIKEDMACEHEAD UMETA(DisplayName = "Spiked Mace Head"),
 };
 
+
+USTRUCT(BlueprintType)
+struct FIngotRecipe
+{
+	GENERATED_BODY()
+
+		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int iCoalCount = 0;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TArray<EResource> Resources;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float fSmeltTime = 5.0f;
+
+	bool operator==(FIngotRecipe other) {
+		if (other.iCoalCount == iCoalCount && other.Resources == Resources && other.fSmeltTime == fSmeltTime)
+			return true;
+		else
+			return false;
+	}
+};
+
 USTRUCT(BlueprintType)
 struct FWeaponPart
 {
@@ -152,6 +174,8 @@ struct FResource
 		UTexture2D* IconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class APickUpItem> ResourceClass;
+
+
 };
 
 UENUM(BlueprintType)
