@@ -153,7 +153,7 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 
 bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 {
-	bool bFoundRecipe = false;
+	bool bValidResource = false;
 	TArray<FIngotRecipe> Recipes;
 	IngotRecipies.GenerateValueArray(Recipes);
 	for (FIngotRecipe Recipie : Recipes)
@@ -175,17 +175,17 @@ bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 		{
 			// Is need for recipe
 			RecipeRequired.RemoveSingle(_Resource);
+			bValidResource = true;
 			// If recipe is complete with this new item
 			if (RecipeRequired.Num() <= 0 && RequiredCoal <= 0)
 			{
 				FoundRecipe = Recipie;
-				bFoundRecipe = true;
 			}
 		}
 	}
 
 
-	return bFoundRecipe;
+	return bValidResource;
 }
 
 EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
