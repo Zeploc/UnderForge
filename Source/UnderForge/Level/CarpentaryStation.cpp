@@ -190,7 +190,7 @@ void ACarpentaryStation::SpinningMinigame()
 			CurrentY = CurrentPlayer->CurrentY;// GetInputAxisKeyValue("SpinningYAxis");
 		}
 
-		FVector currentStickPos(CurrentX, CurrentY, 0.0f);
+		FVector currentStickPos(CurrentX, CurrentY, 0.0f); 
 		currentStickPos.Normalize();
 		FVector PreviousStickPos(PreviousX, PreviousY, 0.0f);
 		PreviousStickPos.Normalize();
