@@ -178,6 +178,8 @@ bool ASwordItem::AddPart(EWeaponPart PartToAdd)
 		if (!ForgeParts.Contains(WeaponPart))
 			return false;
 	}
+	ItemMesh->SetSimulatePhysics(true);
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessCombine);
 
 	return true;
 

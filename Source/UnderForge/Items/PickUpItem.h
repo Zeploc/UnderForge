@@ -28,10 +28,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Drop();
+		virtual void PickUp(class AForgePlayer* NewPlayer);
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnPickUp();
 
 	UFUNCTION(BlueprintCallable)
-		virtual void PickUp(class AForgePlayer* NewPlayer);
+	virtual void Drop();
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnDrop();
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 		bool CanBePickedUp = true;

@@ -19,10 +19,7 @@ class UNDERFORGE_API AResourcePile : public AForgeStation
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EResource Resource;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgeMat> ForgeMat;
-
+	
 	UFUNCTION(BlueprintCallable)
 		class AForgeMat* GetResource(AForgePlayer * _OwningPlayer);
 	//UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)

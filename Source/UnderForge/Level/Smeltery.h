@@ -38,24 +38,31 @@ public:
 
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
+	bool CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe);
+
+	UFUNCTION(Server, reliable, WithValidation)
+		void SERVER_ChangeCurrentRecipe(FIngotRecipe _NewRecipe);
+	UFUNCTION(NetMulticast, reliable)
+		void MULTI_ChangeCurrentRecipe(FIngotRecipe _NewRecipe);
+
+	UFUNCTION(Server, reliable, WithValidation)
+		void SERVER_ClearCurrentRecipe();
+	UFUNCTION(NetMulticast, reliable)
+		void MULTI_ClearCurrentRecipe();
+
+	UFUNCTION(Server, reliable, WithValidation)
+		void SERVER_ChangeResource(EResource _ResourceChange, bool _Add = true);
+	UFUNCTION(NetMulticast, reliable)
+		void MULTI_ChangeResource(EResource _ResourceChange, bool _Add = true);
+
 	UFUNCTION(BlueprintImplementableEvent)
 		void BI_OnNewResource(EResource _Resource);
 	UFUNCTION(BlueprintImplementableEvent)
 		void BI_OnRemoveResource(EResource _Resource);
 
 	void ProcessSmelting(float DeltaTime);
-	virtual void MorphStates(bool Next) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronIngotPart;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> SteelIngotPart;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgeMat> IronMat;
-
+	//virtual void MorphStates(bool Next) override;
+	
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);
 	UFUNCTION(BlueprintCallable)
@@ -70,12 +77,12 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		float SmeltingTimePassed;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)//, Replicated)
 	 TArray<EResource> CurrentlyProcessing;
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EResource, FIngotRecipe> IngotRecipies;
-	
+
 	FIngotRecipe* CurrentRecipe;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -103,12 +110,7 @@ public:
 		class UStaticMeshComponent* CurrentProducingItem;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class USceneComponent* Rotator;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* IronIngot;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* SteelIngot;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EResource CurrentState;
 

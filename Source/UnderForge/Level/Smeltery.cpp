@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "Utlities.h"
 #include "Engine.h"
+#include "UnrealNetwork.h"
 #include "UnderForgeSingleton.h"
 
 // Sets default values
@@ -41,7 +42,7 @@ ASmeltery::ASmeltery()
 void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentProducingItem->SetStaticMesh(IronIngot);
+	//CurrentProducingItem->SetStaticMesh(IronIngot);
 	InteractTimer = 0;
 }
 
@@ -66,6 +67,33 @@ bool ASmeltery::TryInteract(AForgePlayer * _Player)
 	return false;
 }
 
+void ASmeltery::ProcessMatItem(AForgeMat* material)
+{
+	bool bCanHaveResource = false;
+	if (material->ResourceType == EResource::R_COAL)
+		bCanHaveResource = true;
+
+	if (!bCanHaveResource)
+	{
+		FIngotRecipe FoundRecipie;
+		if (CanHaveResource(material->ResourceType, FoundRecipie))
+		{
+			bCanHaveResource = true;
+			//MULTI_ChangeCurrentRecipe_Implementation(FoundRecipie);
+			SERVER_ChangeCurrentRecipe(FoundRecipie);
+		}
+	}
+
+	if (!bCanHaveResource)
+	{
+		ThrowAway(material);
+		return;
+	}
+	//MULTI_ChangeResource_Implementation(material->ResourceType, true);
+	SERVER_ChangeResource(material->ResourceType, true);
+	material->Destroy();
+	
+}
 void ASmeltery::Interacted(AForgePlayer * _Player)
 {
 	EResource ResourceToMake = EResource::R_NONE;
@@ -94,10 +122,7 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
 	}
-	// If no coal left
-	if (!CurrentlyProcessing.Contains(EResource::R_COAL))
-	{
-	}
+
 	SmeltingTimePassed = 0.0f;
 	bSmeltingMinigamePlaying = false;
 	CurrentRemainingTime = 0.0f;
@@ -108,21 +133,56 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 		{
 			if (CurrentlyProcessing.Contains(Resource))
 			{
-				CurrentlyProcessing.RemoveSingle(Resource);
-				BI_OnRemoveResource(Resource);
+				//MULTI_ChangeResource_Implementation(Resource, false);
+				SERVER_ChangeResource(Resource, false);
 			}
 		}
 		for (int i = 0; i < CurrentRecipe->iCoalCount; i++)
 		{
 			if (CurrentlyProcessing.Contains(EResource::R_COAL))
 			{
-				CurrentlyProcessing.RemoveSingle(EResource::R_COAL);
-				BI_OnRemoveResource(EResource::R_COAL);
+				//MULTI_ChangeResource_Implementation(EResource::R_COAL, false);
+				SERVER_ChangeResource(EResource::R_COAL, false);
 			}
 		}
-		CurrentRecipe = nullptr;
-		CurrentResourceCreating = EResource::R_NONE;
+		SERVER_ClearCurrentRecipe();
+		//MULTI_ClearCurrentRecipe_Implementation();
 	}
+}
+
+
+bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
+{
+	TArray<FIngotRecipe> Recipes;
+	IngotRecipies.GenerateValueArray(Recipes);
+	for (FIngotRecipe Recipie : Recipes)
+	{
+
+		// Create required for this recipe
+		TArray<EResource> RecipeRequired = Recipie.Resources;
+		int RequiredCoal = Recipie.iCoalCount;
+		for (EResource CurrentResource : CurrentlyProcessing)
+		{
+			if (CurrentResource == EResource::R_COAL)
+				RequiredCoal--;
+			else
+				// Removes current resource from required
+				RecipeRequired.RemoveSingle(CurrentResource);
+		}
+		// If required resources still contains given resource
+		if (RecipeRequired.Contains(_Resource))
+		{
+			// Is need for recipe
+			RecipeRequired.RemoveSingle(_Resource);
+			// If recipe is complete with this new item
+			if (RecipeRequired.Num() <= 0 && RequiredCoal <= 0)
+			{
+				FoundRecipe = Recipie;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
@@ -139,70 +199,74 @@ EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
 	return EResource::R_NONE;
 }
 
-void ASmeltery::ProcessMatItem(AForgeMat* material)
+void ASmeltery::SERVER_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe)
 {
-	bool bCanHaveResource = false;
-	if (material->ResourceType == EResource::R_COAL)
-		bCanHaveResource = true;
-
-	if (!bCanHaveResource)
-	{
-		TArray<FIngotRecipe> Recipes;
-		IngotRecipies.GenerateValueArray(Recipes);
-		for (FIngotRecipe Recipie : Recipes)
-		{
-			// Create required for this recipe
-			TArray<EResource> RecipeRequired = Recipie.Resources;
-			int RequiredCoal = Recipie.iCoalCount;
-			for (EResource CurrentResource : CurrentlyProcessing)
-			{
-				if (CurrentResource == EResource::R_COAL)
-					RequiredCoal--;
-				else
-					// Removes current resource from required
-					RecipeRequired.RemoveSingle(CurrentResource);
-			}
-			// If required resources still contains given resource
-			if (RecipeRequired.Contains(material->ResourceType))
-			{
-				// Is need for recipe
-				RecipeRequired.RemoveSingle(material->ResourceType);
-				// If recipe is complete with this new item
-				if (RecipeRequired.Num() <= 0 && RequiredCoal <= 0)
-				{
-					bCanHaveResource = true;
-					CurrentRecipe = new FIngotRecipe(Recipie);
-					CurrentResourceCreating = GetResourceFromRecipe(Recipie);
-					CurrentRecipeSmeltingTimeNeeded = CurrentRecipe->fSmeltTime;
-					SmeltingTimeKABOOM = CurrentRecipeSmeltingTimeNeeded + 5.0f;
-					break;
-				}
-			}
-		}
-	}
-
-	if (!bCanHaveResource)
-	{
-		ThrowAway(material);
-		return;
-	}
-	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
-	CurrentlyProcessing.Add(material->ResourceType);
-	BI_OnNewResource(material->ResourceType);
-	material->Destroy();
-	bool HasNonCoal = false;
-	for (EResource Resource : CurrentlyProcessing)
-	{
-		if (Resource != EResource::R_COAL)
-		{
-			HasNonCoal = true;
-			break;
-		}
-	}
-
-	if (HasNonCoal && CurrentlyProcessing.Contains(EResource::R_COAL))
-		bSmeltingMinigamePlaying = true;
+	MULTI_ChangeCurrentRecipe(_NewRecipe);
 }
+bool ASmeltery::SERVER_ChangeCurrentRecipe_Validate(FIngotRecipe _NewRecipe)
+{
+	return true;
+}
+void ASmeltery::MULTI_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe)
+{
+	CurrentRecipe = new FIngotRecipe(_NewRecipe);
+	CurrentResourceCreating = GetResourceFromRecipe(_NewRecipe);
+	CurrentRecipeSmeltingTimeNeeded = _NewRecipe.fSmeltTime;
+	SmeltingTimeKABOOM = CurrentRecipeSmeltingTimeNeeded + 5.0f;
+}
+void ASmeltery::SERVER_ClearCurrentRecipe_Implementation()
+{
+	MULTI_ClearCurrentRecipe();
+}
+bool ASmeltery::SERVER_ClearCurrentRecipe_Validate()
+{
+	return true;
+}
+
+void ASmeltery::MULTI_ClearCurrentRecipe_Implementation()
+{
+	CurrentRecipe = nullptr;
+	CurrentResourceCreating = EResource::R_NONE;
+}
+
+void ASmeltery::SERVER_ChangeResource_Implementation(EResource _ResourceChange, bool _Add)
+{
+	MULTI_ChangeResource(_ResourceChange, _Add);
+}
+bool ASmeltery::SERVER_ChangeResource_Validate(EResource _ResourceChange, bool _Add)
+{
+	return true;
+}
+
+void ASmeltery::MULTI_ChangeResource_Implementation(EResource _ResourceChange, bool _Add)
+{
+	if (_Add)
+	{
+		CurrentlyProcessing.Add(_ResourceChange);
+		BI_OnNewResource(_ResourceChange);
+		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
+
+		bool HasNonCoal = false;
+		for (EResource Resource : CurrentlyProcessing)
+		{
+			if (Resource != EResource::R_COAL)
+			{
+				HasNonCoal = true;
+				break;
+			}
+		}
+
+		if (HasNonCoal && CurrentlyProcessing.Contains(EResource::R_COAL))
+			bSmeltingMinigamePlaying = true;
+	}
+	else
+	{
+		CurrentlyProcessing.RemoveSingle(_ResourceChange);
+		BI_OnRemoveResource(_ResourceChange);
+	}
+}
+
+
 
 void ASmeltery::ProcessSmelting(float DeltaTime)
 {
@@ -289,44 +353,44 @@ bool ASmeltery::SERVER_MakeMat_Validate(EResource type)
 	return true;
 }
 
-void ASmeltery::MorphStates(bool Next)
-{
-	return; // REMOVING CHANGE MECHANIC
-	if (bSmeltingMinigamePlaying) return;
-	switch (CurrentState)
-	{
-	case EResource::R_IRONINGOT:
-	{
-		if (Next)
-			CurrentState = EResource::R_STEELINGOT;
-		else
-			CurrentState = EResource::R_STEELINGOT;
-		break;
-	}
-	case EResource::R_STEELINGOT:
-	{
-		if (Next)
-			CurrentState = EResource::R_IRONINGOT;
-		else
-			CurrentState = EResource::R_IRONINGOT;
-		break;
-	}
-	}
-
-	switch (CurrentState)
-	{
-	case EResource::R_IRONINGOT:
-		OutputName = FString("Iron Ingot");
-		CurrentProducingItem->SetStaticMesh(IronIngot);
-		break;
-	case EResource::R_STEELINGOT:
-		OutputName = FString("Steel Ingot");
-		CurrentProducingItem->SetStaticMesh(SteelIngot);
-		break;
-	default:
-		break;
-	}
-}
+//void ASmeltery::MorphStates(bool Next)
+//{
+//	return; // REMOVING CHANGE MECHANIC
+//	if (bSmeltingMinigamePlaying) return;
+//	switch (CurrentState)
+//	{
+//	case EResource::R_IRONINGOT:
+//	{
+//		if (Next)
+//			CurrentState = EResource::R_STEELINGOT;
+//		else
+//			CurrentState = EResource::R_STEELINGOT;
+//		break;
+//	}
+//	case EResource::R_STEELINGOT:
+//	{
+//		if (Next)
+//			CurrentState = EResource::R_IRONINGOT;
+//		else
+//			CurrentState = EResource::R_IRONINGOT;
+//		break;
+//	}
+//	}
+//
+//	switch (CurrentState)
+//	{
+//	case EResource::R_IRONINGOT:
+//		OutputName = FString("Iron Ingot");
+//		CurrentProducingItem->SetStaticMesh(IronIngot);
+//		break;
+//	case EResource::R_STEELINGOT:
+//		OutputName = FString("Steel Ingot");
+//		CurrentProducingItem->SetStaticMesh(SteelIngot);
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 void ASmeltery::DamageForge(float Damage)
 {
@@ -362,3 +426,9 @@ void ASmeltery::RestartHealth()
 {
 	ForgeHealth = 1.0f;
 }
+
+//void ASmeltery::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//	//DOREPLIFETIME(ASmeltery, CurrentlyProcessing);
+//}

@@ -56,36 +56,34 @@ bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Minigame Interact"));
 		//HammeringCycle(_Player);
-		return Super::TryInteract(_Player);
+		Interacted(_Player);
+		return true;
+		//return Super::TryInteract(_Player);
 	}
 	return false;
 }
 
 void AForgeAnvil::Interacted(AForgePlayer * _Player)
 {
+	if (!_Player->IsLocallyControlled())
+		return;
 	if (!_Player->HoldingHammer() || SuccessHit) return;
 	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), Success);
-		SetOwner(_Player);
-
-		CurrentOrb++;
+		//SetOwner(_Player);
+		SERVER_InteractHit(true);
 		SuccessHit = true;
+
 		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
 	}
 	else // Missed, fail
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), Failure, 1.0f, 1.0f, 0.0f);
-		CurrentOrb--;
-		if (CurrentOrb <= 0)
+		SERVER_InteractHit(false);
+
+		if (CurrentOrb - 1 > 0)
 		{
-			bHammerMinigamePlaying = false;
-			CurrentOrb = OrbCount / 2;
-			//CurrentResource = EBladeMat::BM_NONE;
-			CurrentResource = EResource::R_NONE;
-		}
-		else
 			RandomiseRange();
+		}
 	}
 }
 
@@ -102,6 +100,8 @@ void AForgeAnvil::Tick(float DeltaTime)
 
 void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 {
+	if (!Part)
+		return;
 	if (Part->SwordPart != EWeaponPart::WP_NONE || (Part->ResourceType != EResource::R_IRONINGOT && Part->ResourceType != EResource::R_STEELINGOT) || bHammerMinigamePlaying)
 	{
 		ThrowAway(Part);
@@ -111,31 +111,41 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	CurrentResource = Part->ResourceType;
 	RandomiseRange();
 	bHammerMinigamePlaying = true;
-	/*switch (Part->ResourceType)
-	{
-	case(EResource::R_STEELINGOT):
-		{
-			CurrentResource = EBladeMat::BM_STEEL;
-			RandomiseRange();
-			bHammerMinigamePlaying = true;
-			break;
-		}
-	case(EResource::R_IRONINGOT):
-		{
-			CurrentResource = EBladeMat::BM_IRON;
-			RandomiseRange();
-			bHammerMinigamePlaying = true;
-			break;
-		}
-		default:
-		{
-			const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EResource"), true);
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("No valid Resource type, instead is " + EnumPtr->GetNameByValue((int64)Part->ResourceType).ToString()));
-			break;
-		}
-	}*/
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	Part->Destroy();
+}
+
+void AForgeAnvil::SERVER_InteractHit_Implementation(bool _Success)
+{
+	MULTI_InteractHit(_Success);
+}
+bool AForgeAnvil::SERVER_InteractHit_Validate(bool _Success)
+{
+	return true;
+}
+
+void AForgeAnvil::MULTI_InteractHit_Implementation(bool _Success)
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), _Success ? Success : Failure);
+	if (_Success)
+	{
+		SuccessHit = true;
+		CurrentOrb++;
+		if (!SuccessHitTimerHandle.IsValid())
+			GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
+	}
+	else
+	{
+		CurrentOrb--;
+		if (CurrentOrb <= 0)
+		{
+			bHammerMinigamePlaying = false;
+			CurrentOrb = OrbCount / 2;
+			CurrentResource = EResource::R_NONE;
+		}
+		else
+			RandomiseRange();
+	}
 }
 
 void AForgeAnvil::HammeringMinigame(float Deltatime)
@@ -147,16 +157,16 @@ void AForgeAnvil::HammeringMinigame(float Deltatime)
 	CurrentMarkerPos += CurrentMarkerMoveSpeed * Deltatime;
 }
 
-
 void AForgeAnvil::SuccessTimeComplete()
 {
 	SuccessHit = false;
 	if (CurrentOrb >= OrbCount)
 	{
+		if (HasAuthority())
+			MakeResource(CurrentResource);
+
 		CurrentOrb = OrbCount / 2;
-		MakeResource(CurrentResource);
 		bHammerMinigamePlaying = false;
-		//CurrentResource = EBladeMat::BM_NONE;
 		CurrentResource = EResource::R_NONE;
 		UGameplayStatics::PlaySound2D(GetWorld(), FullyCompletedCrafting);
 	}
@@ -192,36 +202,6 @@ AForgePart * AForgeAnvil::MakeResource(EResource type)
 	AForgePart * ForgePartRef = GetWorld()->SpawnActor<AForgePart>(FoundWeaponPart->PartClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
 	return ForgePartRef;
 
-	/*switch (type)
-	{
-		case(EBladeMat::BM_IRON):
-		{
-			if (CurrentState == EBladeType::BT_BROADSWORD)
-			{
-				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-				return ResourceRef;
-			}
-			else
-			{
-				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-				return ResourceRef;
-			}
-		}
-		case(EBladeMat::BM_STEEL):
-		{
-			if (CurrentState == EBladeType::BT_BROADSWORD)
-			{
-				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-				return ResourceRef;
-			}
-			else
-			{
-				AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
-				return ResourceRef;
-			}
-		}
-	}*/
-	return nullptr;
 }
 
 EWeaponPart AForgeAnvil::FindPartFromResource(EResource _Resource)
@@ -252,49 +232,49 @@ bool AForgeAnvil::SERVER_MakeResource_Validate(EResource type)
 	return true;
 }
 
-void AForgeAnvil::MorphStates(bool Next)
-{
-	if (bHammerMinigamePlaying) return;
-
-	/*switch (CurrentState)
-	{
-	case EBladeType::BT_BROADSWORD:
-	{
-		if (Next)
-			CurrentState = EBladeType::BT_KRIS;
-		else
-			CurrentState = EBladeType::BT_KRIS;
-		break;
-	}
-	case EBladeType::BT_KRIS:
-	{
-		if (Next)
-			CurrentState = EBladeType::BT_BROADSWORD;
-		else
-			CurrentState = EBladeType::BT_BROADSWORD;
-		break;
-	}
-	}
-
-	switch (CurrentState)
-	{
-	case EBladeType::BT_BROADSWORD:
-		OutputName = FString("Broad Blade");
-		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
-		break;
-	case EBladeType::BT_KRIS:
-		OutputName = FString("Kris Blade");
-		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
-		break;
-	default:
-		break;
-	}*/
-}
-
-//void AForgeAnvil::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+//void AForgeAnvil::MorphStates(bool Next)
 //{
-//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-//	//DOREPLIFETIME(AForgeAnvil, CurrentMinRange);
-//	//DOREPLIFETIME(AForgeAnvil, CurrentMaxRange);
-//	//DOREPLIFETIME(AForgeAnvil, CurrentMarkerPos);
+//	if (bHammerMinigamePlaying) return;
+//
+//	/*switch (CurrentState)
+//	{
+//	case EBladeType::BT_BROADSWORD:
+//	{
+//		if (Next)
+//			CurrentState = EBladeType::BT_KRIS;
+//		else
+//			CurrentState = EBladeType::BT_KRIS;
+//		break;
+//	}
+//	case EBladeType::BT_KRIS:
+//	{
+//		if (Next)
+//			CurrentState = EBladeType::BT_BROADSWORD;
+//		else
+//			CurrentState = EBladeType::BT_BROADSWORD;
+//		break;
+//	}
+//	}
+//
+//	switch (CurrentState)
+//	{
+//	case EBladeType::BT_BROADSWORD:
+//		OutputName = FString("Broad Blade");
+//		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
+//		break;
+//	case EBladeType::BT_KRIS:
+//		OutputName = FString("Kris Blade");
+//		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
+//		break;
+//	default:
+//		break;
+//	}*/
 //}
+
+void AForgeAnvil::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AForgeAnvil, CurrentMinRange);
+	DOREPLIFETIME(AForgeAnvil, CurrentMaxRange);
+	//DOREPLIFETIME(AForgeAnvil, CurrentMarkerPos);
+}
