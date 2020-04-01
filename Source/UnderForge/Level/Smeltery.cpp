@@ -70,18 +70,19 @@ bool ASmeltery::TryInteract(AForgePlayer * _Player)
 void ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	bool bCanHaveResource = false;
-	if (material->ResourceType == EResource::R_COAL)
+	
+	FIngotRecipe FoundRecipie;
+	if (CanHaveResource(material->ResourceType, FoundRecipie))
+	{
 		bCanHaveResource = true;
+		//MULTI_ChangeCurrentRecipe_Implementation(FoundRecipie);
+		SERVER_ChangeCurrentRecipe(FoundRecipie);
+	}
 
 	if (!bCanHaveResource)
 	{
-		FIngotRecipe FoundRecipie;
-		if (CanHaveResource(material->ResourceType, FoundRecipie))
-		{
+		if (material->ResourceType == EResource::R_COAL)
 			bCanHaveResource = true;
-			//MULTI_ChangeCurrentRecipe_Implementation(FoundRecipie);
-			SERVER_ChangeCurrentRecipe(FoundRecipie);
-		}
 	}
 
 	if (!bCanHaveResource)
@@ -161,14 +162,14 @@ bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 
 		// Create required for this recipe
 		TArray<EResource> RecipeRequired = Recipie.Resources;
-		int RequiredCoal = Recipie.iCoalCount;
+		for (int i = 0; i < Recipie.iCoalCount; i++)
+		{
+			RecipeRequired.Add(EResource::R_COAL);
+		}
 		for (EResource CurrentResource : CurrentlyProcessing)
 		{
-			if (CurrentResource == EResource::R_COAL)
-				RequiredCoal--;
-			else
-				// Removes current resource from required
-				RecipeRequired.RemoveSingle(CurrentResource);
+			// Removes current resource from required
+			RecipeRequired.RemoveSingle(CurrentResource);
 		}
 		// If required resources still contains given resource
 		if (RecipeRequired.Contains(_Resource))
@@ -177,7 +178,7 @@ bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 			RecipeRequired.RemoveSingle(_Resource);
 			bValidResource = true;
 			// If recipe is complete with this new item
-			if (RecipeRequired.Num() <= 0 && RequiredCoal <= 0)
+			if (RecipeRequired.Num() <= 0)
 			{
 				FoundRecipe = Recipie;
 			}
@@ -212,6 +213,11 @@ bool ASmeltery::SERVER_ChangeCurrentRecipe_Validate(FIngotRecipe _NewRecipe)
 }
 void ASmeltery::MULTI_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe)
 {
+	if (_NewRecipe.iCoalCount == 0 && _NewRecipe.Resources.Num() == 0)
+	{
+		// Not valid recipe
+		return;
+	}
 	CurrentRecipe = new FIngotRecipe(_NewRecipe);
 	CurrentResourceCreating = GetResourceFromRecipe(_NewRecipe);
 	CurrentRecipeSmeltingTimeNeeded = _NewRecipe.fSmeltTime;

@@ -25,8 +25,8 @@ enum class EResource : uint8
 
 	R_STEELINGOT UMETA(DisplayName = "Steel Ingot"),
 	R_IRONINGOT UMETA(DisplayName = "Iron Ingot"),
-	R_COPPERINGOT UMETA(DisplayName = "Copper Ingot"),
 	R_TININGOT UMETA(DisplayName = "Tin Ingot"),
+	R_COPPERINGOT UMETA(DisplayName = "Copper Ingot"),
 	R_BRONZEINGOT UMETA(DisplayName = "Bronze Ingot"),
 	R_SILVERINGOT UMETA(DisplayName = "Silver Ingot"),
 	R_GOLDINGOT UMETA(DisplayName = "Gold Ingot"),

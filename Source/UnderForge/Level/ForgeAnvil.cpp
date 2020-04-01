@@ -39,6 +39,8 @@ AForgeAnvil::AForgeAnvil()
 	Failure = SoundFail.Object;
 
 	PotentiallyInteracting = false;
+
+	AvailableResourceTypes = { EResource::R_IRONINGOT, EResource::R_STEELINGOT, EResource::R_BRONZEINGOT, EResource::R_COPPERINGOT, EResource::R_GOLDINGOT, EResource::R_SILVERINGOT, EResource::R_TININGOT };
 }
 void AForgeAnvil::BeginPlay()
 {
@@ -102,7 +104,7 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 {
 	if (!Part)
 		return;
-	if (Part->SwordPart != EWeaponPart::WP_NONE || (Part->ResourceType != EResource::R_IRONINGOT && Part->ResourceType != EResource::R_STEELINGOT) || bHammerMinigamePlaying)
+	if (Part->SwordPart != EWeaponPart::WP_NONE || !AvailableResourceTypes.Contains(Part->ResourceType) || bHammerMinigamePlaying)
 	{
 		ThrowAway(Part);
 		return;

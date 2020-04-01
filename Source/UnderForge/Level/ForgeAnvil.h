@@ -94,6 +94,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EResource CurrentResource;
 
+	UPROPERTY(EditDefaultsOnly)
+	TArray<EResource> AvailableResourceTypes;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bHammerMinigamePlaying;
 	UPROPERTY(BlueprintReadWrite)
