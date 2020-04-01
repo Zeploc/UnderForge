@@ -71,36 +71,18 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 	EResource ResourceToMake = EResource::R_NONE;
 	if (CurrentRecipe)
 	{
-		TArray<EResource> Recipies;
-		IngotRecipies.GenerateKeyArray(Recipies);
-		for (EResource RecipeResource : Recipies)
-		{
-			if (IngotRecipies[RecipeResource] == *CurrentRecipe)
-			{
-				ResourceToMake = RecipeResource;
-				break;
-			}
-		}
-
-		//const EResource* FoundRecipeResource = IngotRecipies.FindKey(*CurrentRecipe);
-		/*if (FoundRecipeResource)
-		{
-			ResourceToMake = *FoundRecipeResource;
-		}*/
-
+		ResourceToMake = GetResourceFromRecipe(*CurrentRecipe);
 	}
-
-	// If no coal left
-	if (!CurrentlyProcessing.Contains(EResource::R_COAL))
-	{
-		bSmeltingMinigamePlaying = false;
-		CurrentRemainingTime = 0.0f;
-	}
+	
 	if (SmeltingTimePassed < CurrentRecipeSmeltingTimeNeeded)
 	{
 		for (EResource Resource : CurrentRecipe->Resources)
 		{
-			MakeMat(Resource);
+			if (CurrentlyProcessing.Contains(Resource))
+			{
+				MakeMat(Resource);
+				CurrentlyProcessing.Remove(Resource);
+			}
 		}
 	}
 	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
@@ -112,16 +94,49 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
 	}
+	// If no coal left
+	if (!CurrentlyProcessing.Contains(EResource::R_COAL))
+	{
+	}
 	SmeltingTimePassed = 0.0f;
+	bSmeltingMinigamePlaying = false;
+	CurrentRemainingTime = 0.0f;
 
 	if (CurrentRecipe)
 	{
 		for (EResource Resource : CurrentRecipe->Resources)
 		{
-			CurrentlyProcessing.Remove(Resource);
+			if (CurrentlyProcessing.Contains(Resource))
+			{
+				CurrentlyProcessing.RemoveSingle(Resource);
+				BI_OnRemoveResource(Resource);
+			}
+		}
+		for (int i = 0; i < CurrentRecipe->iCoalCount; i++)
+		{
+			if (CurrentlyProcessing.Contains(EResource::R_COAL))
+			{
+				CurrentlyProcessing.RemoveSingle(EResource::R_COAL);
+				BI_OnRemoveResource(EResource::R_COAL);
+			}
 		}
 		CurrentRecipe = nullptr;
+		CurrentResourceCreating = EResource::R_NONE;
 	}
+}
+
+EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
+{
+	TArray<EResource> Recipies;
+	IngotRecipies.GenerateKeyArray(Recipies);
+	for (EResource RecipeResource : Recipies)
+	{
+		if (IngotRecipies[RecipeResource] == _IngotRecipe)
+		{
+			return RecipeResource;
+		}
+	}
+	return EResource::R_NONE;
 }
 
 void ASmeltery::ProcessMatItem(AForgeMat* material)
@@ -138,19 +153,30 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 		{
 			// Create required for this recipe
 			TArray<EResource> RecipeRequired = Recipie.Resources;
+			int RequiredCoal = Recipie.iCoalCount;
 			for (EResource CurrentResource : CurrentlyProcessing)
 			{
-				// Removes current resource from required
-				RecipeRequired.Remove(CurrentResource);
+				if (CurrentResource == EResource::R_COAL)
+					RequiredCoal--;
+				else
+					// Removes current resource from required
+					RecipeRequired.RemoveSingle(CurrentResource);
 			}
 			// If required resources still contains given resource
 			if (RecipeRequired.Contains(material->ResourceType))
 			{
 				// Is need for recipe
-				bCanHaveResource = true;
-				CurrentRecipe = new FIngotRecipe(Recipie);
-				CurrentRecipeSmeltingTimeNeeded = CurrentRecipe->fSmeltTime;
-				break;
+				RecipeRequired.RemoveSingle(material->ResourceType);
+				// If recipe is complete with this new item
+				if (RecipeRequired.Num() <= 0 && RequiredCoal <= 0)
+				{
+					bCanHaveResource = true;
+					CurrentRecipe = new FIngotRecipe(Recipie);
+					CurrentResourceCreating = GetResourceFromRecipe(Recipie);
+					CurrentRecipeSmeltingTimeNeeded = CurrentRecipe->fSmeltTime;
+					SmeltingTimeKABOOM = CurrentRecipeSmeltingTimeNeeded + 5.0f;
+					break;
+				}
 			}
 		}
 	}
@@ -162,8 +188,20 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 	}
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	CurrentlyProcessing.Add(material->ResourceType);
+	BI_OnNewResource(material->ResourceType);
 	material->Destroy();
-	bSmeltingMinigamePlaying = true;
+	bool HasNonCoal = false;
+	for (EResource Resource : CurrentlyProcessing)
+	{
+		if (Resource != EResource::R_COAL)
+		{
+			HasNonCoal = true;
+			break;
+		}
+	}
+
+	if (HasNonCoal && CurrentlyProcessing.Contains(EResource::R_COAL))
+		bSmeltingMinigamePlaying = true;
 }
 
 void ASmeltery::ProcessSmelting(float DeltaTime)

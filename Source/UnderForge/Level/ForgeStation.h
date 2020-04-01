@@ -45,6 +45,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ThrowAway(AActor* Actor);
 
+	UFUNCTION(BlueprintCallable)
+		virtual void SetPotentiallyInteracting(bool _PotentiallyInteracting);
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnSetPotentiallyInteracting();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* StationMesh;
@@ -59,8 +63,6 @@ public:
 		class UArrowComponent* RefuseThrowDirection;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool PotentiallyInteracting;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractTimer;
 
 
@@ -68,4 +70,8 @@ public:
 		class USoundBase* SuccessInteractSound;
 	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 		class USoundBase* FailInteractSound;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool PotentiallyInteracting = false;
 };

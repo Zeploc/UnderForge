@@ -79,7 +79,28 @@ bool ASwordItem::CanHavePart(EWeaponPart PartToCheck)
 			return true;
 	}
 
-	return false;
+	bool bCanHaveWeapon = false;
+	// Check through weapons to see if this part matches a weapon config using existing parts
+	TArray<EWeapon> Weapons;
+	GameSingleton->Weapons.GenerateKeyArray(Weapons);
+	for (EWeapon Weapon : Weapons)
+	{
+		// Create required for this weapon
+		TArray<EWeaponPart> PartsRequired = GameSingleton->Weapons[Weapon].Parts;
+		for (EWeaponPart CurrentPart : ForgeParts)
+		{
+			// Removes current part from required
+			PartsRequired.RemoveSingle(CurrentPart);
+		}
+		// If required parts still contains given part
+		if (PartsRequired.Contains(PartToCheck))
+		{
+			bCanHaveWeapon = true;
+			WeaponType = Weapon;
+		}
+	}
+
+	return bCanHaveWeapon;
 
 	/*for (int i = 0; i < ForgeParts.Num(); i++)
 	{

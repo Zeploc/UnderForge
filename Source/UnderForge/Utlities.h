@@ -122,7 +122,7 @@ struct FIngotRecipe
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		int iCoalCount = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EResource> Resources;
@@ -149,6 +149,8 @@ struct FWeaponPart
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* IconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* HorizontalIconImage;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class AForgePart> PartClass;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EResource> ResourcesRequired;
@@ -163,6 +165,8 @@ struct FWeapon
 		TArray<EWeaponPart> Parts;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* IconImage;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* HorizontalIconImage;
 };
 
 USTRUCT(BlueprintType)

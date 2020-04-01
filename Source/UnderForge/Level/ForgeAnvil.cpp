@@ -7,6 +7,7 @@
 #include "Components/SceneComponent.h"
 #include "TimerManager.h"
 #include "Player/ForgePlayer.h"
+#include "UnderForgeSingleton.h"
 
 #include "UnrealNetwork.h"
 
@@ -28,9 +29,9 @@ AForgeAnvil::AForgeAnvil()
 	CurrentProducingItem->SetVisibility(true, false);
 
 	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
-	CurrentState = EBladeType::BT_BROADSWORD;
+	//CurrentState =  EBladeType::BT_BROADSWORD;
 	OutputName = FString("Broad Blade");
-	CurrentResource = EBladeMat::BM_NONE;
+	CurrentResource = EResource::R_NONE;//EBladeMat::BM_NONE;
 
 	static ConstructorHelpers::FObjectFinder<USoundBase> SoundSuccess(TEXT("SoundWave'/Game/Sounds/SoundRourke/SmithingHit_Sound.SmithingHit_Sound'"));
 	Success = SoundSuccess.Object;
@@ -42,7 +43,7 @@ AForgeAnvil::AForgeAnvil()
 void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentProducingItem->SetStaticMesh(BroadswordBlade);
+	//CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 	InteractTimer = 0;
 
 	CurrentOrb = OrbCount / 2;
@@ -80,8 +81,8 @@ void AForgeAnvil::Interacted(AForgePlayer * _Player)
 		{
 			bHammerMinigamePlaying = false;
 			CurrentOrb = OrbCount / 2;
-			CurrentResource = EBladeMat::BM_NONE;
-			CurrentlyProcessing = EResource::R_NONE;
+			//CurrentResource = EBladeMat::BM_NONE;
+			CurrentResource = EResource::R_NONE;
 		}
 		else
 			RandomiseRange();
@@ -107,7 +108,10 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 		return;
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Part: " + Part->GetName()));
-	switch (Part->ResourceType)
+	CurrentResource = Part->ResourceType;
+	RandomiseRange();
+	bHammerMinigamePlaying = true;
+	/*switch (Part->ResourceType)
 	{
 	case(EResource::R_STEELINGOT):
 		{
@@ -129,7 +133,7 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("No valid Resource type, instead is " + EnumPtr->GetNameByValue((int64)Part->ResourceType).ToString()));
 			break;
 		}
-	}
+	}*/
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	Part->Destroy();
 }
@@ -152,8 +156,8 @@ void AForgeAnvil::SuccessTimeComplete()
 		CurrentOrb = OrbCount / 2;
 		MakeResource(CurrentResource);
 		bHammerMinigamePlaying = false;
-		CurrentResource = EBladeMat::BM_NONE;
-		CurrentlyProcessing = EResource::R_NONE;
+		//CurrentResource = EBladeMat::BM_NONE;
+		CurrentResource = EResource::R_NONE;
 		UGameplayStatics::PlaySound2D(GetWorld(), FullyCompletedCrafting);
 	}
 	else
@@ -169,14 +173,26 @@ void AForgeAnvil::RandomiseRange()
 	CurrentMaxRange = CurrentMinRange + RangeSize;
 }
 
-AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
+AForgePart * AForgeAnvil::MakeResource(EResource type)
 {
 	if (!HasAuthority())
 	{
 		SERVER_MakeResource(type);
 		return nullptr;
 	}
-	switch (type)
+
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return nullptr;
+
+	FWeaponPart* FoundWeaponPart = GameSingleton->Parts.Find(FindPartFromResource(type));
+	if (!FoundWeaponPart)
+		return nullptr;
+
+	AForgePart * ForgePartRef = GetWorld()->SpawnActor<AForgePart>(FoundWeaponPart->PartClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+	return ForgePartRef;
+
+	/*switch (type)
 	{
 		case(EBladeMat::BM_IRON):
 		{
@@ -204,15 +220,34 @@ AForgePart * AForgeAnvil::MakeResource(EBladeMat type)
 				return ResourceRef;
 			}
 		}
-	}
+	}*/
 	return nullptr;
 }
 
-void AForgeAnvil::SERVER_MakeResource_Implementation(EBladeMat type)
+EWeaponPart AForgeAnvil::FindPartFromResource(EResource _Resource)
+{
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return EWeaponPart::WP_NONE;
+
+	TArray<EWeaponPart> WeaponParts;
+	GameSingleton->Parts.GenerateKeyArray(WeaponParts);
+	for (EWeaponPart WeaponPart : WeaponParts)
+	{
+		FWeaponPart FoundWeaponpart = GameSingleton->Parts[WeaponPart];
+		if (FoundWeaponpart.ResourcesRequired.Contains(_Resource))
+		{
+			return WeaponPart;
+		}
+	}
+	return EWeaponPart::WP_NONE;
+}
+
+void AForgeAnvil::SERVER_MakeResource_Implementation(EResource type)
 {
 	MakeResource(type);
 }
-bool AForgeAnvil::SERVER_MakeResource_Validate(EBladeMat type)
+bool AForgeAnvil::SERVER_MakeResource_Validate(EResource type)
 {
 	return true;
 }
@@ -221,7 +256,7 @@ void AForgeAnvil::MorphStates(bool Next)
 {
 	if (bHammerMinigamePlaying) return;
 
-	switch (CurrentState)
+	/*switch (CurrentState)
 	{
 	case EBladeType::BT_BROADSWORD:
 	{
@@ -253,7 +288,7 @@ void AForgeAnvil::MorphStates(bool Next)
 		break;
 	default:
 		break;
-	}
+	}*/
 }
 
 //void AForgeAnvil::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const

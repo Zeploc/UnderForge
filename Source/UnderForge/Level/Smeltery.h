@@ -34,7 +34,14 @@ public:
 	virtual bool TryInteract(class AForgePlayer* _Player) override;
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
+	EResource GetResourceFromRecipe(FIngotRecipe _IngotRecipe);
+
 	virtual void ProcessMatItem(AForgeMat* material) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnNewResource(EResource _Resource);
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnRemoveResource(EResource _Resource);
 
 	void ProcessSmelting(float DeltaTime);
 	virtual void MorphStates(bool Next) override;
@@ -68,8 +75,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EResource, FIngotRecipe> IngotRecipies;
-
+	
 	FIngotRecipe* CurrentRecipe;
+
+	UPROPERTY(BlueprintReadWrite)
+	EResource CurrentResourceCreating = EResource::R_NONE;
 
 	FTimerHandle timer;
 
