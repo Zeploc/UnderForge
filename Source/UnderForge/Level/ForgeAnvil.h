@@ -35,7 +35,12 @@ public:
 	virtual bool TryInteract(class AForgePlayer* _Player) override;
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
-	virtual void MorphStates(bool Next) override;
+	//virtual void MorphStates(bool Next) override;
+
+	UFUNCTION(Server, reliable, WithValidation)
+		void SERVER_InteractHit(bool _Success);
+	UFUNCTION(NetMulticast, reliable)
+		void MULTI_InteractHit(bool _Success);
 
 	void HammeringMinigame(float Deltatime);
 
@@ -46,19 +51,7 @@ public:
 
 		UFUNCTION(BlueprintPure)
 	static EWeaponPart FindPartFromResource(EResource _Resource);
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<class AForgePart> SteelKrisBladePart;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<class AForgePart> SteelBroadBladePart;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<class AForgePart> IronKrisBladePart;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<class AForgePart> IronBroadBladePart;
-	
+			
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;
@@ -81,9 +74,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int OrbCount = 10;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
 		float CurrentMinRange = 0.0f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
 		float CurrentMaxRange = 0.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)//, Replicated)
 		float CurrentMarkerPos = 0.0f;

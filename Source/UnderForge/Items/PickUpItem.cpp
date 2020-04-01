@@ -43,19 +43,6 @@ void APickUpItem::Tick(float DeltaTime)
 
 }
 
-void APickUpItem::Drop()
-{
-	ItemMesh->SetSimulatePhysics(true);
-	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
-	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
-
-	if (CurrentTouchingStation)
-	{
-		CurrentTouchingStation->ProcessItem(this);
-	}
-	HeldPlayer = nullptr;
-}
-
 void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 {
 	if (HeldPlayer)
@@ -68,8 +55,23 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 	SetActorRelativeTransform(AttachOffset);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
-
+	BI_OnPickUp();
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Picked Up");
+}
+
+void APickUpItem::Drop()
+{
+	ItemMesh->SetSimulatePhysics(true);
+	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+
+	BI_OnDrop();
+
+	if (CurrentTouchingStation)
+	{
+		CurrentTouchingStation->ProcessItem(this);
+	}
+	HeldPlayer = nullptr;
 }
 
 void APickUpItem::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const

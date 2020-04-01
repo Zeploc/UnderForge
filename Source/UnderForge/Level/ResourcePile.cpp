@@ -5,20 +5,32 @@
 #include "Player/ForgePlayer.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "UnderForgeSingleton.h"
 
 AForgeMat * AResourcePile::GetResource(AForgePlayer * _OwningPlayer)
 {
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return nullptr;
+
+	FResource* FoundResource = GameSingleton->Resources.Find(Resource);
+	if (!FoundResource)
+		return nullptr;
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = _OwningPlayer;
-	AForgeMat* ResourceRef = GetWorld()->SpawnActor<AForgeMat>(ForgeMat, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation(), SpawnParams);
+	APickUpItem* ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation(), SpawnParams);
+	if (!ResourceRef)
+		return nullptr;
+	AForgeMat* ResourceMatRef = Cast<AForgeMat>(ResourceRef);
 	/*FTransform SpawnTransform = FTransform::Identity;
 	SpawnTransform.SetLocation(ObjectPosition->GetComponentLocation());
 	SpawnTransform.SetRotation(ObjectPosition->GetComponentRotation().Quaternion());
 	AForgeMat* ResourceRef = GetWorld()->SpawnActorDeferred<AForgeMat>(ForgeMat, SpawnTransform);
 	ResourceRef->HeldPlayer = _OwningPlayer;
 	UGameplayStatics::FinishSpawningActor(ResourceRef, SpawnTransform);*/
-	return ResourceRef;
+	return ResourceMatRef;
 }
 
 void AResourcePile::Interacted(AForgePlayer * _Player)
