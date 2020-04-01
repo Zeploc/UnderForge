@@ -18,10 +18,18 @@ enum class EResource : uint8
 	R_WOOD UMETA(DisplayName = "Wood"),
 	R_IRONORE UMETA(DisplayName = "Iron Ore"),
 	R_COAL UMETA(DisplayName = "Coal"),
+	R_COPPER UMETA(DisplayName = "Copper"),
+	R_TIN UMETA(DisplayName = "Tin"),
+	R_SILVER UMETA(DisplayName = "Silver"),
+	R_GOLD UMETA(DisplayName = "Gold"),
 
 	R_STEELINGOT UMETA(DisplayName = "Steel Ingot"),
 	R_IRONINGOT UMETA(DisplayName = "Iron Ingot"),
-
+	R_COPPERINGOT UMETA(DisplayName = "Copper Ingot"),
+	R_TININGOT UMETA(DisplayName = "Tin Ingot"),
+	R_BRONZEINGOT UMETA(DisplayName = "Bronze Ingot"),
+	R_SILVERINGOT UMETA(DisplayName = "Silver Ingot"),
+	R_GOLDINGOT UMETA(DisplayName = "Gold Ingot"),
 
 	R_NONE UMETA(DisplayName = "Nothing"),
 };
