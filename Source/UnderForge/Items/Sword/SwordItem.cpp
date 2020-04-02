@@ -38,6 +38,13 @@ ASwordItem::ASwordItem()
 	CanBePickedUp = false;
 	iAttackDamage = 25;
 
+}
+
+// Called when the game starts or when spawned
+void ASwordItem::BeginPlay()
+{
+	Super::BeginPlay();
+
 	if (WeaponType != EWeapon::W_NONE)
 	{
 		SetUpWeapon(WeaponType);
@@ -96,7 +103,7 @@ bool ASwordItem::CanHavePart(EWeaponPart PartToCheck)
 		if (PartsRequired.Contains(PartToCheck))
 		{
 			bCanHaveWeapon = true;
-			WeaponType = Weapon;
+			SetWeaponType(Weapon);
 		}
 	}
 
@@ -144,7 +151,7 @@ bool ASwordItem::AddPart(EWeaponPart PartToAdd)
 					if (WeaponPart == PartToAdd)
 					{
 						// Set current weapon and break
-						WeaponType = Weapon;
+						SetWeaponType(Weapon);
 						break;
 					}
 				}
@@ -182,19 +189,12 @@ void ASwordItem::MULTI_AddPart_Implementation(EWeaponPart PartToAdd)
 
 void ASwordItem::SetUpWeapon(EWeapon _Weapon)
 {
+	SetWeaponType(_Weapon);
 	
-	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
-	if (!GameSingleton)
-		return;
-
-	FWeapon* FoundWeapon = GameSingleton->Weapons.Find(_Weapon);
-	if (!FoundWeapon)
-		return;
-
 	ClearCurrentParts();
 
 	int PartID = 1;
-	for (EWeaponPart WeaponPart : FoundWeapon->Parts)
+	for (EWeaponPart WeaponPart : CurentWeaponStats.Parts)
 	{
 		FName PartName = FName(TEXT("Part %d"), PartID);
 		AddPartMesh(WeaponPart, PartName);
@@ -232,6 +232,20 @@ void ASwordItem::ClearCurrentParts()
 		StaticMeshComp->DestroyComponent();
 	}
 	PartComponents.Empty();
+}
+
+void ASwordItem::SetWeaponType(EWeapon _Weapon)
+{
+	WeaponType = _Weapon;
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return;
+
+	FWeapon* FoundWeapon = GameSingleton->Weapons.Find(_Weapon);
+	if (!FoundWeapon)
+		return;
+
+	CurentWeaponStats = *FoundWeapon;
 }
 
 

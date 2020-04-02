@@ -19,6 +19,9 @@ class UNDERFORGE_API ASwordItem : public AForgeItem
 public:
 	ASwordItem();
 
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* HandleMesh;
 
@@ -36,6 +39,8 @@ public:
 	void AddPartMesh(EWeaponPart WeaponPart, const FName PartName);
 	void ClearCurrentParts();
 
+	void SetWeaponType(EWeapon _Weapon);
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TMap<EWeaponPart, UStaticMeshComponent*> PartComponents;
@@ -51,6 +56,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EWeapon WeaponType = EWeapon::W_NONE;
+
+	UPROPERTY(BlueprintReadWrite)
+		FWeapon CurentWeaponStats;
 
 	UFUNCTION(BlueprintCallable)
 		void Disassemble();
