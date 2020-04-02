@@ -102,18 +102,6 @@ bool ASwordItem::CanHavePart(EWeaponPart PartToCheck)
 
 	return bCanHaveWeapon;
 
-	/*for (int i = 0; i < ForgeParts.Num(); i++)
-	{
-		if (UCommonFunctions::IsHandle(ForgeParts[i]) && UCommonFunctions::IsHandle(PartToCheck))
-		{
-			return false;
-		}
-		else if (UCommonFunctions::IsBlade(ForgeParts[i]) && UCommonFunctions::IsBlade(PartToCheck))
-		{
-			return false;
-		}
-	}
-	return true;*/
 }
 
 bool ASwordItem::AddPart(EWeaponPart PartToAdd)
@@ -183,33 +171,6 @@ bool ASwordItem::AddPart(EWeaponPart PartToAdd)
 
 	return true;
 
-	//bool HasHandle = false;
-	//bool HadBlade = false;
-
-	//for (int i = 0; i < ForgeParts.Num(); i++)
-	//{
-	//	if (UCommonFunctions::IsHandle(ForgeParts[i]))
-	//	{
-	//		HasHandle = true;
-	//		HandleMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
-	//	}
-	//	else if (UCommonFunctions::IsBlade(ForgeParts[i]))
-	//	{
-	//		HadBlade = true;
-	//		BladeMesh->SetStaticMesh(PartMeshes[ForgeParts[i]]);
-	//	}
-	//}
-
-	//if (HasHandle && HadBlade)
-	//{
-	//	ItemMesh->SetSimulatePhysics(true);
-	//	UGameplayStatics::PlaySound2D(GetWorld(), SuccessCombine);
-	//	//ItemMesh->SetVisibility(true);
-	//	//HandleMesh->SetVisibility(false);
-	//	//BladeMesh->SetVisibility(false);
-	//	return true;
-	//}
-	//return false;
 }
 void ASwordItem::MULTI_AddPart_Implementation(EWeaponPart PartToAdd)
 {
@@ -285,48 +246,3 @@ void ASwordItem::Disassemble()
 	}
 	Destroy();
 }
-
-//AForgePart * ASwordItem::MakeResource(ESwordPart type)
-//{
-//	switch (type)
-//	{
-//		case ESwordPart::PT_BROADSWORDHANDLE:
-//		{
-//			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandle, GetActorLocation(), GetActorRotation());
-//			return ResourceRef;
-//			break;
-//		}
-//		case ESwordPart::PT_KRISHANDLE:
-//		{
-//
-//			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandle, GetActorLocation(), GetActorRotation());
-//			return ResourceRef;
-//			break;
-//		}
-//		case ESwordPart::PT_IRONBROADSWORDBLADE:
-//		{
-//			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronBroadBladePart, GetActorLocation(), GetActorRotation());
-//			return ResourceRef;
-//			break;
-//		}
-//		case ESwordPart::PT_IRONKRISBLADE:
-//		{
-//			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(IronKrisBladePart, GetActorLocation(), GetActorRotation());
-//			return ResourceRef;
-//			break;
-//		}
-//		case ESwordPart::PT_STEELBROADSWORDBLADE:
-//		{
-//			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelBroadBladePart, GetActorLocation(), GetActorRotation());
-//			return ResourceRef;
-//			break;
-//		}
-//		case ESwordPart::PT_STEELKRISBLADE:
-//		{
-//			AForgePart * ResourceRef = GetWorld()->SpawnActor<AForgePart>(SteelKrisBladePart, GetActorLocation(), GetActorRotation());
-//			return ResourceRef;
-//			break;
-//		}
-//	}
-//	return nullptr;
-//}

@@ -27,8 +27,4 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Underforge Singleton")
 		static class UUnderForgeSingleton* GetGameSingleton(bool& IsValid);
 
-	UFUNCTION(BlueprintPure)
-		static bool IsHandle(ESwordPart SwordPart);
-	UFUNCTION(BlueprintPure)
-		static bool IsBlade(ESwordPart SwordPart);
 };

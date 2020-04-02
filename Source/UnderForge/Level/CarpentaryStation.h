@@ -28,30 +28,20 @@ public:
 
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
-	virtual void MorphStates(bool Next) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> BroadswordHandlePart;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> KrisHandlePart;
 
 	UFUNCTION(BlueprintCallable)
-		class AForgePart* MakeResource(EHandleType type);
+		class AForgePart* MakeResource(EResource type);
 	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
-		void SERVER_MakeResource(EHandleType type);
+		void SERVER_MakeResource(EResource type);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class UStaticMeshComponent* CurrentProducingItem;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 		class USceneComponent* Rotator;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* BroadSwordHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UStaticMesh* KrisSwordHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EHandleType CurrentState;
+		EResource CurrentResource;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AForgePlayer * CurrentPlayer;

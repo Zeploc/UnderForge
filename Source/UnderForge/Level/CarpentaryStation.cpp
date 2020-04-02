@@ -14,6 +14,9 @@
 #include <string>
 #include <cmath>
 
+#include "ForgeAnvil.h"
+#include "UnderForgeSingleton.h"
+
 
 
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
@@ -36,7 +39,7 @@ ACarpentaryStation::ACarpentaryStation()
 	CurrentProducingItem->SetupAttachment(Rotator);
 	CurrentProducingItem->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
 	CurrentProducingItem->SetVisibility(true, false);
-	CurrentState = EHandleType::HT_BROADSWORD;
+	CurrentResource = EResource::R_NONE;
 	OutputName = FString("Rough Hilt");
 	PotentiallyInteracting = false;
 	SpinningRequired = 25.0f;
@@ -46,7 +49,7 @@ ACarpentaryStation::ACarpentaryStation()
 void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
+	//CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
 	InteractTimer = 0;
 }
 
@@ -65,7 +68,7 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 	{
 		CurrentPlayer = material->HeldPlayer;
 		SetOwner(CurrentPlayer);
-
+		CurrentResource = material->ResourceType;
 		BeginMinigame();
 		material->Destroy();
 		
@@ -80,48 +83,7 @@ void ACarpentaryStation::Interacted(AForgePlayer * _Player)
 	SetOwner(_Player);
 }
 
-void ACarpentaryStation::MorphStates(bool Next)
-{
-	return; // REMOVING CHANGE MECHANIC
-	if (!bSpinningGamePlaying)
-	{
-		switch (CurrentState)
-		{
-		case EHandleType::HT_BROADSWORD:
-		{
-			if (Next)
-				CurrentState = EHandleType::HT_KRIS;
-			else
-				CurrentState = EHandleType::HT_KRIS;
-			break;
-		}
-		case EHandleType::HT_KRIS:
-		{
-			if (Next)
-				CurrentState = EHandleType::HT_BROADSWORD;
-			else
-				CurrentState = EHandleType::HT_BROADSWORD;
-			break;
-		}
-		}
-
-		switch (CurrentState)
-		{
-		case EHandleType::HT_BROADSWORD:
-			OutputName = FString("Rough Hilt");
-			CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
-			break;
-		case EHandleType::HT_KRIS:
-			OutputName = FString("Smooth Hilt");
-			CurrentProducingItem->SetStaticMesh(KrisSwordHandle);
-			break;
-		default:
-			break;
-		}
-	}
-}
-
-AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
+AForgePart * ACarpentaryStation::MakeResource(EResource type)
 {
 	if (!HasAuthority())
 	{
@@ -132,28 +94,41 @@ AForgePart * ACarpentaryStation::MakeResource(EHandleType type)
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = CurrentPlayer;
 	CurrentPlayer = nullptr;*/
-	switch (type)
+	EWeaponPart CreatedPart = AForgeAnvil::FindPartFromResource(type);
+
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return nullptr;
+
+	FWeaponPart* FoundPart = GameSingleton->Parts.Find(CreatedPart);
+	if (FoundPart)
 	{
-		case EHandleType::HT_BROADSWORD:
-		{
-			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());// , SpawnParams);
-			return ResourceRef;
-		}
-		case EHandleType::HT_KRIS:
-		{
-			AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());//, SpawnParams);
-			return ResourceRef;
-		}
+		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(FoundPart->PartClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());// , SpawnParams);
+		return ResourceRef;
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "DIDN'T MAKE A DAMN PART");
+
+	//switch (type)
+	//{
+	//	case EHandleType::HT_BROADSWORD:
+	//	{
+	//		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(BroadswordHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());// , SpawnParams);
+	//		return ResourceRef;
+	//	}
+	//	case EHandleType::HT_KRIS:
+	//	{
+	//		AForgePart* ResourceRef = GetWorld()->SpawnActor<AForgePart>(KrisHandlePart, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());//, SpawnParams);
+	//		return ResourceRef;
+	//	}
+	//}
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "DIDN'T MAKE A DAMN PART");
 	return nullptr;
 }
 
-void ACarpentaryStation::SERVER_MakeResource_Implementation(EHandleType type)
+void ACarpentaryStation::SERVER_MakeResource_Implementation(EResource type)
 {
 	MakeResource(type);
 }
-bool ACarpentaryStation::SERVER_MakeResource_Validate(EHandleType type)
+bool ACarpentaryStation::SERVER_MakeResource_Validate(EResource type)
 {
 	return true;
 }
@@ -208,7 +183,7 @@ void ACarpentaryStation::SpinningMinigame()
 		{
 			SpinningTotal = 0.0f;
 			bSpinningGamePlaying = false;
-			MakeResource(CurrentState);
+			MakeResource(CurrentResource);
 		}
 	}
 	return;

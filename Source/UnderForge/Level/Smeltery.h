@@ -34,11 +34,9 @@ public:
 	virtual bool TryInteract(class AForgePlayer* _Player) override;
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
-	EResource GetResourceFromRecipe(FIngotRecipe _IngotRecipe);
 
 	virtual void ProcessMatItem(AForgeMat* material) override;
 
-	bool CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe);
 
 	UFUNCTION(Server, reliable, WithValidation)
 		void SERVER_ChangeCurrentRecipe(FIngotRecipe _NewRecipe);
@@ -61,6 +59,12 @@ public:
 		void BI_OnRemoveResource(EResource _Resource);
 
 	void ProcessSmelting(float DeltaTime);
+
+	bool CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe);
+	TArray<EResource> GetRequiredForRecipe(FIngotRecipe Recipie);
+	EResource GetResourceFromRecipe(FIngotRecipe _IngotRecipe);
+	bool IsCompletedRecipe(FIngotRecipe _Recipe);
+	bool FindCompletedRecipe(FIngotRecipe& FoundRecipe);
 	//virtual void MorphStates(bool Next) override;
 	
 	UFUNCTION(BlueprintCallable)

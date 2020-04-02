@@ -36,8 +36,6 @@ public:
 	void AddPartMesh(EWeaponPart WeaponPart, const FName PartName);
 	void ClearCurrentParts();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<ESwordPart, UStaticMesh*> PartMeshes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TMap<EWeaponPart, UStaticMeshComponent*> PartComponents;
@@ -50,28 +48,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USoundBase* FailureCombine;
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> BroadswordHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> KrisHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronBroadBladePart;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> IronKrisBladePart;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> SteelBroadBladePart;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AForgePart> SteelKrisBladePart;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EWeapon WeaponType = EWeapon::W_NONE;
 
 	UFUNCTION(BlueprintCallable)
 		void Disassemble();
 
-	//UFUNCTION(BlueprintCallable)
-		//class AForgePart* MakeResource(ESwordPart type);
 private:
 
 };

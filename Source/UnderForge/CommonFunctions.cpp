@@ -45,26 +45,3 @@ UUnderForgeSingleton * UCommonFunctions::GetGameSingleton(bool & IsValid)
 	IsValid = true;
 	return DataInstance;
 }
-
-bool UCommonFunctions::IsHandle(ESwordPart SwordPart)
-{
-	if (SwordPart == ESwordPart::PT_BROADSWORDHANDLE ||
-		SwordPart == ESwordPart::PT_KRISHANDLE)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool UCommonFunctions::IsBlade(ESwordPart SwordPart)
-{
-	if (SwordPart == ESwordPart::PT_IRONBROADSWORDBLADE ||
-		SwordPart == ESwordPart::PT_IRONKRISBLADE ||
-		SwordPart == ESwordPart::PT_STEELBROADSWORDBLADE ||
-		SwordPart == ESwordPart::PT_STEELKRISBLADE)
-	{
-		return true;
-	}
-	return false;
-}

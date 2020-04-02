@@ -75,8 +75,8 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 	if (CanHaveResource(material->ResourceType, FoundRecipie))
 	{
 		bCanHaveResource = true;
-		//MULTI_ChangeCurrentRecipe_Implementation(FoundRecipie);
-		SERVER_ChangeCurrentRecipe(FoundRecipie);
+		if (!CurrentRecipe)
+			CurrentRecipe = new FIngotRecipe(FoundRecipie);
 	}
 
 	if (!bCanHaveResource)
@@ -90,33 +90,42 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 		ThrowAway(material);
 		return;
 	}
+
+	if (!HasAuthority())
+		return;
 	//MULTI_ChangeResource_Implementation(material->ResourceType, true);
 	SERVER_ChangeResource(material->ResourceType, true);
+
+	if (CurrentRecipe)
+	{
+		SERVER_ChangeCurrentRecipe(FoundRecipie); // *CurrentRecipe ?
+	}
+
 	material->Destroy();
 	
 }
 void ASmeltery::Interacted(AForgePlayer * _Player)
 {
-	EResource ResourceToMake = EResource::R_NONE;
-	if (CurrentRecipe)
+	// Only server
+	if (!HasAuthority())
 	{
-		ResourceToMake = GetResourceFromRecipe(*CurrentRecipe);
+		return;
 	}
-	
+
 	if (SmeltingTimePassed < CurrentRecipeSmeltingTimeNeeded)
 	{
+		// Early removal, give ores back
 		for (EResource Resource : CurrentRecipe->Resources)
 		{
 			if (CurrentlyProcessing.Contains(Resource))
 			{
 				MakeMat(Resource);
-				CurrentlyProcessing.Remove(Resource);
 			}
 		}
 	}
 	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
 	{
-		MakeResource(ResourceToMake);		
+		MakeResource(CurrentResourceCreating);
 	}
 	else
 	{
@@ -124,17 +133,17 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 		//KABOOM
 	}
 
-	SmeltingTimePassed = 0.0f;
+	/*SmeltingTimePassed = 0.0f;
 	bSmeltingMinigamePlaying = false;
-	CurrentRemainingTime = 0.0f;
+	CurrentRemainingTime = 0.0f;*/
 
 	if (CurrentRecipe)
 	{
+		// Remove all current recipe
 		for (EResource Resource : CurrentRecipe->Resources)
 		{
 			if (CurrentlyProcessing.Contains(Resource))
 			{
-				//MULTI_ChangeResource_Implementation(Resource, false);
 				SERVER_ChangeResource(Resource, false);
 			}
 		}
@@ -142,13 +151,19 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 		{
 			if (CurrentlyProcessing.Contains(EResource::R_COAL))
 			{
-				//MULTI_ChangeResource_Implementation(EResource::R_COAL, false);
 				SERVER_ChangeResource(EResource::R_COAL, false);
 			}
 		}
-		SERVER_ClearCurrentRecipe();
-		//MULTI_ClearCurrentRecipe_Implementation();
 	}
+
+	// Check for new current recipe
+	FIngotRecipe FoundRecipe;
+	if (FindCompletedRecipe(FoundRecipe))
+	{
+		SERVER_ChangeCurrentRecipe(FoundRecipe);
+	}
+	else
+		SERVER_ClearCurrentRecipe();
 }
 
 
@@ -159,18 +174,9 @@ bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 	IngotRecipies.GenerateValueArray(Recipes);
 	for (FIngotRecipe Recipie : Recipes)
 	{
-
 		// Create required for this recipe
-		TArray<EResource> RecipeRequired = Recipie.Resources;
-		for (int i = 0; i < Recipie.iCoalCount; i++)
-		{
-			RecipeRequired.Add(EResource::R_COAL);
-		}
-		for (EResource CurrentResource : CurrentlyProcessing)
-		{
-			// Removes current resource from required
-			RecipeRequired.RemoveSingle(CurrentResource);
-		}
+		TArray<EResource> RecipeRequired = GetRequiredForRecipe(Recipie);
+
 		// If required resources still contains given resource
 		if (RecipeRequired.Contains(_Resource))
 		{
@@ -189,6 +195,21 @@ bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 	return bValidResource;
 }
 
+TArray<EResource> ASmeltery::GetRequiredForRecipe(FIngotRecipe Recipie)
+{
+	TArray<EResource> RecipeRequired = Recipie.Resources;
+	for (int i = 0; i < Recipie.iCoalCount; i++)
+	{
+		RecipeRequired.Add(EResource::R_COAL);
+	}
+	for (EResource CurrentResource : CurrentlyProcessing)
+	{
+		// Removes current resource from required
+		RecipeRequired.RemoveSingle(CurrentResource);
+	}
+	return RecipeRequired;
+}
+
 EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
 {
 	TArray<EResource> Recipies;
@@ -203,6 +224,35 @@ EResource ASmeltery::GetResourceFromRecipe(FIngotRecipe _IngotRecipe)
 	return EResource::R_NONE;
 }
 
+bool ASmeltery::IsCompletedRecipe(FIngotRecipe _Recipe)
+{
+	// Create required for this recipe
+	TArray<EResource> RecipeRequired = GetRequiredForRecipe(_Recipe);
+	// If valid recipe
+	if (RecipeRequired.Num() <= 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool ASmeltery::FindCompletedRecipe(FIngotRecipe& FoundRecipe)
+{
+	// Check if current items are a new valid recipe
+	TArray<FIngotRecipe> Recipes;
+	IngotRecipies.GenerateValueArray(Recipes);
+	for (FIngotRecipe Recipie : Recipes)
+	{
+		// If Completed recipe
+		if (IsCompletedRecipe(Recipie))
+		{
+			FoundRecipe = Recipie;
+			return true;
+		}
+	}
+	return false;
+}
+
 void ASmeltery::SERVER_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe)
 {
 	MULTI_ChangeCurrentRecipe(_NewRecipe);
@@ -214,7 +264,7 @@ bool ASmeltery::SERVER_ChangeCurrentRecipe_Validate(FIngotRecipe _NewRecipe)
 void ASmeltery::MULTI_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe)
 {
 	if (_NewRecipe.iCoalCount == 0 && _NewRecipe.Resources.Num() == 0)
-	{
+	{		
 		// Not valid recipe
 		return;
 	}
@@ -222,6 +272,12 @@ void ASmeltery::MULTI_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe
 	CurrentResourceCreating = GetResourceFromRecipe(_NewRecipe);
 	CurrentRecipeSmeltingTimeNeeded = _NewRecipe.fSmeltTime;
 	SmeltingTimeKABOOM = CurrentRecipeSmeltingTimeNeeded + 5.0f;
+	SmeltingTimePassed = 0.0f;
+
+	if (IsCompletedRecipe(*CurrentRecipe))
+	{
+		bSmeltingMinigamePlaying = true;
+	}
 }
 void ASmeltery::SERVER_ClearCurrentRecipe_Implementation()
 {
@@ -236,6 +292,10 @@ void ASmeltery::MULTI_ClearCurrentRecipe_Implementation()
 {
 	CurrentRecipe = nullptr;
 	CurrentResourceCreating = EResource::R_NONE;
+
+	SmeltingTimePassed = 0.0f;
+	bSmeltingMinigamePlaying = false;
+	CurrentRemainingTime = 0.0f;
 }
 
 void ASmeltery::SERVER_ChangeResource_Implementation(EResource _ResourceChange, bool _Add)
@@ -255,7 +315,7 @@ void ASmeltery::MULTI_ChangeResource_Implementation(EResource _ResourceChange, b
 		BI_OnNewResource(_ResourceChange);
 		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 
-		bool HasNonCoal = false;
+		/*bool HasNonCoal = false;
 		for (EResource Resource : CurrentlyProcessing)
 		{
 			if (Resource != EResource::R_COAL)
@@ -263,10 +323,10 @@ void ASmeltery::MULTI_ChangeResource_Implementation(EResource _ResourceChange, b
 				HasNonCoal = true;
 				break;
 			}
-		}
+		}*/
 
-		if (HasNonCoal && CurrentlyProcessing.Contains(EResource::R_COAL))
-			bSmeltingMinigamePlaying = true;
+		//if (HasNonCoal && CurrentlyProcessing.Contains(EResource::R_COAL))
+		//	bSmeltingMinigamePlaying = true;
 	}
 	else
 	{
@@ -285,12 +345,40 @@ void ASmeltery::ProcessSmelting(float DeltaTime)
 	SmeltingTimePassed += DeltaTime;
 	CurrentRemainingTime = CurrentRecipeSmeltingTimeNeeded - SmeltingTimePassed;
 	GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
+	if (!HasAuthority())
+		return;
+
 	if (SmeltingTimePassed > SmeltingTimeKABOOM)
 	{
-		bSmeltingMinigamePlaying = false;
-		SmeltingTimePassed = 0.0f;
-		CurrentRemainingTime = 0.0f;
-		CurrentlyProcessing.Empty();
+		if (CurrentRecipe)
+		{
+			for (EResource Resource : CurrentRecipe->Resources)
+			{
+				if (CurrentlyProcessing.Contains(Resource))
+				{
+					SERVER_ChangeResource(Resource, false);
+				}
+			}
+			for (int i = 0; i < CurrentRecipe->iCoalCount; i++)
+			{
+				if (CurrentlyProcessing.Contains(EResource::R_COAL))
+				{
+					SERVER_ChangeResource(EResource::R_COAL, false);
+				}
+			}
+		}
+		FIngotRecipe FoundRecipe;
+		if (FindCompletedRecipe(FoundRecipe))
+		{
+			MULTI_ChangeCurrentRecipe(FoundRecipe);
+			//SERVER_ChangeCurrentRecipe(FoundRecipe);
+		}
+		else
+		{
+			MULTI_ClearCurrentRecipe();
+			//SERVER_ClearCurrentRecipe();
+		}
+
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
 	}
