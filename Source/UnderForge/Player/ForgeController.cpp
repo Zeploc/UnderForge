@@ -3,7 +3,7 @@
 
 #include "ForgeController.h"
 
-void AForgeController::EndGame_Implementation()
+void AForgeController::EndRound_Implementation(int Currency, int CurrencyNeeded)
 {
 
 }
