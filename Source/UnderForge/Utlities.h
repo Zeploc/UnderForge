@@ -107,6 +107,22 @@ struct FWeaponPart
 };
 
 USTRUCT(BlueprintType)
+struct FAttack
+{
+	GENERATED_BODY()
+
+		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float fAttackDistance = 100.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int iAttackDamage = 150;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float fKnockbackMultiplier = 1.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UAnimMontage* AttackMontage;
+
+};
+
+USTRUCT(BlueprintType)
 struct FWeapon
 {
 	GENERATED_BODY()
@@ -119,6 +135,8 @@ struct FWeapon
 		UTexture2D* HorizontalIconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		FVector4 Margin = FVector4(0.0f);
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TArray<FAttack> Attacks;
 };
 
 USTRUCT(BlueprintType)
@@ -145,6 +163,8 @@ enum class EWeapon : uint8
 	W_RAPIER UMETA(DisplayName = "Rapier"),
 	W_SPIKEDMACE UMETA(DisplayName = "Spiked Mace"),
 };
+
+
 
 UCLASS()
 class UNDERFORGE_API UUtilities : public UObject
