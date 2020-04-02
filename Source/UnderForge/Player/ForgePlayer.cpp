@@ -126,6 +126,10 @@ void AForgePlayer::SecondaryInteract()
 	}*/
 }
 
+void AForgePlayer::StartAttack_Implementation()
+{
+}
+
 void AForgePlayer::LockPosition(bool IsLocked)
 {
 	if (IsLocked)

@@ -33,8 +33,10 @@ public:
 	virtual void ProcessPartItem(AForgePart* Part) override;
 
 	virtual bool TryInteract(class AForgePlayer* _Player) override;
-	virtual void Interacted(class AForgePlayer* _Player) override;
+	//virtual void Interacted(class AForgePlayer* _Player) override;
 
+	UFUNCTION(BlueprintCallable)
+	void HitWithHammer(class AForgePlayer* _Player);
 	//virtual void MorphStates(bool Next) override;
 
 	UFUNCTION(Server, reliable, WithValidation)

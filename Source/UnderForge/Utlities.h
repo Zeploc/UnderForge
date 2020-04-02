@@ -101,6 +101,8 @@ struct FWeaponPart
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* HorizontalIconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FVector4 Margin = FVector4(0.0f);
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class AForgePart> PartClass;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EResource> ResourcesRequired;

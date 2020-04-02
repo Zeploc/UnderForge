@@ -47,6 +47,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractRange = 100.0f;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void StartAttack();
 
 	UFUNCTION(BlueprintCallable)
 		void LockPosition(bool IsLocked);

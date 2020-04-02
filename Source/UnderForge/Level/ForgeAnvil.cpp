@@ -57,15 +57,18 @@ bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
 	if (bHammerMinigamePlaying)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Minigame Interact"));
-		//HammeringCycle(_Player);
-		Interacted(_Player);
+		if (_Player->HoldingHammer() && _Player->IsLocallyControlled())
+		{
+			_Player->StartAttack();
+		}
+		//Interacted(_Player);
 		return true;
-		//return Super::TryInteract(_Player);
 	}
 	return false;
 }
 
-void AForgeAnvil::Interacted(AForgePlayer * _Player)
+
+void AForgeAnvil::HitWithHammer(AForgePlayer * _Player)
 {
 	if (!_Player->IsLocallyControlled())
 		return;
