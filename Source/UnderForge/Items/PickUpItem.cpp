@@ -45,10 +45,10 @@ void APickUpItem::Tick(float DeltaTime)
 
 void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 {
-	if (HeldPlayer)
+	/*if (HeldPlayer)
 	{
 		HeldPlayer->HoldItem = nullptr;
-	}
+	}*/
 	HeldPlayer = NewPlayer;
 	ItemMesh->SetSimulatePhysics(false);
 	AttachToComponent(NewPlayer->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
@@ -67,9 +67,9 @@ void APickUpItem::Drop()
 
 	BI_OnDrop();
 
-	if (CurrentTouchingStation)
+	if (CurrentTouchingStation && HasAuthority())
 	{
-		CurrentTouchingStation->ProcessItem(this);
+		CurrentTouchingStation->MULTI_ProcessItem(this);
 	}
 	HeldPlayer = nullptr;
 }

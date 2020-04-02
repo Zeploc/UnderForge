@@ -28,6 +28,10 @@ public:
 
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
+	UFUNCTION(Server, WithValidation, Reliable)
+		void SERVER_SetCurrent(float _x, float _y);
+	UFUNCTION(NetMulticast, Reliable)
+		void MULTI_SetCurrent(float _x, float _y);
 
 	UFUNCTION(BlueprintCallable)
 		class AForgePart* MakeResource(EResource type);

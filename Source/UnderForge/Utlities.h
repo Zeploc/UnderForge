@@ -111,10 +111,12 @@ struct FAttack
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float fAttackDistance = 100.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		int iAttackDamage = 150;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int iCritChance = 5;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float fKnockbackMultiplier = 1.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

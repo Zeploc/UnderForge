@@ -83,6 +83,21 @@ void ACarpentaryStation::Interacted(AForgePlayer * _Player)
 	SetOwner(_Player);
 }
 
+void ACarpentaryStation::SERVER_SetCurrent_Implementation(float _x, float _y)
+{
+	MULTI_SetCurrent(_x, _y);
+}
+bool ACarpentaryStation::SERVER_SetCurrent_Validate(float _x, float _y)
+{
+	return true;
+}
+
+void ACarpentaryStation::MULTI_SetCurrent_Implementation(float _x, float _y)
+{
+	CurrentX = _x;
+	CurrentY = _y;
+}
+
 AForgePart * ACarpentaryStation::MakeResource(EResource type)
 {
 	if (!HasAuthority())
@@ -159,10 +174,11 @@ void ACarpentaryStation::SpinningMinigame()
 {
 	if (bSpinningGamePlaying)
 	{
-		if (CurrentPlayer)
+		if (CurrentPlayer && CurrentPlayer->IsLocallyControlled())
 		{
 			CurrentX = CurrentPlayer->CurrentX;// GetInputAxisKeyValue("SpinningXAxis");
 			CurrentY = CurrentPlayer->CurrentY;// GetInputAxisKeyValue("SpinningYAxis");
+			SERVER_SetCurrent(CurrentX, CurrentY);
 		}
 
 		FVector currentStickPos(CurrentX, CurrentY, 0.0f); 
@@ -183,7 +199,10 @@ void ACarpentaryStation::SpinningMinigame()
 		{
 			SpinningTotal = 0.0f;
 			bSpinningGamePlaying = false;
-			MakeResource(CurrentResource);
+			if (CurrentPlayer && CurrentPlayer->IsLocallyControlled())
+			{
+				MakeResource(CurrentResource);
+			}
 		}
 	}
 	return;

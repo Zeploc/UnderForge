@@ -66,6 +66,11 @@ void AForgeStation::MorphStates(bool Next)
 {
 }
 
+void AForgeStation::MULTI_ProcessItem_Implementation(APickUpItem * Item)
+{
+	ProcessItem(Item);
+}
+
 void AForgeStation::ProcessItem(APickUpItem * Item)
 {
 	if (AForgeMat* mat = Cast<AForgeMat>(Item))

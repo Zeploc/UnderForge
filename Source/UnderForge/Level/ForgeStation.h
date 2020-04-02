@@ -38,6 +38,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		virtual void MorphStates(bool Next);
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MULTI_ProcessItem(class APickUpItem* Item);
 	void ProcessItem(class APickUpItem* Item);
 
 	virtual void ProcessMatItem(AForgeMat* material);
