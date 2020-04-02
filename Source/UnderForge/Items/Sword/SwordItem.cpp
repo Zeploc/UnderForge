@@ -45,7 +45,7 @@ void ASwordItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (WeaponType != EWeapon::W_NONE)
+	if (WeaponType != EWeapon::W_NONE && HasAuthority())
 	{
 		SetUpWeapon(WeaponType);
 	}
