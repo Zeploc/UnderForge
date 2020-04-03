@@ -273,7 +273,8 @@ void ASmeltery::MULTI_ChangeCurrentRecipe_Implementation(FIngotRecipe _NewRecipe
 	CurrentResourceCreating = GetResourceFromRecipe(_NewRecipe);
 	CurrentRecipeSmeltingTimeNeeded = _NewRecipe.fSmeltTime;
 	SmeltingTimeKABOOM = CurrentRecipeSmeltingTimeNeeded + 5.0f;
-	SmeltingTimePassed = 0.0f;
+	if (!bSmeltingMinigamePlaying)
+		SmeltingTimePassed = 0.0f;
 
 	if (IsCompletedRecipe(*CurrentRecipe))
 	{

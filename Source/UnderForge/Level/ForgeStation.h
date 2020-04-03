@@ -43,7 +43,11 @@ public:
 	void ProcessItem(class APickUpItem* Item);
 
 	virtual void ProcessMatItem(AForgeMat* material);
+	UFUNCTION(BlueprintImplementableEvent)
+	void BI_OnProcessMatItem(AForgeMat* material);
 	virtual void ProcessPartItem(AForgePart* Part);
+	UFUNCTION(BlueprintImplementableEvent)
+	void BI_OnProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);
 	UFUNCTION(BlueprintCallable)
 		void ThrowAway(AActor* Actor);
