@@ -107,6 +107,16 @@ struct FWeaponPart
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EResource> ResourcesRequired;
 };
+USTRUCT(BlueprintType)
+struct FAltPart
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UStaticMesh* Mesh;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FTransform Offset;
+};
 
 USTRUCT(BlueprintType)
 struct FAttack
@@ -133,6 +143,8 @@ struct FWeapon
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<EWeaponPart> Parts;
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	//	FTransform AttachOffset = FTransform(FRotator(75.9f, 135.43f, 44.56f), FVector(0, 0, 0), FVector(0.4));
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* IconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -142,7 +154,7 @@ struct FWeapon
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<FAttack> Attacks;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		TMap<EWeaponPart, UStaticMesh*> AltParts;
+		TMap<EWeaponPart, FAltPart> AltParts;
 };
 
 USTRUCT(BlueprintType)

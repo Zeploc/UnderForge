@@ -16,20 +16,9 @@
 
 ASwordItem::ASwordItem()
 {
-	HandleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Handle Mesh"));
-	HandleMesh->SetupAttachment(ItemMesh);
-	BladeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Blade Mesh"));
-	BladeMesh->SetupAttachment(ItemMesh);
-	HandleMesh->SetSimulatePhysics(false);
-	BladeMesh->SetSimulatePhysics(false);
-	HandleMesh->SetCollisionProfileName("OverlapAll");
-	BladeMesh->SetCollisionProfileName("OverlapAll");
-
 	ItemMesh->SetSimulatePhysics(false);
 	//ItemMesh->SetVisibility(false);
 	//ItemMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	BladeMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	HandleMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
 	static ConstructorHelpers::FObjectFinder<USoundBase> SoundSuccess(TEXT("SoundWave'/Game/Sounds/SoundRourke/FinishCrafting_Sound.FinishCrafting_Sound'"));
 	SuccessCombine = SoundSuccess.Object;
@@ -231,7 +220,12 @@ void ASwordItem::UpdateAltPartMeshes()
 	CurentWeaponStats.AltParts.GenerateKeyArray(FoundAltParts);
 	for (EWeaponPart part : FoundAltParts)
 	{
-		PartComponents[part]->SetStaticMesh(CurentWeaponStats.AltParts[part]);
+		if (PartComponents.Contains(part))
+		{
+			FAltPart NewAltPart = CurentWeaponStats.AltParts[part];
+			PartComponents[part]->SetStaticMesh(NewAltPart.Mesh);
+			PartComponents[part]->SetRelativeTransform(NewAltPart.Offset);
+		}
 	}
 }
 
@@ -258,6 +252,7 @@ void ASwordItem::SetWeaponType(EWeapon _Weapon)
 		return;
 
 	CurentWeaponStats = *FoundWeapon;
+	//AttachOffset = CurentWeaponStats.AttachOffset;
 }
 
 
