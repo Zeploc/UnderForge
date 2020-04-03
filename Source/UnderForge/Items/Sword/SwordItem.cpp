@@ -161,6 +161,8 @@ bool ASwordItem::AddPart(EWeaponPart PartToAdd)
 				break;
 		}
 	}
+
+	UpdateAltPartMeshes();
 	
 	FWeapon* FoundWeapon = GameSingleton->Weapons.Find(WeaponType);
 	if (!FoundWeapon)
@@ -221,6 +223,16 @@ void ASwordItem::AddPartMesh(EWeaponPart WeaponPart, const FName PartName)
 	NewMeshComp->AttachToComponent(ItemMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	NewMeshComp->SetRelativeTransform(FoundWeaponPart->Offset);
 	PartComponents.Add(WeaponPart, NewMeshComp);
+}
+
+void ASwordItem::UpdateAltPartMeshes()
+{
+	TArray<EWeaponPart> FoundAltParts;
+	CurentWeaponStats.AltParts.GenerateKeyArray(FoundAltParts);
+	for (EWeaponPart part : FoundAltParts)
+	{
+		PartComponents[part]->SetStaticMesh(CurentWeaponStats.AltParts[part]);
+	}
 }
 
 void ASwordItem::ClearCurrentParts()

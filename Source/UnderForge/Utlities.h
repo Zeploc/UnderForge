@@ -141,6 +141,8 @@ struct FWeapon
 		FVector4 Margin = FVector4(0.0f);
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<FAttack> Attacks;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TMap<EWeaponPart, UStaticMesh*> AltParts;
 };
 
 USTRUCT(BlueprintType)

@@ -37,6 +37,7 @@ public:
 
 	void SetUpWeapon(EWeapon _Weapon);
 	void AddPartMesh(EWeaponPart WeaponPart, const FName PartName);
+	void UpdateAltPartMeshes();
 	void ClearCurrentParts();
 
 	void SetWeaponType(EWeapon _Weapon);
