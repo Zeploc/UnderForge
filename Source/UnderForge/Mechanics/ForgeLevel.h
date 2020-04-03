@@ -20,4 +20,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int TotalWeaponsCreated = 0;
+
+	UFUNCTION(BlueprintNativeEvent)
+		void ForgeDestroyed();
 };

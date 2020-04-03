@@ -50,22 +50,31 @@ void ACombineBench::ProcessPartItem(AForgePart * Part)
 			NewSwordItem->ItemMesh->SetSimulatePhysics(false);
 			NewSwordItem->AddPart(Part->SwordPart);
 			CurrentItem = NewSwordItem;
-		}		
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Server: New Item");
+		}
+		else
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "All: New Item");
 		Part->Destroy();
-		UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
+		//UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 	}
 	else // item exists, check valid part
 	{
 		if (CurrentItem->CanHavePart(Part->SwordPart)) // If the sword needs that type of part
 		{
-			if (CurrentItem->AddPart(Part->SwordPart)) // Add the part
+			if (HasAuthority())
 			{
-				CurrentItem->CanBePickedUp = true;
-				// Is complete
-				CurrentItem = nullptr;
+				if (CurrentItem->AddPart(Part->SwordPart)) // Add the part
+				{
+					CurrentItem->CanBePickedUp = true;
+					// Is complete
+					CurrentItem = nullptr;
+				}
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Server: Add Part");
 			}
+			else
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "All: Add Part");
 			Part->Destroy(); // Destroy part actor
-			UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
+			//UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 		}
 		else
 		{

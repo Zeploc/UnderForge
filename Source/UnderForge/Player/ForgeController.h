@@ -15,8 +15,8 @@ class UNDERFORGE_API AForgeController : public ANetworkController
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintNativeEvent)
-		void EndGame();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void EndRound(int Currency, int CurrencyNeeded);
 
 protected:
 };

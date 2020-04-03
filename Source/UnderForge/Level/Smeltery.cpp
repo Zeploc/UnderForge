@@ -5,6 +5,7 @@
 #include "Items/ForgePart.h"
 #include "Player/ForgePlayer.h"
 #include "Player/ForgeController.h"
+#include "Mechanics/ForgeLevel.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
 #include "Utlities.h"
@@ -494,25 +495,22 @@ void ASmeltery::DamageForge(float Damage)
 	UGameplayStatics::PlaySound2D(GetWorld(), SmelteryTakeDamageSound);
 	ForgeHealth -= Damage;
 	MULTI_UpdateForgeHealth(ForgeHealth);
+	if (ForgeHealth <= 0 && HasAuthority())
+	{
+		if (AForgeLevel* ForgeGamemode = Cast<AForgeLevel>(GetWorld()->GetAuthGameMode()))
+		{
+			ForgeGamemode->ForgeDestroyed();
+		}
+	}
 }
 
 void ASmeltery::MULTI_UpdateForgeHealth_Implementation(float _NewHealth)
 {
-	if (_NewHealth <= 0.0f)
-	{
-		if (GetWorld())
-		{
-			if (AForgeController* ForgeController = Cast<AForgeController>(GetWorld()->GetFirstPlayerController()))
-			{
-				ForgeController->EndGame();
-			}
-		}
-	}
 
 	if (HasAuthority())
 		return;
 
-	if (ForgeHealth > _NewHealth)
+	if (_NewHealth < ForgeHealth)
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), SmelteryTakeDamageSound);
 	}

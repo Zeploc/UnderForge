@@ -2,6 +2,7 @@
 
 #include "ForgeLevel.h"
 
+void AForgeLevel::ForgeDestroyed_Implementation()
+{
 
-
-
+}
