@@ -50,7 +50,7 @@ public:
 		class USoundBase* FailureCombine;
 
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 		EWeapon WeaponType = EWeapon::W_NONE;
 
 	UPROPERTY(BlueprintReadWrite)

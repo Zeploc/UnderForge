@@ -64,7 +64,7 @@ void ACarpentaryStation::Tick(float DeltaTime)
 
 void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
-	if (material->ResourceType == EResource::R_WOOD)
+	if (material->ResourceType == EResource::R_WOOD && CurrentResource == EResource::R_NONE)
 	{
 		CurrentPlayer = material->HeldPlayer;
 		SetOwner(CurrentPlayer);
@@ -203,6 +203,7 @@ void ACarpentaryStation::SpinningMinigame()
 			{
 				MakeResource(CurrentResource);
 			}
+			CurrentResource = EResource::R_NONE;
 		}
 	}
 	return;

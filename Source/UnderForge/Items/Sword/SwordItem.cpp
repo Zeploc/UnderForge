@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
+#include "UnrealNetwork.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Sound/SoundBase.h"
@@ -34,7 +35,7 @@ void ASwordItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (WeaponType != EWeapon::W_NONE && HasAuthority())
+	if (WeaponType != EWeapon::W_NONE)// && HasAuthority())
 	{
 		SetUpWeapon(WeaponType);
 	}
@@ -267,3 +268,9 @@ void ASwordItem::Disassemble()
 	}
 	Destroy();
 }
+void ASwordItem::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ASwordItem, WeaponType);
+}
+
