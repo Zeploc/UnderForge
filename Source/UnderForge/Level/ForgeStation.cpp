@@ -75,10 +75,12 @@ void AForgeStation::ProcessItem(APickUpItem * Item)
 {
 	if (AForgeMat* mat = Cast<AForgeMat>(Item))
 	{
+		BI_OnProcessMatItem(mat);
 		ProcessMatItem(mat);
 	}
 	else if (AForgePart* part = Cast<AForgePart>(Item))
 	{
+		BI_OnProcessPartItem(part);
 		ProcessPartItem(part);
 	}
 }

@@ -84,7 +84,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)//, Replicated)
 	 TArray<EResource> CurrentlyProcessing;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TMap<EResource, FIngotRecipe> IngotRecipies;
 
 	FIngotRecipe* CurrentRecipe;
