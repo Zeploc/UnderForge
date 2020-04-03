@@ -18,6 +18,15 @@ public:
 	// Sets default values for this actor's properties
 	AForgeStation();
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+		class UStaticMeshComponent* StationMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		class USceneComponent* ObjectPosition;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		class UBoxComponent* CollisionBox;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,7 +49,11 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MULTI_ProcessItem(class APickUpItem* Item);
-	void ProcessItem(class APickUpItem* Item);
+	virtual void ProcessItem(class APickUpItem* Item);
+
+	virtual void ItemPickedUp(class APickUpItem* Item);
+	UFUNCTION(BlueprintImplementableEvent)
+		void BI_OnItemPickedUp(class APickUpItem* Item);
 
 	virtual void ProcessMatItem(AForgeMat* material);
 	UFUNCTION(BlueprintImplementableEvent)
@@ -57,14 +70,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void BI_OnSetPotentiallyInteracting();
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* StationMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class USceneComponent* ObjectPosition;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class UBoxComponent* CollisionBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UArrowComponent* RefuseThrowDirection;

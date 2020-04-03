@@ -55,6 +55,8 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 	SetActorRelativeTransform(AttachOffset);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+	if (CurrentTouchingStation)
+		CurrentTouchingStation->ItemPickedUp(this);
 	BI_OnPickUp();
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Picked Up");
 }

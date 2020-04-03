@@ -85,6 +85,11 @@ void AForgeStation::ProcessItem(APickUpItem * Item)
 	}
 }
 
+void AForgeStation::ItemPickedUp(class APickUpItem* Item)
+{
+	BI_OnItemPickedUp(Item);
+}
+
 void AForgeStation::ProcessMatItem(AForgeMat * material)
 {
 	ThrowAway(material);	
