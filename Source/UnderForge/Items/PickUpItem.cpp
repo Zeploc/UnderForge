@@ -53,7 +53,7 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 	ItemMesh->SetSimulatePhysics(false);
 	AttachToComponent(NewPlayer->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
 	SetActorRelativeTransform(AttachOffset);
-	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	//ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 	if (CurrentStation)
 	{
@@ -67,7 +67,7 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 void APickUpItem::Drop()
 {
 	ItemMesh->SetSimulatePhysics(true);
-	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	//ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 
 	BI_OnDrop();
