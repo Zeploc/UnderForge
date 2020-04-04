@@ -19,7 +19,8 @@ public:
 
 
 public:
-	virtual bool ProcessItem(class APickUpItem* Item) override;
+	virtual bool CanTakeItem(class APickUpItem* Item) override;
+	virtual void ProcessItem(class APickUpItem* Item) override;
 	virtual void ItemPickedUp(class APickUpItem* Item) override;
 
 	void SetCurrentItem(APickUpItem * Item);

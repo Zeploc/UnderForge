@@ -7,7 +7,33 @@
 #include "Kismet/GameplayStatics.h"
 #include "UnderForgeSingleton.h"
 
-AForgeMat * AResourcePile::GetResource(AForgePlayer * _OwningPlayer)
+#include "Components/StaticMeshComponent.h"
+
+// Called when the game starts or when spawned
+void AResourcePile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (HasAuthority())
+		RecreateResource();
+}
+
+void AResourcePile::RecreateResource()
+{
+	if (!HasAuthority())
+		return; 
+
+	AForgeMat* NewResource = GetResource();
+	if (NewResource)
+	{
+		NewResource->ItemMesh->SetSimulatePhysics(false);
+		NewResource->SetActorLocation(ObjectPosition->GetComponentLocation());
+		NewResource->SetActorRotation(ObjectPosition->GetComponentRotation());
+		NewResource->CurrentStation = this;
+	}
+}
+
+AForgeMat * AResourcePile::GetResource()
 {
 	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
 	if (!GameSingleton)
@@ -19,7 +45,6 @@ AForgeMat * AResourcePile::GetResource(AForgePlayer * _OwningPlayer)
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Owner = _OwningPlayer;
 	APickUpItem* ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation(), SpawnParams);
 	if (!ResourceRef)
 		return nullptr;
@@ -33,17 +58,28 @@ AForgeMat * AResourcePile::GetResource(AForgePlayer * _OwningPlayer)
 	return ResourceMatRef;
 }
 
+bool AResourcePile::CanTakeItem(APickUpItem * Item)
+{
+	return false;
+}
+
+void AResourcePile::ItemPickedUp(APickUpItem * Item)
+{
+	RecreateResource();
+}
+
 void AResourcePile::Interacted(AForgePlayer * _Player)
 {
+
 	//if (HasAuthority())
 	//{
 	// Will spawn on all, client spawns temporary one
-		AForgeMat* CreatedResource = GetResource(_Player);
-		if (CreatedResource)
-		{
-			CreatedResource->PickUp(_Player);
-			_Player->SetHoldItem(CreatedResource);
-		}
+		//AForgeMat* CreatedResource = GetResource();
+		//if (CreatedResource)
+		//{
+		//	CreatedResource->PickUp(_Player);
+		//	_Player->SetHoldItem(CreatedResource);
+		//}
 		//_Player->CLIENT_PickUp(CreatedResource);
 	//}
 }

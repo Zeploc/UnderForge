@@ -44,12 +44,16 @@ public:
 	virtual bool TryInteract(class AForgePlayer* _Player);
 	virtual void Interacted(class AForgePlayer* _Player);
 
+	virtual bool CanTakeItem(class APickUpItem* Item);
+	virtual bool CanTakeMatItem(class AForgeMat* material);
+	virtual bool CanTakePartItem(class AForgePart* Part);
+
 	UFUNCTION(BlueprintCallable)
 		virtual void MorphStates(bool Next);
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MULTI_ProcessItem(class APickUpItem* Item);
-	virtual bool ProcessItem(class APickUpItem* Item);
+	virtual void ProcessItem(class APickUpItem* Item);
 
 	virtual void ItemPickedUp(class APickUpItem* Item);
 	UFUNCTION(BlueprintImplementableEvent)

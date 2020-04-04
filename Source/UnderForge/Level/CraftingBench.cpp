@@ -35,6 +35,17 @@ void ACraftingBench::ItemDectection(class AActor* OverlappActor, bool entering)
 	}	
 }
 
+bool ACraftingBench::CanTakePartItem(AForgePart * Part)
+{
+	if (Part->SwordPart == EWeaponPart::WP_NONE) // Check if its not a valid part
+		return false;
+	if (CurrentItem == nullptr) // No current item/parts
+		return true;
+	if (CurrentItem->CanHavePart(Part->SwordPart)) // If the sword needs that type of part
+		return true;
+	return false;
+}
+
 bool ACraftingBench::ProcessPartItem(AForgePart * Part)
 {
 	if (Part->SwordPart == EWeaponPart::WP_NONE) // Check if its not a valid part

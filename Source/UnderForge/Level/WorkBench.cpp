@@ -16,33 +16,40 @@ AWorkBench::AWorkBench()
 
 }
 
-bool AWorkBench::ProcessItem(class APickUpItem* Item)
+bool AWorkBench::CanTakeItem(APickUpItem * Item)
+{
+	if (!CurrentItem)
+		return true;
+	return false;
+}
+
+void AWorkBench::ProcessItem(class APickUpItem* Item)
 {
 	if (!CurrentItem)
 	{
-		if (HasAuthority())
-		{
-			MULTI_NewItem(Item);
-			if (CurrentItem->HeldPlayer)
-			{
-				CurrentItem->HeldPlayer->ClearHoldItem();
-			}
-		}
-		else
-		{
-			SetCurrentItem(Item);
-			if (CurrentItem->HeldPlayer)
-			{
-				CurrentItem->HeldPlayer->ClearHoldItem();
-			}
-		}
+		SetCurrentItem(Item);
+		//if (HasAuthority())
+		//{
+		//	MULTI_NewItem(Item);
+		//	/*if (CurrentItem->HeldPlayer)
+		//	{
+		//		CurrentItem->HeldPlayer->ClearHoldItem();
+		//	}*/
+		//}
+		//else
+		//{
+		//	SetCurrentItem(Item);
+		//	/*if (CurrentItem->HeldPlayer)
+		//	{
+		//		CurrentItem->HeldPlayer->ClearHoldItem();
+		//	}*/
+		//}
 	}
 	else
 	{
 		ThrowAway(Item);
-		return false;
+		return;
 	}
-	return true;
 }
 
 void AWorkBench::ItemPickedUp(APickUpItem * Item)
@@ -61,16 +68,22 @@ void AWorkBench::MULTI_NewItem_Implementation(APickUpItem * Item)
 		return;
 
 	SetCurrentItem(Item);
-	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 }
 void AWorkBench::SetCurrentItem(APickUpItem * Item)
 {
+	if (!Item)
+		return;
 	CurrentItem = Item;
+	if (CurrentItem->HeldPlayer)
+	{
+		CurrentItem->HeldPlayer->LocalClearHoldItem();
+		CurrentItem->HeldPlayer = nullptr;
+	}
 	CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
 	CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
-	CurrentItem->HeldPlayer = nullptr;
 	CurrentItem->ItemMesh->SetSimulatePhysics(false);
-	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	CurrentItem->CurrentStation = this;
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 }

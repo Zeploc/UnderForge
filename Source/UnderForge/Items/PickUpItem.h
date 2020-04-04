@@ -44,7 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class AForgePlayer* HeldPlayer;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 		class AForgeStation* CurrentStation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

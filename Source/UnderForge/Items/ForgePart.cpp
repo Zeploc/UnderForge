@@ -35,7 +35,7 @@ void AForgePart::BeginPlay()
 	}
 
 	// Sync up client to use servers version
-	if (GetOwner() && !HasAuthority())
+	/*if (GetOwner() && !HasAuthority())
 	{
 		if (AForgePlayer* OwnerForgePlayer = Cast<AForgePlayer>(GetOwner()))
 		{
@@ -52,7 +52,7 @@ void AForgePart::BeginPlay()
 				}
 			}
 		}
-	}
+	}*/
 }
 
 // Called every frame

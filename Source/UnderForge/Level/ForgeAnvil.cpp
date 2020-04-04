@@ -111,15 +111,17 @@ void AForgeAnvil::Tick(float DeltaTime)
 // TEMP
 #include "Engine.h"
 
-bool AForgeAnvil::ProcessPartItem(AForgePart * Part)
+bool AForgeAnvil::CanTakePartItem(AForgePart * Part)
 {
 	if (!Part)
 		return false;
 	if (Part->SwordPart != EWeaponPart::WP_NONE || !AvailableResourceTypes.Contains(Part->ResourceType) || bHammerMinigamePlaying)
-	{
-		ThrowAway(Part);
 		return false;
-	}
+	return true;
+}
+
+bool AForgeAnvil::ProcessPartItem(AForgePart * Part)
+{
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Part: " + Part->GetName()));
 	CurrentResource = Part->ResourceType;
 	RandomiseRange();

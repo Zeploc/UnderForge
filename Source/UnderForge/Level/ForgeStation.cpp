@@ -52,11 +52,21 @@ bool AForgeStation::TryInteract(AForgePlayer * _Player)
 {
 	if (_Player->GetHoldItem())
 	{
-		if (ProcessItem(_Player->GetHoldItem()))
+		if (CanTakeItem(_Player->GetHoldItem()))
 		{
-			_Player->ClearHoldItem();
+			if (HasAuthority())
+			{
+				MULTI_ProcessItem(_Player->GetHoldItem());
+				//_Player->ClearHoldItem();				
+			}
+			else
+			{
+				_Player->SERVER_InteractWith(this);
+			}
 			return true;
 		}
+
+		ThrowAway(_Player->GetHoldItem());
 		return false;
 	}
 
@@ -72,6 +82,29 @@ void AForgeStation::Interacted(AForgePlayer * _Player)
 {
 }
 
+bool AForgeStation::CanTakeItem(APickUpItem * Item)
+{
+	if (AForgeMat* mat = Cast<AForgeMat>(Item))
+	{
+		return CanTakeMatItem(mat);
+	}
+	else if (AForgePart* part = Cast<AForgePart>(Item))
+	{
+		return CanTakePartItem(part);
+	}
+	return false;
+}
+
+bool AForgeStation::CanTakeMatItem(AForgeMat * material)
+{
+	return false;
+}
+
+bool AForgeStation::CanTakePartItem(AForgePart * Part)
+{
+	return false;
+}
+
 void AForgeStation::MorphStates(bool Next)
 {
 }
@@ -81,7 +114,7 @@ void AForgeStation::MULTI_ProcessItem_Implementation(APickUpItem * Item)
 	ProcessItem(Item);
 }
 
-bool AForgeStation::ProcessItem(APickUpItem * Item)
+void AForgeStation::ProcessItem(APickUpItem * Item)
 {
 	if (AForgeMat* mat = Cast<AForgeMat>(Item))
 	{
@@ -89,7 +122,7 @@ bool AForgeStation::ProcessItem(APickUpItem * Item)
 		if (ProcessMatItem(mat))
 		{
 			Item->CurrentStation = this;
-			return true;
+			return;
 		}
 	}
 	else if (AForgePart* part = Cast<AForgePart>(Item))
@@ -98,10 +131,9 @@ bool AForgeStation::ProcessItem(APickUpItem * Item)
 		if (ProcessPartItem(part))
 		{
 			Item->CurrentStation = this;
-			return true;
+			return;
 		}
 	}
-	return false;
 }
 
 void AForgeStation::ItemPickedUp(class APickUpItem* Item)
@@ -126,9 +158,10 @@ void AForgeStation::ItemDectection(AActor * actor, bool entering)
 	if (APickUpItem* PickUp = Cast<APickUpItem>(actor))
 	{
 		//PickUp->CurrentStation = this;
-		if (!PickUp->HeldPlayer)
+		if (!PickUp->HeldPlayer && HasAuthority())
 		{
-			ProcessItem(PickUp);
+			if (CanTakeItem(PickUp))
+				MULTI_ProcessItem(PickUp);
 		}
 	}	
 }

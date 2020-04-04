@@ -68,6 +68,17 @@ bool ASmeltery::TryInteract(AForgePlayer * _Player)
 	return false;
 }
 
+bool ASmeltery::CanTakeMatItem(AForgeMat * material)
+{
+	FIngotRecipe FoundRecipie;
+	if (CanHaveResource(material->ResourceType, FoundRecipie))
+		return true;
+	if (material->ResourceType == EResource::R_COAL)
+		return true;
+
+	return false;
+}
+
 bool ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	bool bCanHaveResource = false;

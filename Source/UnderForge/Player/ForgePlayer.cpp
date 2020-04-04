@@ -93,8 +93,20 @@ void AForgePlayer::ClearHoldItem()
 	else
 	{
 		SERVER_ClearHoldItem();
-		MULTI_ClearHoldItem_Implementation();
+		LocalClearHoldItem();
 	}
+}
+
+void AForgePlayer::LocalClearHoldItem()
+{
+	if (HoldItem)
+	{
+		if (HoldItem->IsAttachedTo(this))
+		{
+			HoldItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		}
+	}
+	HoldItem = nullptr;
 }
 
 void AForgePlayer::SERVER_ClearHoldItem_Implementation()
@@ -108,14 +120,7 @@ bool AForgePlayer::SERVER_ClearHoldItem_Validate()
 
 void AForgePlayer::MULTI_ClearHoldItem_Implementation()
 {
-	if (HoldItem)
-	{
-		if (HoldItem->IsAttachedTo(this))
-		{
-			HoldItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		}
-	}
-	HoldItem = nullptr;
+	LocalClearHoldItem();
 }
 
 void AForgePlayer::SetHoldItem(APickUpItem * PickUp)

@@ -43,7 +43,9 @@ public:
 		void CLIENT_PickUp(class APickUpItem* PickUp);
 
 	UFUNCTION(BlueprintCallable)
-	void ClearHoldItem();
+		void ClearHoldItem();
+	UFUNCTION(BlueprintCallable)
+		void LocalClearHoldItem();
 	UFUNCTION(Server, WithValidation, Reliable)
 		void SERVER_ClearHoldItem();
 	UFUNCTION(NetMulticast, Reliable)

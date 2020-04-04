@@ -35,6 +35,7 @@ public:
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
 
+	virtual bool CanTakeMatItem(class AForgeMat* material);
 	virtual bool ProcessMatItem(AForgeMat* material) override;
 
 

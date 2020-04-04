@@ -30,6 +30,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 public:
+	virtual bool CanTakePartItem(class AForgePart* Part);
 	virtual bool ProcessPartItem(AForgePart* Part) override;
 
 	virtual bool TryInteract(class AForgePlayer* _Player) override;
