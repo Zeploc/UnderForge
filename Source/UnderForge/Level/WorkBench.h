@@ -23,6 +23,8 @@ public:
 	virtual void ItemPickedUp(class APickUpItem* Item) override;
 
 protected:
+	UFUNCTION(NetMulticast, Reliable)
+		void MULTI_NewItem(class APickUpItem* Item);
 
 public:
 	class APickUpItem* CurrentItem;

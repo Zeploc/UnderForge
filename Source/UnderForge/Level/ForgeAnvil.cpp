@@ -48,7 +48,7 @@ void AForgeAnvil::BeginPlay()
 	//CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 	InteractTimer = 0;
 
-	CurrentOrb = OrbCount / 2;
+	CurrentOrb = 0;// OrbCount / 2;
 }
 bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
 {
@@ -73,23 +73,27 @@ void AForgeAnvil::HitWithHammer(AForgePlayer * _Player)
 	if (!_Player->IsLocallyControlled())
 		return;
 	if (!_Player->HoldingHammer() || SuccessHit) return;
-	if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
-	{
-		//SetOwner(_Player);
-		SERVER_InteractHit(true);
-		SuccessHit = true;
 
-		GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
-	}
-	else // Missed, fail
-	{
-		SERVER_InteractHit(false);
+	SERVER_InteractHit(true);
+	//MULTI_InteractHit_Implementation(true);
+	//GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
+	//if (CurrentMarkerPos >= CurrentMinRange && CurrentMarkerPos <= CurrentMaxRange) // In range
+	//{
+	//	//SetOwner(_Player);
+	//	SERVER_InteractHit(true);
+	//	SuccessHit = true;
 
-		if (CurrentOrb - 1 > 0)
-		{
-			RandomiseRange();
-		}
-	}
+	//	GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
+	//}
+	//else // Missed, fail
+	//{
+	//	SERVER_InteractHit(false);
+
+	//	if (CurrentOrb - 1 > 0)
+	//	{
+	//		RandomiseRange();
+	//	}
+	//}
 }
 
 void AForgeAnvil::Tick(float DeltaTime)
@@ -134,10 +138,20 @@ void AForgeAnvil::MULTI_InteractHit_Implementation(bool _Success)
 	UGameplayStatics::PlaySound2D(GetWorld(), _Success ? Success : Failure);
 	if (_Success)
 	{
-		SuccessHit = true;
+		//SuccessHit = true;
 		CurrentOrb++;
-		if (!SuccessHitTimerHandle.IsValid())
-			GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
+		//if (!SuccessHitTimerHandle.IsValid())
+		//	GetWorldTimerManager().SetTimer(SuccessHitTimerHandle, this, &AForgeAnvil::SuccessTimeComplete, PauseTimeOnSuccess, false);
+		if (CurrentOrb >= OrbCount)
+		{
+			if (HasAuthority())
+				MakeResource(CurrentResource);
+
+			CurrentOrb = 0;// OrbCount / 2;
+			bHammerMinigamePlaying = false;
+			CurrentResource = EResource::R_NONE;
+			UGameplayStatics::PlaySound2D(GetWorld(), FullyCompletedCrafting);
+		}
 	}
 	else
 	{
@@ -145,7 +159,7 @@ void AForgeAnvil::MULTI_InteractHit_Implementation(bool _Success)
 		if (CurrentOrb <= 0)
 		{
 			bHammerMinigamePlaying = false;
-			CurrentOrb = OrbCount / 2;
+			CurrentOrb = 0;// OrbCount / 2;
 			CurrentResource = EResource::R_NONE;
 		}
 		else
@@ -236,45 +250,6 @@ bool AForgeAnvil::SERVER_MakeResource_Validate(EResource type)
 {
 	return true;
 }
-
-//void AForgeAnvil::MorphStates(bool Next)
-//{
-//	if (bHammerMinigamePlaying) return;
-//
-//	/*switch (CurrentState)
-//	{
-//	case EBladeType::BT_BROADSWORD:
-//	{
-//		if (Next)
-//			CurrentState = EBladeType::BT_KRIS;
-//		else
-//			CurrentState = EBladeType::BT_KRIS;
-//		break;
-//	}
-//	case EBladeType::BT_KRIS:
-//	{
-//		if (Next)
-//			CurrentState = EBladeType::BT_BROADSWORD;
-//		else
-//			CurrentState = EBladeType::BT_BROADSWORD;
-//		break;
-//	}
-//	}
-//
-//	switch (CurrentState)
-//	{
-//	case EBladeType::BT_BROADSWORD:
-//		OutputName = FString("Broad Blade");
-//		CurrentProducingItem->SetStaticMesh(BroadswordBlade);
-//		break;
-//	case EBladeType::BT_KRIS:
-//		OutputName = FString("Kris Blade");
-//		CurrentProducingItem->SetStaticMesh(KrisSwordBlade);
-//		break;
-//	default:
-//		break;
-//	}*/
-//}
 
 void AForgeAnvil::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {

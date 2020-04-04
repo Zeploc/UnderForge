@@ -19,11 +19,17 @@ void AWorkBench::ProcessItem(class APickUpItem* Item)
 {
 	if (!CurrentItem)
 	{
-		CurrentItem = Item;
-		CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
-		CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
-		CurrentItem->ItemMesh->SetSimulatePhysics(false);
-		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
+		if (HasAuthority())
+		{
+			MULTI_NewItem(Item);
+		}
+		else
+		{
+			CurrentItem = Item;
+			CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
+			CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
+			CurrentItem->ItemMesh->SetSimulatePhysics(false);
+		}
 	}
 	else
 		ThrowAway(Item);
@@ -37,4 +43,15 @@ void AWorkBench::ItemPickedUp(APickUpItem * Item)
 		CurrentItem = nullptr;
 		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	}
+}
+
+void AWorkBench::MULTI_NewItem_Implementation(APickUpItem * Item)
+{
+	if (!Item)
+		return;
+	CurrentItem = Item;
+	CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
+	CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
+	CurrentItem->ItemMesh->SetSimulatePhysics(false);
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 }
