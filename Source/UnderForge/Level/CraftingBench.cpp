@@ -22,18 +22,6 @@ ACraftingBench::ACraftingBench()
 	ObjectPosition->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 }
 
-void ACraftingBench::ItemDectection(class AActor* OverlappActor, bool entering)
-{
-	if (AForgePart* Part = Cast<AForgePart>(OverlappActor))
-	{
-		if (!entering)
-		{
-			Part->CurrentStation = nullptr;
-			return;
-		}		
-		//Part->CurrentStation = this;
-	}	
-}
 
 bool ACraftingBench::CanTakePartItem(AForgePart * Part)
 {

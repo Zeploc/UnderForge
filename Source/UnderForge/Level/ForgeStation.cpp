@@ -33,6 +33,7 @@ AForgeStation::AForgeStation()
 	RefuseThrowDirection->SetupAttachment(StationMesh);
 
 	PotentiallyInteracting = false;
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -111,6 +112,7 @@ void AForgeStation::MorphStates(bool Next)
 
 void AForgeStation::MULTI_ProcessItem_Implementation(APickUpItem * Item)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString(HasAuthority() ? "Server: " : "Client: ") + FString("Multi process item"));
 	ProcessItem(Item);
 }
 

@@ -11,9 +11,11 @@
 #include "Items/ForgePart.h"
 #include "Player/ForgePlayer.h"
 
+#include "Engine.h"
+
 AWorkBench::AWorkBench()
 {
-
+	
 }
 
 bool AWorkBench::CanTakeItem(APickUpItem * Item)
@@ -71,6 +73,7 @@ void AWorkBench::MULTI_NewItem_Implementation(APickUpItem * Item)
 }
 void AWorkBench::SetCurrentItem(APickUpItem * Item)
 {
+
 	if (!Item)
 		return;
 	CurrentItem = Item;
