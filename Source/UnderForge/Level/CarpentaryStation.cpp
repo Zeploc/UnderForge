@@ -62,7 +62,7 @@ void ACarpentaryStation::Tick(float DeltaTime)
 	SpinningMinigame();
 }
 
-void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
+bool ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 {
 	if (material->ResourceType == EResource::R_WOOD && CurrentResource == EResource::R_NONE)
 	{
@@ -73,9 +73,13 @@ void ACarpentaryStation::ProcessMatItem(AForgeMat* material)
 		material->Destroy();
 		
 		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
+		return true;
 	}
 	else
-		ThrowAway(material);	
+	{
+		ThrowAway(material);
+		return false;
+	}
 }
 
 void ACarpentaryStation::Interacted(AForgePlayer * _Player)

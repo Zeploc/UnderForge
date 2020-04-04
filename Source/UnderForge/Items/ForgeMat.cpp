@@ -30,15 +30,15 @@ void AForgeMat::BeginPlay()
 	{
 		if (AForgePlayer* OwnerForgePlayer = Cast<AForgePlayer>(GetOwner()))
 		{
-			if (OwnerForgePlayer->HoldItem)
+			if (OwnerForgePlayer->GetHoldItem())
 			{
-				if (AForgeMat* HeldMat = Cast<AForgeMat>(OwnerForgePlayer->HoldItem))
+				if (AForgeMat* HeldMat = Cast<AForgeMat>(OwnerForgePlayer->GetHoldItem()))
 				{
 					if (HeldMat->ResourceType == ResourceType)
 					{
 						HeldMat->Destroy();
 						PickUp(OwnerForgePlayer);
-						OwnerForgePlayer->HoldItem = this;
+						OwnerForgePlayer->SetHoldItem(this);
 						
 					}
 				}

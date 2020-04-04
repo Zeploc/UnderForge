@@ -64,6 +64,10 @@ bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
 		//Interacted(_Player);
 		return true;
 	}
+	else
+	{
+		return Super::TryInteract(_Player);
+	}
 	return false;
 }
 
@@ -107,14 +111,14 @@ void AForgeAnvil::Tick(float DeltaTime)
 // TEMP
 #include "Engine.h"
 
-void AForgeAnvil::ProcessPartItem(AForgePart * Part)
+bool AForgeAnvil::ProcessPartItem(AForgePart * Part)
 {
 	if (!Part)
-		return;
+		return false;
 	if (Part->SwordPart != EWeaponPart::WP_NONE || !AvailableResourceTypes.Contains(Part->ResourceType) || bHammerMinigamePlaying)
 	{
 		ThrowAway(Part);
-		return;
+		return false;
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, TEXT("Part: " + Part->GetName()));
 	CurrentResource = Part->ResourceType;
@@ -122,6 +126,7 @@ void AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	bHammerMinigamePlaying = true;
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	Part->Destroy();
+	return true;
 }
 
 void AForgeAnvil::SERVER_InteractHit_Implementation(bool _Success)

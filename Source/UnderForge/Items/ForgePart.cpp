@@ -39,15 +39,15 @@ void AForgePart::BeginPlay()
 	{
 		if (AForgePlayer* OwnerForgePlayer = Cast<AForgePlayer>(GetOwner()))
 		{
-			if (OwnerForgePlayer->HoldItem)
+			if (OwnerForgePlayer->GetHoldItem())
 			{
-				if (AForgePart* HeldMat = Cast<AForgePart>(OwnerForgePlayer->HoldItem))
+				if (AForgePart* HeldMat = Cast<AForgePart>(OwnerForgePlayer->GetHoldItem()))
 				{
 					if (HeldMat->SwordPart == SwordPart)
 					{
 						HeldMat->Destroy();
 						PickUp(OwnerForgePlayer);
-						OwnerForgePlayer->HoldItem = this;
+						OwnerForgePlayer->SetHoldItem(this);
 					}
 				}
 			}

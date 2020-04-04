@@ -165,6 +165,8 @@ struct FResource
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* IconImage;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FVector4 Margin = FVector4(0.0f);
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class APickUpItem> ResourceClass;
 
 

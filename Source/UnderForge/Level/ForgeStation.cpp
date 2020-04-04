@@ -50,6 +50,16 @@ void AForgeStation::Tick(float DeltaTime)
 
 bool AForgeStation::TryInteract(AForgePlayer * _Player)
 {
+	if (_Player->GetHoldItem())
+	{
+		if (ProcessItem(_Player->GetHoldItem()))
+		{
+			_Player->ClearHoldItem();
+			return true;
+		}
+		return false;
+	}
+
 	if (!HasAuthority())
 		_Player->SERVER_InteractWith(this);
 
@@ -71,18 +81,27 @@ void AForgeStation::MULTI_ProcessItem_Implementation(APickUpItem * Item)
 	ProcessItem(Item);
 }
 
-void AForgeStation::ProcessItem(APickUpItem * Item)
+bool AForgeStation::ProcessItem(APickUpItem * Item)
 {
 	if (AForgeMat* mat = Cast<AForgeMat>(Item))
 	{
 		BI_OnProcessMatItem(mat);
-		ProcessMatItem(mat);
+		if (ProcessMatItem(mat))
+		{
+			Item->CurrentStation = this;
+			return true;
+		}
 	}
 	else if (AForgePart* part = Cast<AForgePart>(Item))
 	{
 		BI_OnProcessPartItem(part);
-		ProcessPartItem(part);
+		if (ProcessPartItem(part))
+		{
+			Item->CurrentStation = this;
+			return true;
+		}
 	}
+	return false;
 }
 
 void AForgeStation::ItemPickedUp(class APickUpItem* Item)
@@ -90,43 +109,45 @@ void AForgeStation::ItemPickedUp(class APickUpItem* Item)
 	BI_OnItemPickedUp(Item);
 }
 
-void AForgeStation::ProcessMatItem(AForgeMat * material)
+bool AForgeStation::ProcessMatItem(AForgeMat * material)
 {
 	ThrowAway(material);	
+	return false;
 }
 
-void AForgeStation::ProcessPartItem(AForgePart * Part)
+bool AForgeStation::ProcessPartItem(AForgePart * Part)
 {
 	ThrowAway(Part);
+	return false;
 }
 
 void AForgeStation::ItemDectection(AActor * actor, bool entering)
 {
-	if (AForgeMat* mat = Cast<AForgeMat>(actor))
+	if (APickUpItem* PickUp = Cast<APickUpItem>(actor))
 	{
-		if (entering)
-			mat->CurrentTouchingStation = this;
-		else
-			mat->CurrentTouchingStation = nullptr;
-	}
-	else if (AForgePart* part = Cast<AForgePart>(actor))
-	{
-		if (entering)
-			part->CurrentTouchingStation = this;
-		else
-			part->CurrentTouchingStation = nullptr;
-	}
+		//PickUp->CurrentStation = this;
+		if (!PickUp->HeldPlayer)
+		{
+			ProcessItem(PickUp);
+		}
+	}	
 }
 
-void AForgeStation::ThrowAway(AActor * Actor)
+void AForgeStation::ThrowAway(APickUpItem* PickUpItem)
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), FailInteractSound);
 	// YEET THAT BOI
-	if (!Actor) return;
-	if (UStaticMeshComponent* StaticMeshComp = Cast<UStaticMeshComponent>(Actor->GetComponentByClass(UStaticMeshComponent::StaticClass())))
+	if (!PickUpItem) return;
+	
+	PickUpItem->ItemMesh->SetSimulatePhysics(true);
+	PickUpItem->ItemMesh->AddImpulse(RefuseThrowDirection->GetForwardVector() * 1000.0f);
+	PickUpItem->CurrentStation = nullptr;
+	if (PickUpItem->HeldPlayer)
 	{
-		StaticMeshComp->SetSimulatePhysics(true);
-		StaticMeshComp->AddImpulse(RefuseThrowDirection->GetForwardVector() * 1000.0f);
+		// NOT NETWORKED
+		if (PickUpItem->HeldPlayer)
+			PickUpItem->HeldPlayer->ClearHoldItem();
+		PickUpItem->Drop();
 	}
 }
 

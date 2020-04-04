@@ -19,8 +19,10 @@ public:
 
 
 public:
-	virtual void ProcessItem(class APickUpItem* Item) override;
+	virtual bool ProcessItem(class APickUpItem* Item) override;
 	virtual void ItemPickedUp(class APickUpItem* Item) override;
+
+	void SetCurrentItem(APickUpItem * Item);
 
 protected:
 	UFUNCTION(NetMulticast, Reliable)

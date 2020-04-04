@@ -55,8 +55,11 @@ void APickUpItem::PickUp(AForgePlayer * NewPlayer)
 	SetActorRelativeTransform(AttachOffset);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
-	if (CurrentTouchingStation)
-		CurrentTouchingStation->ItemPickedUp(this);
+	if (CurrentStation)
+	{
+		CurrentStation->ItemPickedUp(this);
+		CurrentStation = nullptr;
+	}
 	BI_OnPickUp();
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Picked Up");
 }
@@ -69,10 +72,10 @@ void APickUpItem::Drop()
 
 	BI_OnDrop();
 
-	if (CurrentTouchingStation && HasAuthority())
+	/*if (CurrentStation && HasAuthority())
 	{
-		CurrentTouchingStation->MULTI_ProcessItem(this);
-	}
+		CurrentStation->MULTI_ProcessItem(this);
+	}*/
 	HeldPlayer = nullptr;
 }
 

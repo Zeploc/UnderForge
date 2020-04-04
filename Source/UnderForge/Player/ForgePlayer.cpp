@@ -81,8 +81,68 @@ bool AForgePlayer::Interact()
 	{
 		return Station->TryInteract(this);
 	}
-
 	return false;
+}
+
+void AForgePlayer::ClearHoldItem()
+{
+	if (HasAuthority())
+	{
+		MULTI_ClearHoldItem();
+	}
+	else
+	{
+		SERVER_ClearHoldItem();
+		MULTI_ClearHoldItem_Implementation();
+	}
+}
+
+void AForgePlayer::SERVER_ClearHoldItem_Implementation()
+{
+	MULTI_ClearHoldItem();
+}
+bool AForgePlayer::SERVER_ClearHoldItem_Validate()
+{
+	return true;
+}
+
+void AForgePlayer::MULTI_ClearHoldItem_Implementation()
+{
+	if (HoldItem)
+	{
+		if (HoldItem->IsAttachedTo(this))
+		{
+			HoldItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		}
+	}
+	HoldItem = nullptr;
+}
+
+void AForgePlayer::SetHoldItem(APickUpItem * PickUp)
+{
+	if (HasAuthority())
+	{
+		MULTI_SetHoldItem(PickUp);
+	}
+	else
+	{
+		SERVER_SetHoldItem(PickUp);
+		MULTI_SetHoldItem_Implementation(PickUp);
+	}
+}
+
+void AForgePlayer::SERVER_SetHoldItem_Implementation(APickUpItem * PickUp)
+{
+	MULTI_SetHoldItem(PickUp);
+}
+bool AForgePlayer::SERVER_SetHoldItem_Validate(APickUpItem * PickUp)
+{
+	return true;
+}
+
+void AForgePlayer::MULTI_SetHoldItem_Implementation(APickUpItem * PickUp)
+{
+	HoldItem = PickUp;
 }
 
 void AForgePlayer::SERVER_InteractWith_Implementation(AForgeStation * Station)
@@ -103,6 +163,7 @@ void AForgePlayer::CLIENT_PickUp_Implementation(APickUpItem * PickUp)
 	HoldItem = PickUp;
 }
 
+
 void AForgePlayer::SecondaryInteract()
 {
 	/*if (FindComponentByClass<UPhysicsHandleComponent>()->GetGrabbedComponent())
@@ -113,9 +174,9 @@ void AForgePlayer::SecondaryInteract()
 			{
 				if (AForgeMat* mat = Cast<AForgeMat>(item))
 				{
-					if (mat->CurrentTouchingStation && mat->ResourceType == EResource::R_WOOD)
+					if (mat->CurrentStation && mat->ResourceType == EResource::R_WOOD)
 					{
-						if (ACarpentaryStation* station = Cast<ACarpentaryStation>(mat->CurrentTouchingStation))
+						if (ACarpentaryStation* station = Cast<ACarpentaryStation>(mat->CurrentStation))
 						{
 							station->MorphStates();
 						}

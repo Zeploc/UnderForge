@@ -49,21 +49,21 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MULTI_ProcessItem(class APickUpItem* Item);
-	virtual void ProcessItem(class APickUpItem* Item);
+	virtual bool ProcessItem(class APickUpItem* Item);
 
 	virtual void ItemPickedUp(class APickUpItem* Item);
 	UFUNCTION(BlueprintImplementableEvent)
 		void BI_OnItemPickedUp(class APickUpItem* Item);
 
-	virtual void ProcessMatItem(AForgeMat* material);
+	virtual bool ProcessMatItem(AForgeMat* material);
 	UFUNCTION(BlueprintImplementableEvent)
 	void BI_OnProcessMatItem(AForgeMat* material);
-	virtual void ProcessPartItem(AForgePart* Part);
+	virtual bool ProcessPartItem(AForgePart* Part);
 	UFUNCTION(BlueprintImplementableEvent)
 	void BI_OnProcessPartItem(AForgePart* Part);
 	virtual void ItemDectection(class AActor*, bool entering);
 	UFUNCTION(BlueprintCallable)
-		void ThrowAway(AActor* Actor);
+		void ThrowAway(APickUpItem* PickUpItem);
 
 	UFUNCTION(BlueprintCallable)
 		virtual void SetPotentiallyInteracting(bool _PotentiallyInteracting);

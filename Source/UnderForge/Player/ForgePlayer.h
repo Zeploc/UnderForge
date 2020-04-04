@@ -43,6 +43,23 @@ public:
 		void CLIENT_PickUp(class APickUpItem* PickUp);
 
 	UFUNCTION(BlueprintCallable)
+	void ClearHoldItem();
+	UFUNCTION(Server, WithValidation, Reliable)
+		void SERVER_ClearHoldItem();
+	UFUNCTION(NetMulticast, Reliable)
+		void MULTI_ClearHoldItem();
+
+	APickUpItem* GetHoldItem() { return HoldItem;  };
+
+	UFUNCTION(BlueprintCallable)
+	void SetHoldItem(class APickUpItem* PickUp);
+	UFUNCTION(Server, WithValidation, Reliable)
+		void SERVER_SetHoldItem(class APickUpItem* PickUp);
+	UFUNCTION(NetMulticast, Reliable)
+		void MULTI_SetHoldItem(class APickUpItem* PickUp);
+
+
+	UFUNCTION(BlueprintCallable)
 		void SecondaryInteract();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InteractRange = 100.0f;
@@ -59,8 +76,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USoundBase* Attack3;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class APickUpItem* HoldItem;
 
 	UFUNCTION(BlueprintPure)
 		bool HoldingWeapon();
@@ -75,4 +90,8 @@ public:
 		void SetYValue(float y);
 	float CurrentX;
 	float CurrentY;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class APickUpItem* HoldItem;
 };

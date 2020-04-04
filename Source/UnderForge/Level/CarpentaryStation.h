@@ -24,7 +24,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void ProcessMatItem(AForgeMat* material) override;
+	virtual bool ProcessMatItem(AForgeMat* material) override;
 
 	virtual void Interacted(class AForgePlayer* _Player) override;
 

@@ -45,7 +45,7 @@ public:
 		class AForgePlayer* HeldPlayer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class AForgeStation* CurrentTouchingStation;
+		class AForgeStation* CurrentStation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EPickUpType PickUpType;

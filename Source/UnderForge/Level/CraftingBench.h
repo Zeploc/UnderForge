@@ -20,7 +20,7 @@ public:
 	ACraftingBench();
 
 	virtual void ItemDectection(class AActor* OverlappActor, bool entering) override;
-	virtual void ProcessPartItem(AForgePart* Part) override;
+	virtual bool ProcessPartItem(AForgePart* Part) override;
 
 	UFUNCTION(BlueprintCallable)
 		void S_Disassemble();

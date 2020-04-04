@@ -9,30 +9,40 @@
 
 #include "Items/ForgeMat.h"
 #include "Items/ForgePart.h"
+#include "Player/ForgePlayer.h"
 
 AWorkBench::AWorkBench()
 {
 
 }
 
-void AWorkBench::ProcessItem(class APickUpItem* Item)
+bool AWorkBench::ProcessItem(class APickUpItem* Item)
 {
 	if (!CurrentItem)
 	{
 		if (HasAuthority())
 		{
 			MULTI_NewItem(Item);
+			if (CurrentItem->HeldPlayer)
+			{
+				CurrentItem->HeldPlayer->ClearHoldItem();
+			}
 		}
 		else
 		{
-			CurrentItem = Item;
-			CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
-			CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
-			CurrentItem->ItemMesh->SetSimulatePhysics(false);
+			SetCurrentItem(Item);
+			if (CurrentItem->HeldPlayer)
+			{
+				CurrentItem->HeldPlayer->ClearHoldItem();
+			}
 		}
 	}
 	else
+	{
 		ThrowAway(Item);
+		return false;
+	}
+	return true;
 }
 
 void AWorkBench::ItemPickedUp(APickUpItem * Item)
@@ -49,9 +59,18 @@ void AWorkBench::MULTI_NewItem_Implementation(APickUpItem * Item)
 {
 	if (!Item)
 		return;
+
+	SetCurrentItem(Item);
+	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
+}
+void AWorkBench::SetCurrentItem(APickUpItem * Item)
+{
 	CurrentItem = Item;
 	CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
 	CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
+	CurrentItem->HeldPlayer = nullptr;
 	CurrentItem->ItemMesh->SetSimulatePhysics(false);
-	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
+	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+	CurrentItem->CurrentStation = this;
 }

@@ -58,17 +58,17 @@ void ASmeltery::Tick(float DeltaTime)
 
 bool ASmeltery::TryInteract(AForgePlayer * _Player)
 {
+	return Super::TryInteract(_Player);
 	//UE_LOG(LogTemp, Warning, TEXT("Minigame Start"));
 	if (bSmeltingMinigamePlaying)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Minigame Interact"));
-		return Super::TryInteract(_Player);
 		//smelty->MiniGameComplete();
 	}
 	return false;
 }
 
-void ASmeltery::ProcessMatItem(AForgeMat* material)
+bool ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	bool bCanHaveResource = false;
 	
@@ -89,11 +89,11 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 	if (!bCanHaveResource)
 	{
 		ThrowAway(material);
-		return;
+		return false;
 	}
 
 	if (!HasAuthority())
-		return;
+		return false;
 	//MULTI_ChangeResource_Implementation(material->ResourceType, true);
 	SERVER_ChangeResource(material->ResourceType, true);
 
@@ -103,6 +103,7 @@ void ASmeltery::ProcessMatItem(AForgeMat* material)
 	}
 
 	material->Destroy();
+	return true;
 	
 }
 void ASmeltery::Interacted(AForgePlayer * _Player)
@@ -115,12 +116,15 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 
 	if (SmeltingTimePassed < CurrentRecipeSmeltingTimeNeeded)
 	{
-		// Early removal, give ores back
-		for (EResource Resource : CurrentRecipe->Resources)
+		if (CurrentRecipe)
 		{
-			if (CurrentlyProcessing.Contains(Resource))
+			// Early removal, give ores back
+			for (EResource Resource : CurrentRecipe->Resources)
 			{
-				MakeMat(Resource);
+				if (CurrentlyProcessing.Contains(Resource))
+				{
+					MakeMat(Resource);
+				}
 			}
 		}
 	}

@@ -28,19 +28,19 @@ void ACraftingBench::ItemDectection(class AActor* OverlappActor, bool entering)
 	{
 		if (!entering)
 		{
-			Part->CurrentTouchingStation = nullptr;
+			Part->CurrentStation = nullptr;
 			return;
 		}		
-		Part->CurrentTouchingStation = this;
+		//Part->CurrentStation = this;
 	}	
 }
 
-void ACraftingBench::ProcessPartItem(AForgePart * Part)
+bool ACraftingBench::ProcessPartItem(AForgePart * Part)
 {
 	if (Part->SwordPart == EWeaponPart::WP_NONE) // Check if its not a valid part
 	{
 		ThrowAway(Part); // if it does throw it away
-		return; // Stop checking
+		return false; // Stop checking
 	}
 	if (CurrentItem == nullptr) // No current item/parts
 	{
@@ -79,9 +79,11 @@ void ACraftingBench::ProcessPartItem(AForgePart * Part)
 		else
 		{
 			ThrowAway(Part); // if it does throw it away
-			return; // Stop checking
+			return false; // Stop checking
 		}
 	}	
+
+	return true;
 }
 void ACraftingBench::S_Disassemble()
 {

@@ -42,7 +42,7 @@ void AResourcePile::Interacted(AForgePlayer * _Player)
 		if (CreatedResource)
 		{
 			CreatedResource->PickUp(_Player);
-			_Player->HoldItem = CreatedResource;
+			_Player->SetHoldItem(CreatedResource);
 		}
 		//_Player->CLIENT_PickUp(CreatedResource);
 	//}
