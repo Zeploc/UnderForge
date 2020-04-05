@@ -162,7 +162,7 @@ void AForgeStation::ItemDectection(AActor * actor, bool entering)
 		if (entering)
 		{
 			//PickUp->CurrentStation = this;
-			if (!PickUp->HeldPlayer && HasAuthority())
+			if (!PickUp->HeldPlayer && !PickUp->CurrentStation && HasAuthority())
 			{
 				if (CanTakeItem(PickUp))
 					MULTI_ProcessItem(PickUp);
