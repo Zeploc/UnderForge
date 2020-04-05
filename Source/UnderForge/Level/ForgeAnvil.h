@@ -98,7 +98,8 @@ public:
 		EResource CurrentResource;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<EResource> AvailableResourceTypes;
+		// Available resourcs and the amount of hits to create
+	TMap<EResource, int> AvailableResourceTypes;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bHammerMinigamePlaying;
