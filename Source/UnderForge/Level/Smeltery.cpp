@@ -81,6 +81,8 @@ bool ASmeltery::CanTakeMatItem(AForgeMat * material)
 
 bool ASmeltery::ProcessMatItem(AForgeMat* material)
 {
+	if (!material)
+		return false;
 	bool bCanHaveResource = false;
 	
 	FIngotRecipe FoundRecipie;
@@ -101,6 +103,10 @@ bool ASmeltery::ProcessMatItem(AForgeMat* material)
 	{
 		ThrowAway(material);
 		return false;
+	}
+	if (material->HeldPlayer)
+	{
+		material->HeldPlayer->LocalClearHoldItem();
 	}
 
 	if (!HasAuthority())

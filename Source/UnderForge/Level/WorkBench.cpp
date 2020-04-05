@@ -80,8 +80,8 @@ void AWorkBench::SetCurrentItem(APickUpItem * Item)
 	if (CurrentItem->HeldPlayer)
 	{
 		CurrentItem->HeldPlayer->LocalClearHoldItem();
-		CurrentItem->HeldPlayer = nullptr;
 	}
+	CurrentItem->HeldPlayer = nullptr;
 	CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
 	CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
 	CurrentItem->ItemMesh->SetSimulatePhysics(false);

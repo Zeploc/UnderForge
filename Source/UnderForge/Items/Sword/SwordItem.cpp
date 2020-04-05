@@ -35,7 +35,7 @@ void ASwordItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (WeaponType != EWeapon::W_NONE)// && HasAuthority())
+	if (WeaponType == EWeapon::W_TRAININGSWORD)// && HasAuthority())
 	{
 		SetUpWeapon(WeaponType);
 	}
@@ -115,7 +115,7 @@ bool ASwordItem::AddPart(EWeaponPart PartToAdd)
 
 	// Add part and mesh
 	ForgeParts.Add(PartToAdd); // Add the part
-	AddPartMesh(PartToAdd, FName(TEXT("Part %d"), ForgeParts.Num()));
+	AddPartMesh(PartToAdd, FName(*FString::Printf(TEXT("Part %d"), ForgeParts.Num())));
 
 	// Checks
 	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);

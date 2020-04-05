@@ -176,6 +176,7 @@ UENUM(BlueprintType)
 enum class EWeapon : uint8
 {
 	W_NONE UMETA(DisplayName = "None"),
+	W_TRAININGSWORD UMETA(DisplayName = "Training Sword"),
 	W_DAGGER UMETA(DisplayName = "Dagger"),
 	W_BROADSWORD UMETA(DisplayName = "Broad Sword"),
 	W_AXE UMETA(DisplayName = "Axe"),

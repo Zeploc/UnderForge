@@ -159,11 +159,14 @@ void AForgeStation::ItemDectection(AActor * actor, bool entering)
 {
 	if (APickUpItem* PickUp = Cast<APickUpItem>(actor))
 	{
-		//PickUp->CurrentStation = this;
-		if (!PickUp->HeldPlayer && HasAuthority())
+		if (entering)
 		{
-			if (CanTakeItem(PickUp))
-				MULTI_ProcessItem(PickUp);
+			//PickUp->CurrentStation = this;
+			if (!PickUp->HeldPlayer && HasAuthority())
+			{
+				if (CanTakeItem(PickUp))
+					MULTI_ProcessItem(PickUp);
+			}
 		}
 	}	
 }

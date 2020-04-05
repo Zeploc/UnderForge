@@ -40,7 +40,12 @@ AForgeAnvil::AForgeAnvil()
 
 	PotentiallyInteracting = false;
 
-	AvailableResourceTypes = { EResource::R_IRONINGOT, EResource::R_STEELINGOT, EResource::R_BRONZEINGOT, EResource::R_COPPERINGOT, EResource::R_GOLDINGOT, EResource::R_SILVERINGOT, EResource::R_TININGOT };
+	TArray< EResource> ResourceTypes = { EResource::R_IRONINGOT, EResource::R_STEELINGOT, EResource::R_BRONZEINGOT, EResource::R_COPPERINGOT, EResource::R_GOLDINGOT, EResource::R_SILVERINGOT, EResource::R_TININGOT };
+	for (EResource Resource : ResourceTypes)
+	{
+		AvailableResourceTypes.Add(Resource, 5);
+	}
+	 
 }
 void AForgeAnvil::BeginPlay()
 {
@@ -126,6 +131,9 @@ bool AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	CurrentResource = Part->ResourceType;
 	RandomiseRange();
 	bHammerMinigamePlaying = true;
+	int* NewCount = AvailableResourceTypes.Find(CurrentResource);
+	if (NewCount)
+		OrbCount = *NewCount;
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	Part->Destroy();
 	return true;
