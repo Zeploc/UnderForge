@@ -20,14 +20,14 @@ AWorkBench::AWorkBench()
 
 bool AWorkBench::CanTakeItem(APickUpItem * Item)
 {
-	if (!CurrentItem)
+	if (!CurrentItem && Item)
 		return true;
 	return false;
 }
 
 void AWorkBench::ProcessItem(class APickUpItem* Item)
 {
-	if (!CurrentItem)
+	if (!CurrentItem && Item)
 	{
 		SetCurrentItem(Item);
 		//if (HasAuthority())
@@ -59,6 +59,7 @@ void AWorkBench::ItemPickedUp(APickUpItem * Item)
 	Super::ItemPickedUp(Item);
 	if (Item == CurrentItem)
 	{
+		CurrentItem->ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		CurrentItem = nullptr;
 		UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	}
@@ -73,7 +74,6 @@ void AWorkBench::MULTI_NewItem_Implementation(APickUpItem * Item)
 }
 void AWorkBench::SetCurrentItem(APickUpItem * Item)
 {
-
 	if (!Item)
 		return;
 	CurrentItem = Item;
@@ -85,6 +85,7 @@ void AWorkBench::SetCurrentItem(APickUpItem * Item)
 	CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
 	CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
 	CurrentItem->ItemMesh->SetSimulatePhysics(false);
+	CurrentItem->ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	CurrentItem->CurrentStation = this;
