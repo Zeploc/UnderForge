@@ -244,6 +244,7 @@ void ASwordItem::ClearCurrentParts()
 void ASwordItem::SetWeaponType(EWeapon _Weapon)
 {
 	WeaponType = _Weapon;
+	BI_OnSetWeaponType(_Weapon);
 	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
 	if (!GameSingleton)
 		return;

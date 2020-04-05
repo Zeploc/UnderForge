@@ -155,6 +155,8 @@ struct FWeapon
 		TArray<FAttack> Attacks;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TMap<EWeaponPart, FAltPart> AltParts;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int MaxDurability = 20;
 };
 
 USTRUCT(BlueprintType)
@@ -168,7 +170,6 @@ struct FResource
 		FVector4 Margin = FVector4(0.0f);
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class APickUpItem> ResourceClass;
-
 
 };
 

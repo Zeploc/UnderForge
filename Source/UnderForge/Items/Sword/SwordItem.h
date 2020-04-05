@@ -36,6 +36,8 @@ public:
 	void ClearCurrentParts();
 
 	void SetWeaponType(EWeapon _Weapon);
+	UFUNCTION(BlueprintImplementableEvent)
+	void BI_OnSetWeaponType(EWeapon _Weapon);
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
