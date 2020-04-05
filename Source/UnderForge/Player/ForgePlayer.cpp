@@ -73,10 +73,15 @@ void AForgePlayer::MoveUp(float Value)
 bool AForgePlayer::Interact()
 {
 	FHitResult hit;
-	FVector EndLocation = GetActorLocation() + GetActorRotation().Vector() * InteractRange;
+	FVector EndLocation = GetActorLocation() + GetActorForwardVector() * InteractRange;
 	FCollisionQueryParams Traceparams(TEXT("Interact Trace"), false, this);
 	GetWorld()->LineTraceSingleByChannel(hit, GetActorLocation(), EndLocation, ECC_Station, Traceparams);
 	UE_LOG(LogTemp, Warning, TEXT("Interact"));
+
+	if (hit.bBlockingHit)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "Interact hit " + hit.Actor->GetName());
+	}
 	if (AForgeStation* Station = Cast<AForgeStation>(hit.Actor))
 	{
 		return Station->TryInteract(this);

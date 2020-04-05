@@ -30,6 +30,7 @@ protected:
 		void MULTI_NewItem(class APickUpItem* Item);
 
 public:
-	class APickUpItem* CurrentItem;
+	UPROPERTY(BlueprintReadWrite)
+		class APickUpItem* CurrentItem;
 protected:
 };

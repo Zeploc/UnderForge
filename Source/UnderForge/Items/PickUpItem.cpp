@@ -20,7 +20,7 @@ APickUpItem::APickUpItem()
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	RootComponent = ItemMesh;
 	ItemMesh->SetSimulatePhysics(true);
-	ItemMesh->SetCollisionProfileName("PhysicsActor");
+	ItemMesh->SetCollisionProfileName("Pickup");
 	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	ItemMesh->SetRenderCustomDepth(true);

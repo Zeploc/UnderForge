@@ -14,7 +14,9 @@ class UNDERFORGE_API AServingBench : public AForgeStation
 {
 	GENERATED_BODY()
 	
-	virtual void ItemDectection(class AActor* Item, bool entering) override;
+	//virtual void ItemDectection(class AActor* Item, bool entering) override;
+	virtual bool CanTakeItem(class APickUpItem* Item) override;
+	virtual void ProcessItem(class APickUpItem* Item) override;
 
 public:
 	UFUNCTION(BlueprintImplementableEvent)

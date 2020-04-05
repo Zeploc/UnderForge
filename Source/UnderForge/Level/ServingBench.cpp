@@ -7,15 +7,31 @@
 
 #include "Engine/World.h"
 
-void AServingBench::ItemDectection(AActor* Item, bool entering)
+//void AServingBench::ItemDectection(AActor* Item, bool entering)
+//{
+//	if (entering)
+//	{
+//		if (AForgeItem* ForgeItem = Cast<AForgeItem>(Item))
+//		{
+//			ForgeItems.Add(ForgeItem);
+//			ForgeItem->ItemMesh->SetSimulatePhysics(false);
+//			NewItem(ForgeItem);
+//		}
+//	}
+//}
+
+bool AServingBench::CanTakeItem(APickUpItem * Item)
 {
-	if (entering)
+	return Item->PickUpType == EPickUpType::PT_WEAPON;
+}
+
+void AServingBench::ProcessItem(APickUpItem * Item)
+{
+	if (AForgeItem* ForgeItem = Cast<AForgeItem>(Item))
 	{
-		if (AForgeItem* ForgeItem = Cast<AForgeItem>(Item))
-		{
-			ForgeItems.Add(ForgeItem);
-			ForgeItem->ItemMesh->SetSimulatePhysics(false);
-			NewItem(ForgeItem);
-		}
+		ForgeItems.Add(ForgeItem);
+		ForgeItem->ItemMesh->SetSimulatePhysics(false);
+		NewItem(ForgeItem);
 	}
 }
+
