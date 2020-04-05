@@ -212,6 +212,7 @@ void ASwordItem::AddPartMesh(EWeaponPart WeaponPart, const FName PartName)
 
 	NewMeshComp->AttachToComponent(ItemMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	NewMeshComp->SetRelativeTransform(FoundWeaponPart->Offset);
+	NewMeshComp->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
 	PartComponents.Add(WeaponPart, NewMeshComp);
 }
 
