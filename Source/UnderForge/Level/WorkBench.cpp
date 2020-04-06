@@ -83,11 +83,11 @@ void AWorkBench::SetCurrentItem(APickUpItem * Item)
 	}
 	CurrentItem->HeldPlayer = nullptr;
 	CurrentItem->CurrentStation = this;
+	CurrentItem->ItemMesh->SetSimulatePhysics(false);
 	CurrentItem->ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	//CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	CurrentItem->ItemMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	CurrentItem->SetActorLocation(ObjectPosition->GetComponentLocation());
 	CurrentItem->SetActorRotation(ObjectPosition->GetComponentRotation());
-	CurrentItem->ItemMesh->SetSimulatePhysics(false);
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 }
