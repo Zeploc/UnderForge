@@ -90,7 +90,10 @@ public:
 		void SetXValue(float x);
 	UFUNCTION(BlueprintCallable)
 		void SetYValue(float y);
+
+	UPROPERTY(BlueprintReadOnly)
 	float CurrentX;
+	UPROPERTY(BlueprintReadOnly)
 	float CurrentY;
 
 protected:
