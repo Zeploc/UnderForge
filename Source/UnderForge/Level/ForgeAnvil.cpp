@@ -51,7 +51,6 @@ void AForgeAnvil::BeginPlay()
 {
 	Super::BeginPlay();
 	//CurrentProducingItem->SetStaticMesh(BroadswordBlade);
-	InteractTimer = 0;
 
 	CurrentOrb = 0;// OrbCount / 2;
 }

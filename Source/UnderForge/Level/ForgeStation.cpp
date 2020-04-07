@@ -32,7 +32,7 @@ AForgeStation::AForgeStation()
 	RefuseThrowDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("Refuse Throw Direction"));
 	RefuseThrowDirection->SetupAttachment(StationMesh);
 
-	StationMesh->bRednerCustomDepthPass = true;
+	StationMesh->bRenderCustomDepth = true;
 
 	PotentiallyInteracting = false;
 	bReplicates = true;
@@ -42,7 +42,6 @@ AForgeStation::AForgeStation()
 void AForgeStation::BeginPlay()
 {
 	Super::BeginPlay();
-	InteractTimer = 0;
 }
 
 // Called every frame

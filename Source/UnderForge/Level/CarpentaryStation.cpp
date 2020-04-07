@@ -50,7 +50,6 @@ void ACarpentaryStation::BeginPlay()
 {
 	Super::BeginPlay();
 	//CurrentProducingItem->SetStaticMesh(BroadSwordHandle);
-	InteractTimer = 0;
 }
 
 // Called every frame

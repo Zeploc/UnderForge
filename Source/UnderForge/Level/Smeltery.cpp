@@ -44,7 +44,6 @@ void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
 	//CurrentProducingItem->SetStaticMesh(IronIngot);
-	InteractTimer = 0;
 }
 
 // Called every frame
