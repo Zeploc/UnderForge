@@ -54,7 +54,7 @@ bool ACraftingBench::ProcessPartItem(AForgePart * Part)
 		else
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "All: New Item");
 		Part->Destroy();
-		//UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
+		UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 	}
 	else // item exists, check valid part
 	{
@@ -73,7 +73,7 @@ bool ACraftingBench::ProcessPartItem(AForgePart * Part)
 			else
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, "All: Add Part");
 			Part->Destroy(); // Destroy part actor
-			//UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
+			UGameplayStatics::PlaySound2D(GetWorld(), NewItemAddedSound);
 		}
 		else
 		{

@@ -56,10 +56,6 @@ public:
 	static EWeaponPart FindPartFromResource(EResource _Resource);
 			
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* CurrentProducingItem;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class USceneComponent* Rotator;
 	
 	
 	bool PotentiallyInteracting;

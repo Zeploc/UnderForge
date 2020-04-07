@@ -172,6 +172,8 @@ struct FResource
 		FVector4 Margin = FVector4(0.0f);
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class APickUpItem> ResourceClass;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UStaticMesh* ResourceMesh;
 
 };
 
