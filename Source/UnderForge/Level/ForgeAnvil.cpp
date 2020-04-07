@@ -19,16 +19,8 @@ AForgeAnvil::AForgeAnvil()
 {
 
 	bHammerMinigamePlaying = false;
-	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
-	Rotator->SetupAttachment(StationMesh);
-	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
 	
-	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh3"));
-	CurrentProducingItem->SetupAttachment(Rotator);
-	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	CurrentProducingItem->SetVisibility(true, false);
 
-	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 	//CurrentState =  EBladeType::BT_BROADSWORD;
 	OutputName = FString("Broad Blade");
 	CurrentResource = EResource::R_NONE;//EBladeMat::BM_NONE;
@@ -53,6 +45,7 @@ void AForgeAnvil::BeginPlay()
 	//CurrentProducingItem->SetStaticMesh(BroadswordBlade);
 
 	CurrentOrb = 0;// OrbCount / 2;
+	ProducingItem->SetVisibility(false);
 }
 bool AForgeAnvil::TryInteract(AForgePlayer * _Player)
 {
@@ -108,8 +101,6 @@ void AForgeAnvil::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	HammeringMinigame(DeltaTime);
-	FRotator rotate(0, 1,0);
-	Rotator->AddWorldRotation(rotate);
 }
 
 // TEMP
@@ -135,6 +126,18 @@ bool AForgeAnvil::ProcessPartItem(AForgePart * Part)
 		OrbCount = *NewCount;
 	UGameplayStatics::PlaySound2D(GetWorld(), SuccessInteractSound);
 	Part->Destroy();
+
+	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+	if (!GameSingleton)
+		return true;
+
+	FResource* FoundWeaponPart = GameSingleton->Resources.Find(CurrentResource);
+	if (!FoundWeaponPart)
+		return true;
+
+	ProducingItem->SetStaticMesh(FoundWeaponPart->ResourceMesh);
+	ProducingItem->SetVisibility(true);
+
 	return true;
 }
 
@@ -160,6 +163,7 @@ void AForgeAnvil::MULTI_InteractHit_Implementation(bool _Success)
 		{
 			if (HasAuthority())
 				MakeResource(CurrentResource);
+			ProducingItem->SetVisibility(false);
 
 			CurrentOrb = 0;// OrbCount / 2;
 			bHammerMinigamePlaying = false;

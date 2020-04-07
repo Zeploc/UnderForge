@@ -29,16 +29,7 @@ ACarpentaryStation::ACarpentaryStation()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
-	Rotator->SetupAttachment(StationMesh);
-	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
-	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
-
-	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
-	CurrentProducingItem->SetupAttachment(Rotator);
-	CurrentProducingItem->SetRelativeLocation(FVector(0.0f,0.0f,0.0f));
-	CurrentProducingItem->SetVisibility(true, false);
+		
 	CurrentResource = EResource::R_NONE;
 	OutputName = FString("Rough Hilt");
 	PotentiallyInteracting = false;
@@ -56,8 +47,6 @@ void ACarpentaryStation::BeginPlay()
 void ACarpentaryStation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FRotator rotate(0,1,0);
-	Rotator->AddWorldRotation(rotate);
 	SpinningMinigame();
 }
 

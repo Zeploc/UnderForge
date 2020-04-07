@@ -39,12 +39,7 @@ public:
 		class AForgePart* MakeResource(EResource type);
 	UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
 		void SERVER_MakeResource(EResource type);
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* CurrentProducingItem;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class USceneComponent* Rotator;
-
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EResource CurrentResource;

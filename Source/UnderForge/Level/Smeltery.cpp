@@ -24,15 +24,6 @@ ASmeltery::ASmeltery()
 	CurrentRecipeSmeltingTimeNeeded = 5.0f;
 	SmeltingTimeMax = 8.0f;
 
-	Rotator = CreateDefaultSubobject<USceneComponent>(TEXT("Rotating"));
-	Rotator->SetupAttachment(StationMesh);
-	Rotator->SetRelativeLocation(StationMesh->RelativeLocation);
-	Rotator->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
-
-	CurrentProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Station Mesh2"));
-	CurrentProducingItem->SetupAttachment(Rotator);
-	CurrentProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	CurrentProducingItem->SetVisibility(true, false);
 	CurrentState = EResource::R_IRONINGOT;
 	OutputName = FString("Iron Ingot");
 
@@ -51,8 +42,6 @@ void ASmeltery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	ProcessSmelting(DeltaTime);
-	FRotator rotate(0, 1, 0);
-	Rotator->AddWorldRotation(rotate);
 }
 
 bool ASmeltery::TryInteract(AForgePlayer * _Player)

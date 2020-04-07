@@ -31,6 +31,12 @@ AForgeStation::AForgeStation()
 
 	RefuseThrowDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("Refuse Throw Direction"));
 	RefuseThrowDirection->SetupAttachment(StationMesh);
+	
+	ProducingItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Current Producing Item Mesh"));
+	ProducingItem->SetupAttachment(RootComponent);
+	ProducingItem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	ProducingItem->SetVisibility(true, false);
+	ProducingItem->SetCollisionProfileName("NoCollision");
 
 	StationMesh->bRenderCustomDepth = true;
 

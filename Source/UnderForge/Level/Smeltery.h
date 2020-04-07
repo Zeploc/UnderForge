@@ -110,12 +110,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void RestartHealth();
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class UStaticMeshComponent* CurrentProducingItem;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-		class USceneComponent* Rotator;
-	
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EResource CurrentState;
 
