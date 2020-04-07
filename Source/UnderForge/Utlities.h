@@ -157,6 +157,8 @@ struct FWeapon
 		TMap<EWeaponPart, FAltPart> AltParts;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		int MaxDurability = 20;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool bUsedAsOrder = true;
 };
 
 USTRUCT(BlueprintType)
