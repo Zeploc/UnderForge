@@ -78,10 +78,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UArrowComponent* RefuseThrowDirection;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float InteractTimer;
-
+	
 
 	UPROPERTY(EditDefaultsOnly, Category = Sounds)
 		class USoundBase* SuccessInteractSound;

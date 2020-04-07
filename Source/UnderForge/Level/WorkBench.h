@@ -32,5 +32,7 @@ protected:
 public:
 	UPROPERTY(BlueprintReadWrite)
 		class APickUpItem* CurrentItem;
+	UPROPERTY(EditDefaultsOnly)
+		TArray<EPickUpType> ValidTypes;
 protected:
 };

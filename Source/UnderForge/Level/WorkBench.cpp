@@ -15,13 +15,16 @@
 
 AWorkBench::AWorkBench()
 {
-	
+	ValidTypes = { EPickUpType::PT_MAT, EPickUpType::PT_PART, EPickUpType::PT_WEAPON, EPickUpType::PT_TOOL };
 }
 
 bool AWorkBench::CanTakeItem(APickUpItem * Item)
 {
 	if (!CurrentItem && Item)
-		return true;
+	{
+		if (ValidTypes.Contains(Item->PickUpType))
+			return true;
+	}
 	return false;
 }
 

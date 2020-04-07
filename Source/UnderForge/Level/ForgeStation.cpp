@@ -32,6 +32,8 @@ AForgeStation::AForgeStation()
 	RefuseThrowDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("Refuse Throw Direction"));
 	RefuseThrowDirection->SetupAttachment(StationMesh);
 
+	StationMesh->bRednerCustomDepthPass = true;
+
 	PotentiallyInteracting = false;
 	bReplicates = true;
 }
