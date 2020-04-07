@@ -131,11 +131,11 @@ bool AForgeAnvil::ProcessPartItem(AForgePart * Part)
 	if (!GameSingleton)
 		return true;
 
-	FResource* FoundWeaponPart = GameSingleton->Resources.Find(CurrentResource);
-	if (!FoundWeaponPart)
+	FResource* FoundResource = GameSingleton->Resources.Find(CurrentResource);
+	if (!FoundResource)
 		return true;
 
-	ProducingItem->SetStaticMesh(FoundWeaponPart->ResourceMesh);
+	ProducingItem->SetStaticMesh(FoundResource->ResourceMesh);
 	ProducingItem->SetVisibility(true);
 
 	return true;

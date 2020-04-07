@@ -34,6 +34,7 @@ public:
 	virtual bool TryInteract(class AForgePlayer* _Player) override;
 	virtual void Interacted(class AForgePlayer* _Player) override;
 
+	virtual void ItemPickedUp(class APickUpItem* Item) override;
 
 	virtual bool CanTakeMatItem(class AForgeMat* material);
 	virtual bool ProcessMatItem(AForgeMat* material) override;
@@ -53,6 +54,8 @@ public:
 		void SERVER_ChangeResource(EResource _ResourceChange, bool _Add = true);
 	UFUNCTION(NetMulticast, reliable)
 		void MULTI_ChangeResource(EResource _ResourceChange, bool _Add = true);
+
+	void RecipeComplete();
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void BI_OnNewResource(EResource _Resource);
@@ -90,8 +93,14 @@ public:
 
 	FIngotRecipe* CurrentRecipe;
 
+	TArray<AForgeMat*> RejectedOres;
+	bool RejectingOres = false;
+
 	UPROPERTY(BlueprintReadWrite)
 	EResource CurrentResourceCreating = EResource::R_NONE;
+
+	UPROPERTY(BlueprintReadWrite)
+		class AForgePart* CurrentIngot;
 
 	FTimerHandle timer;
 

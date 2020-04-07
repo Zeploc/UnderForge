@@ -34,7 +34,7 @@ ASmeltery::ASmeltery()
 void ASmeltery::BeginPlay()
 {
 	Super::BeginPlay();
-	//CurrentProducingItem->SetStaticMesh(IronIngot);
+	ProducingItem->SetVisibility(false);
 }
 
 // Called every frame
@@ -58,6 +58,8 @@ bool ASmeltery::TryInteract(AForgePlayer * _Player)
 
 bool ASmeltery::CanTakeMatItem(AForgeMat * material)
 {
+	if (RejectedOres.Contains(material) || RejectingOres)
+		return false;
 	FIngotRecipe FoundRecipie;
 	if (CanHaveResource(material->ResourceType, FoundRecipie))
 		return true;
@@ -71,6 +73,8 @@ bool ASmeltery::ProcessMatItem(AForgeMat* material)
 {
 	if (!material)
 		return false;
+
+
 	bool bCanHaveResource = false;
 	
 	FIngotRecipe FoundRecipie;
@@ -92,10 +96,31 @@ bool ASmeltery::ProcessMatItem(AForgeMat* material)
 		ThrowAway(material);
 		return false;
 	}
+	if (RejectedOres.Contains(material) || RejectingOres)
+	{
+		ThrowAway(material);
+		return false;
+	}
+
 	if (material->HeldPlayer)
 	{
 		material->HeldPlayer->LocalClearHoldItem();
 	}
+
+	if (material->ResourceType != EResource::R_COAL)
+	{
+		UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
+		if (!GameSingleton)
+			return true;
+
+		FResource* FoundResource = GameSingleton->Resources.Find(material->ResourceType);
+		if (FoundResource)
+		{
+			ProducingItem->SetStaticMesh(FoundResource->ResourceMesh);
+			ProducingItem->SetVisibility(true);
+		}
+	}
+
 
 	if (!HasAuthority())
 		return false;
@@ -116,6 +141,11 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 	// Only server
 	if (!HasAuthority())
 	{
+		if (SmeltingTimePassed < CurrentRecipeSmeltingTimeNeeded)
+		{
+			ProducingItem->SetVisibility(false);
+			CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
 		return;
 	}
 
@@ -123,20 +153,34 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 	{
 		if (CurrentRecipe)
 		{
+			RejectingOres = true;
 			// Early removal, give ores back
 			for (EResource Resource : CurrentRecipe->Resources)
 			{
 				if (CurrentlyProcessing.Contains(Resource))
 				{
-					MakeMat(Resource);
+					AForgeMat* NewMat = MakeMat(Resource);// CHANGE FOLLOWING TO INSIDE FOR NETWORKING?
+					if (NewMat)
+					{
+						NewMat->CurrentStation = this;
+						if (NewMat->ItemMesh)
+						{
+							NewMat->ItemMesh->SetSimulatePhysics(false);
+							NewMat->ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+						}
+						RejectedOres.Add(NewMat);
+					}
 				}
 			}
+			RejectingOres = false;
+			CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
+		ProducingItem->SetVisibility(false);
 	}
-	else if (SmeltingTimePassed < SmeltingTimeKABOOM)
+	/*else if (SmeltingTimePassed < SmeltingTimeKABOOM)
 	{
 		MakeResource(CurrentResourceCreating);
-	}
+	}*/
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
@@ -147,6 +191,40 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 	bSmeltingMinigamePlaying = false;
 	CurrentRemainingTime = 0.0f;*/
 
+	RecipeComplete();
+}
+
+void ASmeltery::ItemPickedUp(APickUpItem * Item)
+{
+	Super::ItemPickedUp(Item);
+
+	Item->ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	if (Item == CurrentIngot)
+	{
+		CurrentIngot = nullptr;
+
+		if (HasAuthority())
+			RecipeComplete();
+	}
+	else if (AForgeMat* ForgeMat = Cast< AForgeMat>(Item))
+	{
+		if (RejectedOres.Contains(ForgeMat))
+		{
+			RejectedOres.Remove(ForgeMat);
+		}
+	}
+
+	// No ores/ingots sitting in forge
+	if (RejectedOres.Num() <= 0)// && !CurrentIngot)
+	{
+		CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		//if (HasAuthority())
+		//	bSmeltingMinigamePlaying = false;
+	}
+
+}
+void ASmeltery::RecipeComplete()
+{
 	if (CurrentRecipe)
 	{
 		// Remove all current recipe
@@ -175,7 +253,6 @@ void ASmeltery::Interacted(AForgePlayer * _Player)
 	else
 		SERVER_ClearCurrentRecipe();
 }
-
 
 bool ASmeltery::CanHaveResource(EResource _Resource, FIngotRecipe& FoundRecipe)
 {
@@ -307,6 +384,7 @@ void ASmeltery::MULTI_ClearCurrentRecipe_Implementation()
 	SmeltingTimePassed = 0.0f;
 	bSmeltingMinigamePlaying = false;
 	CurrentRemainingTime = 0.0f;
+	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void ASmeltery::SERVER_ChangeResource_Implementation(EResource _ResourceChange, bool _Add)
@@ -356,39 +434,69 @@ void ASmeltery::ProcessSmelting(float DeltaTime)
 	SmeltingTimePassed += DeltaTime;
 	CurrentRemainingTime = CurrentRecipeSmeltingTimeNeeded - SmeltingTimePassed;
 	GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Green, "Delta" + FString::SanitizeFloat(SmeltingTimePassed));
-	if (!HasAuthority())
-		return;
 
+	if (SmeltingTimePassed >= CurrentRecipeSmeltingTimeNeeded)
+	{
+		if (ProducingItem->IsVisible())
+		{
+			ProducingItem->SetVisibility(false);
+			CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
+
+		if (HasAuthority())
+		{
+			if (!CurrentIngot)
+			{
+				CurrentIngot = MakeResource(CurrentResourceCreating); // CHANGE FOLLOWING TO INSIDE FOR NETWORKING?
+				CurrentIngot->CurrentStation = this;
+				CurrentIngot->ItemMesh->SetSimulatePhysics(false);
+				CurrentIngot->ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			}
+		}
+	}
+	
 	if (SmeltingTimePassed > SmeltingTimeKABOOM)
 	{
-		if (CurrentRecipe)
+		if (HasAuthority())
 		{
-			for (EResource Resource : CurrentRecipe->Resources)
+			if (CurrentRecipe)
 			{
-				if (CurrentlyProcessing.Contains(Resource))
+				for (EResource Resource : CurrentRecipe->Resources)
 				{
-					SERVER_ChangeResource(Resource, false);
+					if (CurrentlyProcessing.Contains(Resource))
+					{
+						SERVER_ChangeResource(Resource, false);
+					}
+				}
+				for (int i = 0; i < CurrentRecipe->iCoalCount; i++)
+				{
+					if (CurrentlyProcessing.Contains(EResource::R_COAL))
+					{
+						SERVER_ChangeResource(EResource::R_COAL, false);
+					}
 				}
 			}
-			for (int i = 0; i < CurrentRecipe->iCoalCount; i++)
+			FIngotRecipe FoundRecipe;
+			if (FindCompletedRecipe(FoundRecipe))
 			{
-				if (CurrentlyProcessing.Contains(EResource::R_COAL))
-				{
-					SERVER_ChangeResource(EResource::R_COAL, false);
-				}
+				MULTI_ChangeCurrentRecipe(FoundRecipe);
+				//SERVER_ChangeCurrentRecipe(FoundRecipe);
+			}
+			else
+			{
+				MULTI_ClearCurrentRecipe();
+				//SERVER_ClearCurrentRecipe();
 			}
 		}
-		FIngotRecipe FoundRecipe;
-		if (FindCompletedRecipe(FoundRecipe))
+		
+
+		if (CurrentIngot)
 		{
-			MULTI_ChangeCurrentRecipe(FoundRecipe);
-			//SERVER_ChangeCurrentRecipe(FoundRecipe);
+			CurrentIngot->Destroy();
+			CurrentIngot = nullptr;
 		}
-		else
-		{
-			MULTI_ClearCurrentRecipe();
-			//SERVER_ClearCurrentRecipe();
-		}
+
+		//CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 		UE_LOG(LogTemp, Warning, TEXT("KABOOM"));
 		//KABOOM
@@ -435,7 +543,9 @@ AForgeMat * ASmeltery::MakeMat(EResource type)
 
 	if (FoundResource)
 	{
-		APickUpItem * ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation());
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		APickUpItem * ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation(), SpawnParams);
 		AForgeMat* ForgeMat = Cast<AForgeMat>(ResourceRef);
 		return ForgeMat;
 	}
@@ -535,5 +645,5 @@ void ASmeltery::RestartHealth()
 //void ASmeltery::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 //{
 //	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-//	//DOREPLIFETIME(ASmeltery, CurrentlyProcessing);
+//	DOREPLIFETIME(ASmeltery, CurrentIngot);
 //}
