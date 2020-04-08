@@ -192,6 +192,8 @@ void ASwordItem::SetUpWeapon(EWeapon _Weapon)
 		AddPartMesh(WeaponPart, PartName);
 		PartID++;
 	}
+
+	UpdateAltPartMeshes();
 }
 
 void ASwordItem::AddPartMesh(EWeaponPart WeaponPart, const FName PartName)
