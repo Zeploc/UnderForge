@@ -31,6 +31,9 @@ void AServingBench::ProcessItem(APickUpItem * Item)
 	{
 		ForgeItems.Add(ForgeItem);
 		ForgeItem->ItemMesh->SetSimulatePhysics(false);
+		ForgeItem->ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		ForgeItem->SetActorLocation(ObjectPosition->GetComponentLocation());
+		ForgeItem->SetActorRotation(ObjectPosition->GetComponentRotation());
 		NewItem(ForgeItem);
 	}
 }
