@@ -26,7 +26,7 @@ public:
 	void RecreateResource();
 
 	UFUNCTION(BlueprintCallable)
-	class AForgeMat* GetResource();
+	class APickUpItem* GetResource();
 	//UFUNCTION(BlueprintCallable, Server, WithValidation, Reliable)
 	//	void SERVER_GetResource();
 

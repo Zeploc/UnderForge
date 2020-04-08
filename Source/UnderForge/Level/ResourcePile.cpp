@@ -23,7 +23,7 @@ void AResourcePile::RecreateResource()
 	if (!HasAuthority())
 		return; 
 
-	AForgeMat* NewResource = GetResource();
+	APickUpItem* NewResource = GetResource();
 	if (NewResource)
 	{
 		NewResource->ItemMesh->SetSimulatePhysics(false);
@@ -33,7 +33,7 @@ void AResourcePile::RecreateResource()
 	}
 }
 
-AForgeMat * AResourcePile::GetResource()
+APickUpItem * AResourcePile::GetResource()
 {
 	UUnderForgeSingleton* GameSingleton = Cast<UUnderForgeSingleton>(GEngine->GameSingleton);
 	if (!GameSingleton)
@@ -46,16 +46,18 @@ AForgeMat * AResourcePile::GetResource()
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	APickUpItem* ResourceRef = GetWorld()->SpawnActor<APickUpItem>(FoundResource->ResourceClass, ObjectPosition->GetComponentLocation(), ObjectPosition->GetComponentRotation(), SpawnParams);
-	if (!ResourceRef)
-		return nullptr;
-	AForgeMat* ResourceMatRef = Cast<AForgeMat>(ResourceRef);
+	//if (!ResourceRef)
+		return ResourceRef;
+	//AForgeMat* ResourceMatRef = Cast<AForgeMat>(ResourceRef);
+
 	/*FTransform SpawnTransform = FTransform::Identity;
 	SpawnTransform.SetLocation(ObjectPosition->GetComponentLocation());
 	SpawnTransform.SetRotation(ObjectPosition->GetComponentRotation().Quaternion());
 	AForgeMat* ResourceRef = GetWorld()->SpawnActorDeferred<AForgeMat>(ForgeMat, SpawnTransform);
 	ResourceRef->HeldPlayer = _OwningPlayer;
 	UGameplayStatics::FinishSpawningActor(ResourceRef, SpawnTransform);*/
-	return ResourceMatRef;
+
+	//return ResourceMatRef;
 }
 
 bool AResourcePile::CanTakeItem(APickUpItem * Item)
@@ -65,6 +67,7 @@ bool AResourcePile::CanTakeItem(APickUpItem * Item)
 
 void AResourcePile::ItemPickedUp(APickUpItem * Item)
 {
+	Super::ItemPickedUp(Item);
 	RecreateResource();
 }
 
