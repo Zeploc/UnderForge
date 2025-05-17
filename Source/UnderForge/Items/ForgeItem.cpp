@@ -14,7 +14,7 @@ AForgeItem::AForgeItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicatingMovement(true);
 	PickUpType = EPickUpType::PT_WEAPON;
 
 

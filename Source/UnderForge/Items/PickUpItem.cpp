@@ -26,7 +26,7 @@ APickUpItem::APickUpItem()
 	ItemMesh->SetRenderCustomDepth(true);
 
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicatingMovement(true);
 }
 
 // Called when the game starts or when spawned

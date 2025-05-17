@@ -15,7 +15,7 @@ AForgePart::AForgePart()
 
 
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicatingMovement(true);
 	PickUpType = EPickUpType::PT_PART;
 
 	AttachOffset.SetScale3D(FVector(0.5f));

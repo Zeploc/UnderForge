@@ -12,7 +12,7 @@ AForgeTool::AForgeTool()
 	PrimaryActorTick.bCanEverTick = true;
 		
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicatingMovement(true);
 	PickUpType = EPickUpType::PT_TOOL;
 	iAttackDamage = 20;
 	

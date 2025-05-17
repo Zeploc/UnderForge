@@ -16,7 +16,7 @@ AForgeMat::AForgeMat()
 	AttachOffset.SetScale3D(FVector(0.5f));
 
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicatingMovement(true);
 	PickUpType = EPickUpType::PT_MAT;
 }
 

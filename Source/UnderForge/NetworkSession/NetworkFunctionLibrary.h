@@ -12,6 +12,7 @@
 UENUM(Blueprintable)
 enum class ESteamAvatarSize : uint8
 {
+	None = 0,
 	SteamAvatar_Small = 1,
 	SteamAvatar_Medium = 2,
 	SteamAvatar_Large = 3
